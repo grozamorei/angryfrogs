@@ -1,5 +1,5 @@
-
-export const GameObject = (name, graphics, x, y, w, h, tint, isStatic = false) => {
+import {CONST} from "../utils/CONST";
+export const GameObject = (name, graphics, x, y, w, h, tint, mask, isStatic = false) => {
 
     let sprite = new PIXI.Sprite(PIXI.loader.resources[graphics].texture)
     sprite.width = w; sprite.height = h
@@ -7,10 +7,19 @@ export const GameObject = (name, graphics, x, y, w, h, tint, isStatic = false) =
     sprite.tint = tint
     sprite.anchor.x = sprite.anchor.y = 0.5
 
-    let body = Matter.Bodies.rectangle(x, y, w, h, {isStatic: isStatic})
-    if (!isStatic) {
-        body.inertia = Number.POSITIVE_INFINITY
-    }
+    let body = Matter.Bodies.rectangle(x, y, w, h, {
+        label: name,
+        inertia: Number.POSITIVE_INFINITY,
+        inverseInertia: 1 / Number.POSITIVE_INFINITY,
+        frictionAir: 0,
+        isStatic: isStatic,
+        collisionFilter: {
+            category: mask
+
+        }
+    })
+    body.friction = mask === CONST.PMASK.WALL ? 0.002 : 1
+    // body.frictionStatic = mask === CONST.PMASK.WALL ? 0 : 1
 
     return {
         get visual() { return sprite },
