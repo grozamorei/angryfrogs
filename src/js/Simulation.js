@@ -1,11 +1,14 @@
-
+import {Renderer} from "./Renderer";
 export const SimulationConstructor = () => {
+
+    const rend = Renderer()
 
     const gameLoop = () => {
         requestAnimationFrame(gameLoop)
 
         // do routines
-        // console.log('update')
+        rend.update()
     }
-    gameLoop()
+
+    requestAnimationFrame(gameLoop)
 }
