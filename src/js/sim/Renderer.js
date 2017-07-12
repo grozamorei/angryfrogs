@@ -1,4 +1,5 @@
-import {DOMUtils} from "./utils/DOMUtils";
+import {DOMUtils} from "../utils/DOMUtils";
+
 export const Renderer = () => {
 
     let canvasW, canvasH = 0
@@ -13,39 +14,42 @@ export const Renderer = () => {
     })
     document.body.appendChild(renderer.view)
 
-    let fr
+    // let fr
     const resizeCanvas = () => {
         canvasW = Math.max(window.innerWidth || 0, document.documentElement.clientWidth)
         canvasH = Math.max(window.innerHeight || 0, document.documentElement.clientHeight)
         renderer.resize(canvasW, canvasH)
 
-        if (fr) {
-            fr.x = canvasW / 2
-            fr.y = canvasH / 2
-        }
+        // if (fr) {
+        //     fr.x = canvasW / 2
+        //     fr.y = canvasH / 2
+        // }
 
         // console.log('new size: ', canvasW, canvasH, canvasH / canvasW)
     }
     resizeCanvas()
 
-    PIXI.loader.add('frog', 'assets/frog.png').load((loader, resources) => {
-        fr = new PIXI.Sprite(resources.frog.texture)
-        fr.anchor.x = fr.anchor.y = 0.5
-        fr.width = fr.height = 64
-        stage.addChild(fr)
-        resizeCanvas()
-    })
+    // PIXI.loader.add('frog', 'assets/frog.png').load((loader, resources) => {
+    //     fr = new PIXI.Sprite(PIXI.loader.resources.frog.texture)
+    //     fr.anchor.x = fr.anchor.y = 0.5
+    //     fr.width = fr.height = 64
+    //     stage.addChild(fr)
+    //     resizeCanvas()
+    // })
 
     return {
+        addObject: (go) => {
+            stage.addChild(go.visual)
+        },
         update: () => {
             const newCanvasW = Math.max(window.innerWidth || 0, document.documentElement.clientWidth)
             const newCanvasH = Math.max(window.innerHeight || 0, document.documentElement.clientHeight)
             if (newCanvasW !== canvasW || newCanvasH !== canvasH) {
                 resizeCanvas()
             }
-            if (fr) {
-                fr.rotation += 0.01
-            }
+            // if (fr) {
+            //     // fr.rotation += 0.01
+            // }
             renderer.render(stage)
         }
     }
