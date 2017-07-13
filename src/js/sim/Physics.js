@@ -29,6 +29,9 @@ export const Physics = () => {
                     grounded = false
                     walled = true
                     break
+                case CONST.PMASK.TRAP:
+                    console.log('DESU')
+                    break
             }
         })
     })
@@ -46,8 +49,8 @@ export const Physics = () => {
             Matter.World.add(engine.world, go.body)
         },
         jump: vector => {
-            vector.x = vector.x < 0 ? Math.max(vector.x, -0.01) : Math.min(vector.x, 0.01)
-            vector.y = vector.y < 0 ? Math.max(vector.y, -0.025) : Math.min(vector.y, 0.025)
+            vector.x = vector.x < 0 ? Math.max(vector.x, -0.015) : Math.min(vector.x, 0.015)
+            vector.y = vector.y < 0 ? Math.max(vector.y, -0.04) : Math.min(vector.y, 0.04)
             if (grounded) {
                 Matter.Body.applyForce(mainBody, mainBody.position, vector)
                 grounded = false

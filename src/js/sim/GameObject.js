@@ -11,7 +11,7 @@ export const GameObject = (name, graphics, x, y, w, h, tint, mask, isStatic = fa
         label: name,
         inertia: Number.POSITIVE_INFINITY,
         inverseInertia: 1 / Number.POSITIVE_INFINITY,
-        frictionAir: 0,
+        frictionAir: 0.01,
         isStatic: isStatic,
         collisionFilter: {
             category: mask

@@ -29,34 +29,39 @@ window.onload = () => {
 
     const startGame = () => {
         let go
-        go = GameObject('leftwall', 'pixel', 0, 300, 30, 600, 0xCC0000, CONST.PMASK.WALL, true)
+        go = GameObject('leftwall', 'pixel', 0, 300, 30, 600, 0xCCCC00, CONST.PMASK.WALL, true)
         rend.addObject(go)
         phys.addObject(go)
         gos.push(go)
 
-        go = GameObject('rightwall', 'pixel', 400, 300, 30, 600, 0xCC0000, CONST.PMASK.WALL, true)
+        go = GameObject('rightwall', 'pixel', 400, 300, 30, 600, 0xCCCC00, CONST.PMASK.WALL, true)
         rend.addObject(go)
         phys.addObject(go)
         gos.push(go)
 
-        go = GameObject('floor', 'pixel', 200, 600, 400, 30, 0xCC0000, CONST.PMASK.FLOOR, true)
+        go = GameObject('floor', 'pixel', 200, 600, 400, 30, 0xCCCC00, CONST.PMASK.FLOOR, true)
         rend.addObject(go)
         phys.addObject(go)
         gos.push(go)
 
-        go = GameObject('ceiling', 'pixel', 200, 0, 400, 30, 0xCC0000, CONST.PMASK.CEILING, true)
+        go = GameObject('ceiling', 'pixel', 200, 0, 400, 30, 0xCC0000, CONST.PMASK.TRAP, true)
         rend.addObject(go)
         phys.addObject(go)
         gos.push(go)
 
-        go = GameObject('platform', 'pixel', 100, 500, 20, 250, 0xCC0000, CONST.PMASK.WALL, true)
+        go = GameObject('platform', 'pixel', 100, 500, 20, 200, 0xCCCC00, CONST.PMASK.WALL, true)
         rend.addObject(go)
         phys.addObject(go)
         gos.push(go)
-        // go = GameObject('platform', 'pixel', 150, 150, 180, 30, 0x00CC00, true)
-        // rend.addObject(go)
-        // phys.addObject(go)
-        // gos.push(go)
+
+        go = GameObject('platform2', 'pixel', 140, 220, 100, 20, 0xCCCC00, CONST.PMASK.FLOOR, true)
+        rend.addObject(go)
+        phys.addObject(go)
+        gos.push(go)
+        go = GameObject('platform2-2', 'pixel', 180, 190, 20, 50, 0xCC0000, CONST.PMASK.TRAP, true)
+        rend.addObject(go)
+        phys.addObject(go)
+        gos.push(go)
 
         go = GameObject('frog', 'pixel', 70, 40, 32, 32, 0x00CC00, CONST.PMASK.FROG, false)
         rend.addObject(go)
