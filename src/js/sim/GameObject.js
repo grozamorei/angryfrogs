@@ -19,7 +19,6 @@ export const GameObject = (name, graphics, x, y, w, h, tint, mask, isStatic = fa
         }
     })
     body.friction = mask === CONST.PMASK.WALL ? 0.002 : 1
-    // body.frictionStatic = mask === CONST.PMASK.WALL ? 0 : 1
 
     return {
         get visual() { return sprite },
