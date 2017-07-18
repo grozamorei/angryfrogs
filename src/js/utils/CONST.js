@@ -5,6 +5,6 @@ export const CONST = {
         WALL: 0x0002,
         CEILING: 0x0004,
         FROG: 0x0008,
-        TRAP: 0x0064
+        DEATH: 0x0064
     }
 }

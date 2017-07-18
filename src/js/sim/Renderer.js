@@ -6,10 +6,11 @@ export const Renderer = (canvas) => {
 
     const stage = new PIXI.Container()
     const renderer = PIXI.autoDetectRenderer({
+        roundPixels: true,
         width: virtualSizeX,
         height: virtualSizeY,
         view: canvas,
-        backgroundColor: 0x110000
+        backgroundColor: 0x817066
     })
     const graphics = new PIXI.Graphics()
 
@@ -19,7 +20,6 @@ export const Renderer = (canvas) => {
 
         renderer.resize(virtualSizeX * (canvasH / virtualSizeY), canvasH)
         const hMargin = (canvasW - renderer.width) / 2
-        // console.log('hmargin:', hMargin, '%:', (hMargin / canvasW) * 100)
         canvas.style.marginLeft = hMargin.toString() + 'px'
 
         stage.scale.x = renderer.width / virtualSizeX
@@ -33,6 +33,9 @@ export const Renderer = (canvas) => {
         addObject: (go) => {
             stage.addChild(go.visual)
             stage.addChild(graphics)
+        },
+        removeObject: (go) => {
+            stage.removeChild(go.visual)
         },
         update: () => {
             const newCanvasW = Math.max(window.innerWidth || 0, document.documentElement.clientWidth)
