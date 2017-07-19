@@ -6,9 +6,10 @@ import {Input} from "./input/Input";
 import {CONST} from "./utils/CONST";
 import {Resources} from "./utils/Resources";
 import {Util} from "./utils/Util";
+import {Platform} from "./platform/Platform";
 
 window.onload = () => {
-    console.log('game starting')
+    const platform = Platform()
 
     const canvas = DOMUtils.createElement('canvas', 'gameCanvas')
     document.body.appendChild(canvas)
@@ -49,7 +50,10 @@ window.onload = () => {
         phys.addObject(frog)
         gos.push(frog)
     }
-    phys.on('death', respawn)
+    phys.on('death', () => {
+        // window.TelegramGameProxy.shareScore()
+        respawn()
+    })
 
     const startGame = () => {
         //
