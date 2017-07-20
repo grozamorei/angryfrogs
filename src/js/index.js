@@ -52,11 +52,14 @@ window.onload = () => {
     }
     phys.on('death', () => {
 
-        let some = {score: Util.getRandomInt(0, 1000)}
-        for (const key in platform.userData) {
-            some[key] = platform.userData[key]
+        console.log('sending ', platform.userData)
+
+        let some = {
+            score: Util.getRandomInt(0, 1000),
+            userId: platform.userData.userId,
+            chat: platform.userData.chat,
+            messageId: platform.userData.messageId
         }
-        console.log('sending ', some)
         Util.postRequest('https://' + window.location.hostname + ':8443/setScore', JSON.stringify(some)).then(
             () => { console.log ('URL REQUEST: SUCCESS') },
             () => {console.log('URL REQUEST: FAILED')}
