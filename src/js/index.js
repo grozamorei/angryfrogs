@@ -51,7 +51,13 @@ window.onload = () => {
         gos.push(frog)
     }
     phys.on('death', () => {
-        Util.postRequest('https://' + window.location.hostname + ':8443/setScore', Object.assign(platform.userData, {score: Util.getRandomInt(0, 1000)})).then(
+
+        let some = {score: Util.getRandomInt(0, 1000)}
+        for (const key in platform.userData) {
+            some[key] = platform.userData[key]
+        }
+        console.log('sending ', some)
+        Util.postRequest('https://' + window.location.hostname + ':8443/setScore', JSON.stringify(some)).then(
             () => { console.log ('URL REQUEST: SUCCESS') },
             () => {console.log('URL REQUEST: FAILED')}
         )
