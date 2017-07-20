@@ -8,5 +8,5 @@ export const platformGetUserName = (state) => ({
 })
 
 export const platformGetUserData = (state) => ({
-    get userName() { return state.userData }
+    get userData() { return state.userData }
 })
