@@ -52,6 +52,11 @@ window.onload = () => {
     }
     phys.on('death', () => {
         // window.TelegramGameProxy.shareScore()
+        // console.log(window.location)
+        Util.postRequest('https://' + window.location.hostname + ':8443/setScore', '{"score": 833}').then(
+            () => { console.log ('URL REQUEST: SUCCESS') },
+            () => {console.log('URL REQUEST: FAILED')}
+        )
         respawn()
     })
 
