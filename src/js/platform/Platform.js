@@ -23,6 +23,7 @@ export const Platform = () => {
 
     return {
         get current() { return current.id },
-        get userName() { return current.userName }
+        get userName() { return current.userName },
+        get userData() { return current.userData }
     }
 }
