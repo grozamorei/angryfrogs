@@ -2,10 +2,16 @@ const gulp = require('gulp')
 const connect = require('gulp-connect')
 
 gulp.task('connect', () => {
+    const fs = require('fs')
     connect.server({
         root: 'build/',
         port: '8100',
-        livereload: true
+        livereload: true,
+        https: {
+            key: fs.readFileSync('ssl/server.key'),
+            cert: fs.readFileSync('ssl/server.crt'),
+            passphrase: 'ssldebug'
+        }
     })
 })
 
