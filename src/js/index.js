@@ -51,9 +51,7 @@ window.onload = () => {
         gos.push(frog)
     }
     phys.on('death', () => {
-        // window.TelegramGameProxy.shareScore()
-        // console.log(window.location)
-        Util.postRequest('https://' + window.location.hostname + ':8443/setScore', '{"score": 833}').then(
+        Util.postRequest('https://' + window.location.hostname + ':8443/setScore', Object.assign(platform.userData, {score: Util.getRandomInt(0, 1000)})).then(
             () => { console.log ('URL REQUEST: SUCCESS') },
             () => {console.log('URL REQUEST: FAILED')}
         )

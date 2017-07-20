@@ -6,12 +6,7 @@ gulp.task('connect', () => {
     connect.server({
         root: 'build/',
         port: '8100',
-        livereload: true,
-        https: {
-            key: fs.readFileSync('ssl/server.key'),
-            cert: fs.readFileSync('ssl/server.crt'),
-            passphrase: 'ssldebug'
-        }
+        livereload: true
     })
 })
 

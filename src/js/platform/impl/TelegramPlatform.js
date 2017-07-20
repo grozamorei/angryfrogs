@@ -17,7 +17,8 @@ const TelegramPlatform = () => {
 
     const state = {
         id: 'telegram',
-        userName: platformArgs.userName
+        userName: platformArgs.userName,
+        userData: platformArgs
     }
 
     const self = {
@@ -26,6 +27,7 @@ const TelegramPlatform = () => {
 
     Object.assign(self, pl.platformGetId(state))
     Object.assign(self, pl.platformGetUserName(state))
+    Object.assign(self, pl.platformGetUserData(state))
 
     return self
 }
