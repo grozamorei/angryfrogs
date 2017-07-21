@@ -5,6 +5,7 @@ export const Physics = () => {
     engine.world = Matter.World.create({gravity: {x:0, y:1}})
 
     let mainBody = null
+    let mainBodyGo = null
 
     let grounded = false
     let canSecondJump = false
@@ -14,6 +15,7 @@ export const Physics = () => {
         addObject: (go) => {
             if (!go.body.isStatic) {
                 mainBody = go.body
+                mainBodyGo = go
             }
             Matter.World.add(engine.world, go.body)
         },
@@ -25,8 +27,11 @@ export const Physics = () => {
         },
         jump: vector => {
             if (mainBody === null) return
-            vector.x = vector.x < 0 ? Math.max(vector.x, -0.015) : Math.min(vector.x, 0.015)
-            vector.y = vector.y < 0 ? Math.max(vector.y, -0.04) : Math.min(vector.y, 0.04)
+            vector.x = vector.x < 0 ? Math.max(vector.x, -0.4) : Math.min(vector.x, 0.4)
+            vector.y = vector.y < 0 ? Math.max(vector.y, -0.3) : Math.min(vector.y, 0.3)
+
+            vector.x < 0 ? mainBodyGo.setDirection(-1) : mainBodyGo.setDirection(1)
+
             if (grounded) {
                 Matter.Body.applyForce(mainBody, mainBody.position, vector)
                 grounded = false
@@ -64,11 +69,15 @@ export const Physics = () => {
                     grounded = true
                     canSecondJump = false
                     walled = false
+
+                    mainBodyGo.setJumpMode(false)
                     break
                 case CONST.PMASK.WALL:
                     console.log('frog walled')
                     grounded = false
                     walled = true
+
+                    mainBodyGo.setWallAttach()
                     break
                 case CONST.PMASK.DEATH:
                     console.log('frog dead')
@@ -79,8 +88,22 @@ export const Physics = () => {
     })
 
     Matter.Events.on(engine, 'collisionEnd', (e) => {
-        // console.log('ended', e.pairs[0].bodyA.label, e.pairs[0].bodyB.label)
-        // console.log(e)
+        e.pairs.forEach(pair => {
+            if (pair.bodyA.collisionFilter.category !== CONST.PMASK.FROG &&
+                pair.bodyB.collisionFilter.category !== CONST.PMASK.FROG) return
+
+            const frogBody = pair.bodyA.collisionFilter.category === CONST.PMASK.FROG ? pair.bodyA : pair.bodyB
+            const otherBody = pair.bodyA === frogBody ? pair.bodyB : pair.bodyA
+
+            switch (otherBody.collisionFilter.category) {
+                case CONST.PMASK.FLOOR:
+                    mainBodyGo.setJumpMode(true)
+                    break
+                case CONST.PMASK.WALL:
+                    mainBodyGo.setJumpMode(true)
+                    break
+            }
+        })
     })
 
     const emitterDict = {}

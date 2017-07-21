@@ -1,12 +1,13 @@
 import {Renderer} from "./sim/Renderer";
 import {Physics} from "./sim/Physics";
-import {GameObject} from "./sim/GameObject";
 import {DOMUtils} from "./utils/DOMUtils";
 import {Input} from "./input/Input";
 import {CONST} from "./utils/CONST";
 import {Resources} from "./utils/Resources";
 import {Util} from "./utils/Util";
 import {Platform} from "./platform/Platform";
+import {StaticObject} from "./game/StaticObject";
+import {Frog} from "./game/Frog";
 
 window.onload = () => {
     console.log(window.location)
@@ -46,7 +47,10 @@ window.onload = () => {
 
         const respawns = respawnLocations[Util.getRandomInt(0, respawnLocations.length-1)]
 
-        frog = GameObject('frog', 'pixel', respawns.x, respawns.y, 32, 32, 0x00CC00, CONST.PMASK.FROG, false)
+        frog = Frog(
+            {idle: 'frog.idle', jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
+            respawns.x, respawns.y,
+            100, 100, CONST.PMASK.FROG)
         rend.addObject(frog)
         phys.addObject(frog)
         gos.push(frog)
@@ -76,7 +80,7 @@ window.onload = () => {
 
             for (let i = 0; i < l.objects.length; i++) {
                 const obj = l.objects[i]
-                const go = GameObject(
+                const go = StaticObject(
                     l.name.toLowerCase() + '_' + i.toString(),
                     'pixel',
                     obj.x, obj.y, obj.width, obj.height,
@@ -97,6 +101,10 @@ window.onload = () => {
     // preload all assets
     resources
         .add('pixel', 'assets/pixel.png')
-        .add('map', 'assets/maptest.json')
+        .add('frog.idle', 'assets/frog/idle.png')
+        .add('frog.jump', 'assets/frog/jump.png')
+        .add('frog.walljump', 'assets/frog/walljump.png')
+        .add('frog.midair', 'assets/frog/midair.png')
+        .add('map', 'assets/maptest2.json')
         .load(startGame)
 }

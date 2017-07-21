@@ -37,7 +37,7 @@ export const Input = (canvas, onReleaseTouch, isMobile, debug) => {
 
     const onTouchEnd = (e) => {
         e.preventDefault()
-        onReleaseTouch({x: (lastSeenAt.x - startedAt.x)/2000, y: (lastSeenAt.y - startedAt.y)/2000})
+        onReleaseTouch({x: (lastSeenAt.x - startedAt.x)/200, y: (lastSeenAt.y - startedAt.y)/200})
 
         startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = Number.NaN
     }
