@@ -29,19 +29,8 @@ export const Util = {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest()
             req.addEventListener('error', reject)
-            // req.addEventListener('abort', reject)
             req.open('POST', url, true)
 
-            // req.onreadystatechange = () => {
-            //     if (req.readyState === 4 && req.status === 200) {
-            //         const jsonData = JSON.parse(req.responseText)
-            //         if (jsonData.status === 'OK') {
-            //             resolve(jsonData)
-            //         } else {
-            //             reject('http.getRequest failed: ' + req.responseText)
-            //         }
-            //     }
-            // }
             req.send(strData)
         })
     }

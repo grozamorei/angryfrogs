@@ -9,6 +9,7 @@ import {Util} from "./utils/Util";
 import {Platform} from "./platform/Platform";
 
 window.onload = () => {
+    console.log(window.location)
     const platform = Platform()
 
     const canvas = DOMUtils.createElement('canvas', 'gameCanvas')
@@ -51,16 +52,9 @@ window.onload = () => {
         gos.push(frog)
     }
     phys.on('death', () => {
-
-        console.log('sending ', platform.userData)
-
-        let some = {
-            score: Util.getRandomInt(0, 1000),
-            userId: platform.userData.userId,
-            chat: platform.userData.chat,
-            messageId: platform.userData.messageId
-        }
-        Util.postRequest('https://' + window.location.hostname + ':8443/setScore', JSON.stringify(some)).then(
+        let data = Object.assign({score: Util.getRandomInt(1, 10000)}, platform.userData)
+        console.log(data.score)
+        Util.postRequest(window.location.protocol + '//' + window.location.hostname + ':8443/setScore', JSON.stringify(data)).then(
             () => { console.log ('URL REQUEST: SUCCESS') },
             () => {console.log('URL REQUEST: FAILED')}
         )
