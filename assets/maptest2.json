@@ -17,15 +17,26 @@
                  "y":1246
                 }, 
                 {
-                 "height":36,
-                 "id":41,
+                 "height":39,
+                 "id":73,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":29.3333,
-                 "x":122.33335,
-                 "y":383
+                 "width":122.333,
+                 "x":213.8335,
+                 "y":23.5
+                }, 
+                {
+                 "height":73,
+                 "id":74,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":68.333,
+                 "x":666.8335,
+                 "y":1080.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -61,15 +72,26 @@
                  "y":0
                 }, 
                 {
-                 "height":242,
+                 "height":302,
                  "id":63,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":38,
+                 "width":40,
                  "x":456.75,
                  "y":593.5
+                }, 
+                {
+                 "height":302,
+                 "id":71,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":114,
+                 "y":117
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -102,7 +124,7 @@
                  "visible":true,
                  "width":182,
                  "x":101,
-                 "y":1048
+                 "y":1076
                 }, 
                 {
                  "height":40,
@@ -125,6 +147,28 @@
                  "width":158,
                  "x":173,
                  "y":464
+                }, 
+                {
+                 "height":40,
+                 "id":70,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":112,
+                 "x":602,
+                 "y":288
+                }, 
+                {
+                 "height":40,
+                 "id":72,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":112,
+                 "x":354,
+                 "y":256
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -184,26 +228,26 @@
                 {
                  "ellipse":true,
                  "height":64,
-                 "id":43,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":248,
-                 "y":247.333333333333
-                }, 
-                {
-                 "ellipse":true,
-                 "height":64,
                  "id":49,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":64,
-                 "x":150,
-                 "y":888.666666666667
+                 "x":166,
+                 "y":928.666666666667
+                }, 
+                {
+                 "ellipse":true,
+                 "height":64,
+                 "id":69,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":266,
+                 "y":312
                 }],
          "opacity":0.790000021457672,
          "type":"objectgroup",
@@ -211,7 +255,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":68,
+ "nextobjectid":75,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",
