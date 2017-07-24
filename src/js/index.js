@@ -10,7 +10,7 @@ import {StaticObject} from "./game/StaticObject";
 import {Frog} from "./game/Frog";
 
 window.onload = () => {
-    console.log(window.location)
+    // console.log(window.location)
     const platform = Platform()
 
     const canvas = DOMUtils.createElement('canvas', 'gameCanvas')
@@ -50,7 +50,7 @@ window.onload = () => {
         frog = Frog(
             {idle: 'frog.idle', jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
             respawns.x, respawns.y,
-            100, 100, CONST.PMASK.FROG)
+            128, 128, CONST.PMASK.FROG)
         rend.addObject(frog)
         phys.addObject(frog)
         gos.push(frog)

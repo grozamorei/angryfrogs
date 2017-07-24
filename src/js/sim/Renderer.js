@@ -32,10 +32,16 @@ export const Renderer = (canvas) => {
         get debugDrawLayer() { return graphics },
         addObject: (go) => {
             stage.addChild(go.visual)
+            if ('debugVisual' in go) {
+                stage.addChild(go.debugVisual)
+            }
             stage.addChild(graphics)
         },
         removeObject: (go) => {
             stage.removeChild(go.visual)
+            if ('debugVisual' in go) {
+                stage.removeChild(go.debugVisual)
+            }
         },
         update: () => {
             const newCanvasW = Math.max(window.innerWidth || 0, document.documentElement.clientWidth)
