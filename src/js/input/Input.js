@@ -1,5 +1,11 @@
+import {emitterTemplate} from "../utils/EmitterBehaviour";
+export const Input = (canvas, isMobile, debug) => {
 
-export const Input = (canvas, onReleaseTouch, isMobile, debug) => {
+    const emitter = {}
+    const self =  {
+        update: () => {}
+    }
+    Object.assign(self, emitterTemplate(emitter))
 
     const getX = (e) => {
         if (isMobile()) {
@@ -18,9 +24,10 @@ export const Input = (canvas, onReleaseTouch, isMobile, debug) => {
     const lastSeenAt = {x: Number.NaN, y: Number.NaN}
     const onTouchStart = (e) => {
         e.preventDefault()
-        // console.log(getX(e), getY(e))
+
         startedAt.x = getX(e)
         startedAt.y = getY(e)
+        self.emit('touchStarted')
     }
 
     const onTouchMove = (e) => {
@@ -37,8 +44,8 @@ export const Input = (canvas, onReleaseTouch, isMobile, debug) => {
 
     const onTouchEnd = (e) => {
         e.preventDefault()
-        onReleaseTouch({x: (lastSeenAt.x - startedAt.x)/200, y: (lastSeenAt.y - startedAt.y)/200})
 
+        self.emit('touchEnded', {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)})
         startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = Number.NaN
     }
 
@@ -50,10 +57,5 @@ export const Input = (canvas, onReleaseTouch, isMobile, debug) => {
     canvas.onmousemove = onTouchMove
     canvas.onmouseup = onTouchEnd
 
-    return {
-        get emitter() {},
-        update: () => {
-
-        }
-    }
+    return self
 }

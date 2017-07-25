@@ -4,8 +4,7 @@ import {CONST} from "../utils/CONST";
 import {INTERSECTION} from "./GUtils";
 export const GEngine = () => {
 
-    const gravity = -4
-    const parachuteVelocity = 3
+    const gravity = 13
 
     const staticBodies = new Map()
     const movingBodies = new Map()
@@ -24,18 +23,24 @@ export const GEngine = () => {
             if (staticBodies.has(bodyId)) staticBodies.delete(bodyId)
             if (movingBodies.has(bodyId)) movingBodies.delete(bodyId)
         },
+        applyForce: (bodyId, force) => {
+            movingBodies.get(bodyId).velocity.x = force.x
+            movingBodies.get(bodyId).velocity.y = force.y
+        },
         update: (dt) => {
             dt /= 1000 // to seconds
 
             // apply all forces
             movingBodies.forEach(b => {
-                if (b.collisions[INTERSECTION.DOWN].mask === 0) {
+                if (b.collisions[INTERSECTION.DOWN].mask === 0 || b.velocity.y < 0) {
                     const startVelY = b.velocity.y
                     let currentVelY = startVelY + gravity * dt
-                    currentVelY = startVelY > 0 ? 1 : -1 * Math.min(parachuteVelocity, Math.abs(currentVelY))
-                    const path = ((currentVelY*currentVelY) - (startVelY*startVelY) / 2*gravity)
+                    const path = (((currentVelY*currentVelY) - (startVelY*startVelY)) / 2*gravity)
                     b.velocity.y = currentVelY
                     b.center.y += path
+                }
+                if (b.velocity.x !== 0) {
+                    b.center.x += b.velocity.x * dt
                 }
             })
 
@@ -63,7 +68,7 @@ export const GEngine = () => {
                                 a.collisions[result.bodyA].frame = 0
                                 if (result.bodyA === INTERSECTION.DOWN) {
                                     a.center.y -= result.penetration
-                                    a.velocity.y = 0
+                                    a.velocity.y = a.velocity.x = 0
                                 }
                             }
                             break

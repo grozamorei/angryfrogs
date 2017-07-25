@@ -4,7 +4,51 @@
          "color":"#000000",
          "draworder":"topdown",
          "name":"DEATH",
-         "objects":[],
+         "objects":[
+                {
+                 "height":52,
+                 "id":88,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":892,
+                 "x":-42,
+                 "y":-50
+                }, 
+                {
+                 "height":52,
+                 "id":89,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":936,
+                 "x":-54,
+                 "y":1276
+                }, 
+                {
+                 "height":1412,
+                 "id":90,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":54,
+                 "x":794,
+                 "y":-58
+                }, 
+                {
+                 "height":1412,
+                 "id":91,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":54,
+                 "x":-53,
+                 "y":-62
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -25,8 +69,8 @@
                  "type":"",
                  "visible":true,
                  "width":74,
-                 "x":98,
-                 "y":236
+                 "x":160,
+                 "y":288
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -47,8 +91,30 @@
                  "type":"",
                  "visible":true,
                  "width":200,
-                 "x":50,
-                 "y":1000
+                 "x":88,
+                 "y":508
+                }, 
+                {
+                 "height":58,
+                 "id":84,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":200,
+                 "x":498,
+                 "y":340
+                }, 
+                {
+                 "height":58,
+                 "id":92,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":200,
+                 "x":450,
+                 "y":815
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -56,7 +122,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":84,
+ "nextobjectid":93,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",

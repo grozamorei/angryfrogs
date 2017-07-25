@@ -20,7 +20,7 @@ window.onload = () => {
 
     const rend = Renderer(canvas)
     const phys = GEngine()
-    const input = Input(canvas, phys.jump, () => PIXI.utils.isMobile.any, rend.debugDrawLayer)
+    const input = Input(canvas, () => PIXI.utils.isMobile.any, rend.debugDrawLayer)
     const gos = []
 
     const respawnLocations = []
@@ -37,10 +37,22 @@ window.onload = () => {
         rend.update()
     }
 
+    input.on('touchEnded', (vector) => {
+        if (Number.isNaN(vector.x) || Number.isNaN(vector.y)) {
+            console.log('CLICK')
+        } else {
+            if (vector.y > 0) return
+            vector.y /= 15; vector.y = Math.max(-6, vector.y)
+            vector.x = vector.x > 0 ? 300 : -300
+            // console.log(vector)
+            phys.applyForce(frog.body.id, vector)
+        }
+    })
+
     const respawn = () => {
         if (frog) {
             rend.removeObject(frog)
-            phys.removeBody(frog.body)
+            phys.removeBody(frog.body.id)
             gos.splice(gos.indexOf(frog), 1)
             frog.destroy()
         }
