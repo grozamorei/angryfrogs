@@ -4,18 +4,7 @@
          "color":"#000000",
          "draworder":"topdown",
          "name":"DEATH",
-         "objects":[
-                {
-                 "height":69,
-                 "id":39,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":816.3333,
-                 "x":-8.16665,
-                 "y":1246
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -23,128 +12,51 @@
          "y":0
         }, 
         {
-         "color":"#640a0a",
-         "draworder":"topdown",
-         "name":"WALL",
-         "objects":[
-                {
-                 "height":1248,
-                 "id":9,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":0,
-                 "y":0
-                }, 
-                {
-                 "height":1248,
-                 "id":12,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":768,
-                 "y":0
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "color":"#646400",
-         "draworder":"topdown",
-         "name":"FLOOR",
-         "objects":[
-                {
-                 "height":40,
-                 "id":60,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":142,
-                 "x":348,
-                 "y":966
-                }, 
-                {
-                 "height":40,
-                 "id":62,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":182,
-                 "x":101,
-                 "y":1076
-                }, 
-                {
-                 "height":40,
-                 "id":75,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":142,
-                 "x":537,
-                 "y":790
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "color":"#0a0a64",
-         "draworder":"topdown",
-         "name":"CEILING",
-         "objects":[
-                {
-                 "height":32,
-                 "id":6,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":736,
-                 "x":32,
-                 "y":0
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "color":"#c8c8c8",
+         "color":"#ffffff",
          "draworder":"topdown",
          "name":"RESPAWN",
          "objects":[
                 {
                  "ellipse":true,
-                 "height":64,
-                 "id":49,
+                 "height":72,
+                 "id":78,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":64,
-                 "x":166,
-                 "y":928.666666666667
+                 "width":74,
+                 "x":98,
+                 "y":236
                 }],
-         "opacity":0.790000021457672,
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "color":"#55557f",
+         "draworder":"topdown",
+         "name":"REGULAR",
+         "objects":[
+                {
+                 "height":100,
+                 "id":79,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":200,
+                 "x":50,
+                 "y":1000
+                }],
+         "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
         }],
- "nextobjectid":76,
+ "nextobjectid":84,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",

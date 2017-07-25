@@ -1,5 +1,3 @@
-import {Renderer} from "./sim/Renderer";
-import {Physics} from "./sim/Physics";
 import {DOMUtils} from "./utils/DOMUtils";
 import {Input} from "./input/Input";
 import {CONST} from "./utils/CONST";
@@ -8,6 +6,8 @@ import {Util} from "./utils/Util";
 import {Platform} from "./platform/Platform";
 import {StaticObject} from "./game/StaticObject";
 import {Frog} from "./game/Frog";
+import {Renderer} from "./Renderer";
+import {GEngine} from "./sim/GEngine";
 
 window.onload = () => {
     // console.log(window.location)
@@ -19,7 +19,7 @@ window.onload = () => {
     const resources = window.resources = Resources()
 
     const rend = Renderer(canvas)
-    const phys = Physics()
+    const phys = GEngine()
     const input = Input(canvas, phys.jump, () => PIXI.utils.isMobile.any, rend.debugDrawLayer)
     const gos = []
 
@@ -33,14 +33,14 @@ window.onload = () => {
         gos.forEach(go => go.update())
 
         input.update()
-        phys.update()
+        phys.update(16)
         rend.update()
     }
 
     const respawn = () => {
         if (frog) {
             rend.removeObject(frog)
-            phys.removeObject(frog)
+            phys.removeBody(frog.body)
             gos.splice(gos.indexOf(frog), 1)
             frog.destroy()
         }
@@ -51,8 +51,9 @@ window.onload = () => {
             {idle: 'frog.idle', jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
             respawns.x, respawns.y,
             128, 128, CONST.PMASK.FROG)
+        console.log(frog)
         rend.addObject(frog)
-        phys.addObject(frog)
+        phys.addBody(frog.body)
         gos.push(frog)
     }
     phys.on('death', () => {
@@ -70,7 +71,6 @@ window.onload = () => {
         // build map
         const map = resources.getJSON('map')
         map.layers.forEach(l => {
-
             if (l.name === 'RESPAWN') {
                 l.objects.forEach(resp => {
                     respawnLocations.push({x:resp.x, y: resp.y})
@@ -84,10 +84,10 @@ window.onload = () => {
                     l.name.toLowerCase() + '_' + i.toString(),
                     'pixel',
                     obj.x, obj.y, obj.width, obj.height,
-                    Util.hexColorToRgbInt(l.color), CONST.PMASK[l.name], true
+                    Util.hexColorToRgbInt(l.color), CONST.PMASK[l.name]
                 )
                 rend.addObject(go)
-                phys.addObject(go)
+                phys.addBody(go.body)
                 gos.push(go)
             }
         })

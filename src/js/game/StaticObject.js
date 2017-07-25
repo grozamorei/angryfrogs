@@ -5,7 +5,6 @@ export const StaticObject = (name, texture, x, y, w, h, tint, physicsMask) => {
     const state = {
         /** @type PIXI.Sprite */
         sprite: null,
-        /** @type Matter.Bodies.rectangle */
         body: null
     }
 

@@ -1,7 +1,7 @@
-import {GBody} from "../sim/physics/GBody";
-import {GPoint} from "../sim/physics/GUtils";
+import {GBody} from "../sim/GBody";
+import {GPoint} from "../sim/GUtils";
 
-export const createTemplate = (state, name, texture, x, y, w, h, tint, physicsMask, isStatic) => {
+export const createTemplate = (state, name, texture, x, y, w, h, tint, physicsMask, isStatic, isInteractive = false) => {
     let s = new PIXI.Sprite(window.resources.getTexture(texture))
     s.width = w; s.height = h
     s.x = x + w/2; s.y = y + h/2
@@ -12,6 +12,7 @@ export const createTemplate = (state, name, texture, x, y, w, h, tint, physicsMa
     state.body = GBody(GPoint(x + w/2, y + h/2), GPoint(w/2, h/2))
         .setOption('label', name)
         .setOption('isStatic', isStatic)
+        .setOption('isInteractive', isInteractive)
         .setOption('collisionFilter', physicsMask)
 
     return {
@@ -28,8 +29,8 @@ export const createTemplate = (state, name, texture, x, y, w, h, tint, physicsMa
 export const debugVisualTemplate = (state, w, h, tint, alpha) => {
     const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
     s.width = w; s.height = h
-    s.tint = 0xCC0000
-    s.alpha = 0.3
+    s.tint = tint
+    s.alpha = alpha
     s.anchor.x = s.anchor.y = 0.5
     state.debugSprite = s
 

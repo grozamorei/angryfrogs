@@ -14,7 +14,7 @@ export const Frog = (animations, x, y, w, h, physicsMask) => {
         }
     }
 
-    Object.assign(self, go.createTemplate(state, 'frog', animations.idle, x, y, w, h, 0xFFFFFF, physicsMask, false))
+    Object.assign(self, go.createTemplate(state, 'frog', animations.idle, x, y, w, h, 0xFFFFFF, physicsMask, false, true))
     Object.assign(self, go.debugVisualTemplate(state, w, h, 0xCC0000, 0.3))
 
     return self

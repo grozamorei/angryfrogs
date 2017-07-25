@@ -4,6 +4,8 @@ export const nextUniqueId = () => ++uniqueId
 
 export const INTERSECTION = {NONE: 'none', TOP: 'top', DOWN: 'down', LEFT: 'left', RIGHT: 'right'}
 
+export const approximately = (a, b) => { return Math.abs(a - b) < 0.001 }
+
 export const testBody = (a, b) => {
     const axisCollision = (bounds) => {
         bounds.sort((s1, s2) => {
@@ -11,8 +13,10 @@ export const testBody = (a, b) => {
             if (s1.bound > s2.bound) return -1
             return 0
         })
-        // console.log('bounds sort: ', bounds)
-        if (bounds[0].body !== bounds[1].body) {// collision!
+
+        // console.log(bounds[1].bound, bounds[2].bound, approximately(bounds[1].bound, bounds[2].bound))
+        if (bounds[0].body !== bounds[1].body || // offset collision
+            approximately(bounds[1].bound, bounds[2].bound)) { // almost perfect collision
             return {
                 test: true,
                 firstBody: bounds[0].body,
@@ -33,24 +37,30 @@ export const testBody = (a, b) => {
     // console.log('x collision: ', xCollision)
     // console.log('y collision: ', yCollision)
 
-    if (!xCollision.test && !yCollision.test) return false
+    if (!xCollision.test || !yCollision.test) return false
     if (xCollision.penetration < yCollision.penetration) { // collision on X axis
         return {
             bodyA: xCollision.firstBody === a ? INTERSECTION.RIGHT : INTERSECTION.LEFT,
-            bodyB: xCollision.firstBody === b ? INTERSECTION.RIGHT : INTERSECTION.LEFT
+            bodyB: xCollision.firstBody === b ? INTERSECTION.RIGHT : INTERSECTION.LEFT,
+            penetration: xCollision.penetration
         }
     } else { // collision on Y axis
         return {
             bodyA: yCollision.firstBody === a ? INTERSECTION.DOWN : INTERSECTION.TOP,
-            bodyB: yCollision.firstBody === b ? INTERSECTION.DOWN : INTERSECTION.TOP
+            bodyB: yCollision.firstBody === b ? INTERSECTION.DOWN : INTERSECTION.TOP,
+            penetration: yCollision.penetration
         }
     }
 }
 
 
 export const GPoint = (x, y) => {
+    let xPos = x; let yPos = y
     return {
-        get x() { return x },
-        get y() { return y }
+        get x() { return xPos },
+        set x(value) { xPos = value },
+        get y() { return yPos },
+        set y(value) { yPos = value },
+        toString() { return 'x: ' + xPos + '; y: ' + yPos }
     }
 }
