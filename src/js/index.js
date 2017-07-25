@@ -17,15 +17,15 @@ window.onload = () => {
     document.body.appendChild(canvas)
 
     const resources = window.resources = Resources()
-
     const rend = Renderer(canvas)
     const phys = GEngine()
-    const input = Input(canvas, () => PIXI.utils.isMobile.any, rend.debugDrawLayer)
+    const input = Input(canvas, rend.debugDrawLayer)
     const gos = []
 
     const respawnLocations = []
     let frog = null
 
+    let frameCounter = 0
     const gameLoop = () => {
         requestAnimationFrame(gameLoop)
 
@@ -33,7 +33,9 @@ window.onload = () => {
         gos.forEach(go => go.update())
 
         input.update()
-        phys.update(16)
+
+        phys.update(16, frameCounter++)
+
         rend.update()
     }
 
@@ -43,7 +45,7 @@ window.onload = () => {
         } else {
             if (vector.y > 0) return
             vector.y /= 15; vector.y = Math.max(-6, vector.y)
-            vector.x = vector.x > 0 ? 300 : -300
+            vector.x *= 100; vector.x = vector.x > 0 ? Math.min(300, vector.x) : Math.max(-300, vector.x)
             // console.log(vector)
             phys.applyForce(frog.body.id, vector)
         }
@@ -62,7 +64,7 @@ window.onload = () => {
         frog = Frog(
             {idle: 'frog.idle', jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
             respawns.x, respawns.y,
-            128, 128, CONST.PMASK.FROG)
+            160, 160, CONST.PMASK.FROG)
         console.log(frog)
         rend.addObject(frog)
         phys.addBody(frog.body)

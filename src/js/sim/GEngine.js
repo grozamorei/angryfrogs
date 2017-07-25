@@ -5,11 +5,11 @@ import {INTERSECTION} from "./GUtils";
 export const GEngine = () => {
 
     const gravity = 13
+    const wallGravity = gravity * 0.92
 
     const staticBodies = new Map()
     const movingBodies = new Map()
 
-    const prevCollisionsCache = {}
     const self = {
         addBody: (value) => {
             if (value.isStatic) {
@@ -27,32 +27,35 @@ export const GEngine = () => {
             movingBodies.get(bodyId).velocity.x = force.x
             movingBodies.get(bodyId).velocity.y = force.y
         },
-        update: (dt) => {
+        update: (dt, currentFrame) => {
             dt /= 1000 // to seconds
 
             // apply all forces
             movingBodies.forEach(b => {
-                if (b.collisions[INTERSECTION.DOWN].mask === 0 || b.velocity.y < 0) {
-                    const startVelY = b.velocity.y
-                    let currentVelY = startVelY + gravity * dt
-                    const path = (((currentVelY*currentVelY) - (startVelY*startVelY)) / 2*gravity)
-                    b.velocity.y = currentVelY
-                    b.center.y += path
+                //
+                // falling down with acceleration
+                let g = 0
+                if (b.collisions.length > 0 && b.velocity.x === 0 && b.velocity.y > 0) {
+                    g = wallGravity
+                } else {
+                    g = gravity
                 }
-                if (b.velocity.x !== 0) {
-                    b.center.x += b.velocity.x * dt
-                }
+
+                const startVelY = b.velocity.y
+                let currentVelY = startVelY + g * dt
+                const path = (((currentVelY*currentVelY) - (startVelY*startVelY)) / 2*g)
+                b.velocity.y = currentVelY
+                b.center.y += path
+
+                //
+                // moving sideways linearly
+                b.center.x += b.velocity.x * dt
             })
 
-            // console.log(movingBodies.forEach(a=>console.log(a.collisions.down)))
+            // apply collision responses
             movingBodies.forEach(a => {
-                prevCollisionsCache.top = a.collisions.top.mask
-                prevCollisionsCache.down = a.collisions.down.mask
-                prevCollisionsCache.left = a.collisions.left.mask
-                prevCollisionsCache.right = a.collisions.right.mask
-
-                a.clearCollisionMask()
                 staticBodies.forEach(b => {
+
                     const result = GUtils.testBody(a, b)
                     if (!result) return
 
@@ -61,20 +64,59 @@ export const GEngine = () => {
                             self.emit('death');
                             break
                         case CONST.PMASK.REGULAR:
-                            a.collisions[result.bodyA].mask = b.collisionMask
-                            if (prevCollisionsCache[result.bodyA] > 0) {
-                                a.collisions[result.bodyA].frame += 1
-                            } else {
-                                a.collisions[result.bodyA].frame = 0
+
+                            //
+                            // determining entering collisions
+                            let collisionEnter = true
+                            a.collisions.forEach(c => {
+                                if (c.mask === b.collisionMask) {
+                                    c.frame = currentFrame
+                                    collisionEnter = false
+                                }
+                            })
+                            if (collisionEnter) {
+                                console.log('entering collision: ', b.label, currentFrame, result.bodyB, a.velocity.toString())
+                                a.collisions.push({id: b.id, mask: b.collisionMask, frame: currentFrame})
+
+                                if (result.bodyB !== INTERSECTION.TOP) {
+                                    if (b.radius.y < a.radius.y / 2) { // fly trough the thin platform
+                                        a.responseLock(b.id)
+                                    }
+                                }
+                            }
+
+                            if (!a.haveResponseLock(b.id)) {
                                 if (result.bodyA === INTERSECTION.DOWN) {
                                     a.center.y -= result.penetration
                                     a.velocity.y = a.velocity.x = 0
+                                }
+                                if (result.bodyA === INTERSECTION.TOP) {
+                                    a.center.y += result.penetration
+                                    a.velocity.y = -a.velocity.y/2
+                                }
+                                if (result.bodyA === INTERSECTION.RIGHT) {
+                                    a.center.x -= result.penetration
+                                    a.velocity.x = 0
+                                }
+                                if (result.bodyA === INTERSECTION.LEFT) {
+                                    a.center.x += result.penetration
+                                    a.velocity.x = 0
                                 }
                             }
                             break
                     }
                 })
-                a.clearCollisionFrame()
+            })
+
+            // swipe previous collisions
+            movingBodies.forEach(a => {
+                for (let i = a.collisions.length-1; i >= 0; i--) {
+                    if (a.collisions[i].frame < currentFrame) {
+                        const old = a.collisions.splice(i, 1)
+                        console.log('ending collision: ', staticBodies.get(old[0].id).label, currentFrame, a.velocity.toString())
+                        a.responseUnlock(old[0].id)
+                    }
+                }
             })
         }
     }

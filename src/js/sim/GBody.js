@@ -1,4 +1,4 @@
-import {GPoint, INTERSECTION, nextUniqueId} from "./GUtils";
+import {GPoint, nextUniqueId} from "./GUtils";
 export const GBody = (center, halfsizes) => {
 
     const state = {
@@ -10,11 +10,8 @@ export const GBody = (center, halfsizes) => {
     const id = nextUniqueId()
 
     const velocity = GPoint(0, 0)
-    const collisions = {}
-    collisions[INTERSECTION.TOP] = {mask: 0, frame: -1}
-    collisions[INTERSECTION.DOWN] = {mask: 0, frame: -1}
-    collisions[INTERSECTION.LEFT] = {mask: 0, frame: -1}
-    collisions[INTERSECTION.RIGHT] = {mask: 0, frame: -1}
+    const collisions = []
+    let lock = []
 
     const self = {
         get id() { return id },
@@ -38,17 +35,12 @@ export const GBody = (center, halfsizes) => {
         },
         get velocity() { return velocity },
         get collisions() { return collisions },
-        clearCollisionMask() {
-            collisions[INTERSECTION.TOP].mask = 0
-            collisions[INTERSECTION.DOWN].mask = 0
-            collisions[INTERSECTION.LEFT].mask = 0
-            collisions[INTERSECTION.RIGHT].mask = 0
+        haveResponseLock(bodyId) { return lock.indexOf(bodyId) !== -1 },
+        responseLock(bodyId) {
+            lock.push(bodyId)
         },
-        clearCollisionFrame() {
-            collisions[INTERSECTION.TOP].frame = collisions[INTERSECTION.TOP].mask === 0 ? -1 : collisions[INTERSECTION.TOP].frame
-            collisions[INTERSECTION.DOWN].frame = collisions[INTERSECTION.DOWN].mask === 0 ? -1 : collisions[INTERSECTION.DOWN].frame
-            collisions[INTERSECTION.LEFT].frame = collisions[INTERSECTION.LEFT].mask === 0 ? -1 : collisions[INTERSECTION.LEFT].frame
-            collisions[INTERSECTION.RIGHT].frame = collisions[INTERSECTION.RIGHT].mask === 0 ? -1 : collisions[INTERSECTION.RIGHT].frame
+        responseUnlock(bodyId) {
+            lock.splice(lock.indexOf(bodyId), 1)
         }
     }
     return self

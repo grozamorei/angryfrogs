@@ -1,6 +1,5 @@
 import {emitterTemplate} from "../utils/EmitterBehaviour";
-export const Input = (canvas, isMobile, debug) => {
-
+export const Input = (canvas, debug) => {
     const emitter = {}
     const self =  {
         update: () => {}
@@ -8,15 +7,11 @@ export const Input = (canvas, isMobile, debug) => {
     Object.assign(self, emitterTemplate(emitter))
 
     const getX = (e) => {
-        if (isMobile()) {
-            return e.touches.item(0).clientX
-        }
+        if ('touches' in e) return e.touches.item(0).clientX
         return e.clientX
     }
     const getY = (e) => {
-        if (isMobile()) {
-            return e.touches.item(0).clientY
-        }
+        if ('touches' in e) return e.touches.item(0).clientY
         return e.clientY
     }
 
@@ -56,6 +51,20 @@ export const Input = (canvas, isMobile, debug) => {
     canvas.onmousedown = onTouchStart
     canvas.onmousemove = onTouchMove
     canvas.onmouseup = onTouchEnd
+
+    window.onkeypress = (e) => {
+        e.preventDefault()
+        // console.log(e.keyCode)
+        if (e.keyCode === 119) {
+            self.emit('touchEnded', {x: 0, y: -100})
+        }
+        if (e.keyCode === 97) {
+            self.emit('touchEnded', {x: -3, y: -100})
+        }
+        if (e.keyCode === 100) {
+            self.emit('touchEnded', {x: 3, y: -100})
+        }
+    }
 
     return self
 }

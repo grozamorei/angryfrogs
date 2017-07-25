@@ -19,7 +19,8 @@ export const testBody = (a, b) => {
             approximately(bounds[1].bound, bounds[2].bound)) { // almost perfect collision
             return {
                 test: true,
-                firstBody: bounds[0].body,
+                firstBody: bounds[0].body.id,
+                secondBody: bounds[3].body.id,
                 penetration: bounds[2].bound - bounds[1].bound
             }
         }
@@ -40,14 +41,18 @@ export const testBody = (a, b) => {
     if (!xCollision.test || !yCollision.test) return false
     if (xCollision.penetration < yCollision.penetration) { // collision on X axis
         return {
-            bodyA: xCollision.firstBody === a ? INTERSECTION.RIGHT : INTERSECTION.LEFT,
-            bodyB: xCollision.firstBody === b ? INTERSECTION.RIGHT : INTERSECTION.LEFT,
+            bodyA: xCollision.firstBody === a.id ? INTERSECTION.RIGHT : INTERSECTION.LEFT,
+            bodyAid: xCollision.firstBody,
+            bodyB: xCollision.firstBody === b.id ? INTERSECTION.RIGHT : INTERSECTION.LEFT,
+            bodyBid: xCollision.secondBody,
             penetration: xCollision.penetration
         }
     } else { // collision on Y axis
         return {
-            bodyA: yCollision.firstBody === a ? INTERSECTION.DOWN : INTERSECTION.TOP,
-            bodyB: yCollision.firstBody === b ? INTERSECTION.DOWN : INTERSECTION.TOP,
+            bodyA: yCollision.firstBody === a.id ? INTERSECTION.DOWN : INTERSECTION.TOP,
+            bodyAid: yCollision.firstBody,
+            bodyB: yCollision.firstBody === b.id ? INTERSECTION.DOWN : INTERSECTION.TOP,
+            bodyBid: yCollision.secondBody,
             penetration: yCollision.penetration
         }
     }
