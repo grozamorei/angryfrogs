@@ -90,7 +90,7 @@ export const GEngine = () => {
                                 }
                             })
                             if (collisionEnter) {
-                                console.log('entering collision: ', b.label, currentFrame, result.bodyB, a.velocity.toString())
+                                // console.log('entering collision: ', b.label, currentFrame, result.bodyB, a.velocity.toString())
                                 a.collisions.push({id: b.id, mask: b.collisionMask, frame: currentFrame})
 
                                 if (result.bodyB !== INTERSECTION.TOP) {
@@ -132,7 +132,7 @@ export const GEngine = () => {
                 for (let i = a.collisions.length-1; i >= 0; i--) {
                     if (a.collisions[i].frame < currentFrame) {
                         const old = a.collisions.splice(i, 1)
-                        console.log('ending collision: ', staticBodies.get(old[0].id).label, currentFrame, a.velocity.toString())
+                        // console.log('ending collision: ', staticBodies.get(old[0].id).label, currentFrame, a.velocity.toString())
                         a.responseUnlock(old[0].id)
                         self.emit(GEngineE.AIRBORNE)
                     }

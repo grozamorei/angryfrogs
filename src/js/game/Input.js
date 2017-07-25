@@ -59,10 +59,10 @@ export const Input = (canvas, debug) => {
             self.emit('touchEnded', {x: 0, y: -100})
         }
         if (e.keyCode === 97) {
-            self.emit('touchEnded', {x: -3, y: -100})
+            self.emit('touchEnded', {x: -5, y: -100})
         }
         if (e.keyCode === 100) {
-            self.emit('touchEnded', {x: 3, y: -100})
+            self.emit('touchEnded', {x: 5, y: -100})
         }
     }
 

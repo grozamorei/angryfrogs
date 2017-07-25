@@ -7,10 +7,17 @@ export const Frog = (animations, x, y, w, h, physicsMask) => {
         body: null
     }
 
+    let lastAnimationKey = 'idle'
     const self = {
         update: () => {
             state.sprite.x = state.debugSprite.x = state.body.center.x
             state.sprite.y = state.debugSprite.y = state.body.center.y
+        },
+        get lastAnimation() { return lastAnimationKey },
+        updateAnimation(name, faceDir) {
+            lastAnimationKey = name
+            state.sprite.texture = window.resources.getTexture(animations[name])
+            state.sprite.scale.x = faceDir * Math.abs(state.sprite.scale.x)
         }
     }
 
