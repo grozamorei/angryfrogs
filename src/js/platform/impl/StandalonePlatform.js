@@ -1,11 +1,6 @@
-import * as pl from "../PlatformBehaviours";
+import * as pl from "../PlatformTools";
 
-export const StandalonePlatformDetector = {
-    isThisPlatform: () => true,
-    createPlatform: () => StandalonePlatform()
-}
-
-const StandalonePlatform = () => {
+export const StandalonePlatform = () => {
 
     const state = {
         id: 'standalone',
@@ -16,8 +11,7 @@ const StandalonePlatform = () => {
 
     }
 
-    Object.assign(self, pl.platformGetId(state))
-    Object.assign(self, pl.platformGetUserName(state))
+    Object.assign(self, pl.platformTemplate(state))
 
     return self
 }

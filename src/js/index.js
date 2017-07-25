@@ -1,17 +1,16 @@
-import {DOMUtils} from "./utils/DOMUtils";
-import {Input} from "./input/Input";
-import {CONST} from "./utils/CONST";
-import {Resources} from "./utils/Resources";
-import {Util} from "./utils/Util";
-import {Platform} from "./platform/Platform";
-import {StaticObject} from "./game/StaticObject";
-import {Renderer} from "./Renderer";
-import {GEngine, GEngineE} from "./sim/GEngine";
-import {Controller} from "./Controller";
+import {DOMUtils} from "./game/utils/DOMUtils";
+import {Input} from "./game/Input";
+import {Resources} from "./game/utils/Resources";
+import {Util} from "./game/utils/Util";
+import {CreateDetectedPlatform} from "./platform/Platform";
+import {StaticObject} from "./game/go/StaticObject";
+import {Renderer} from "./game/Renderer";
+import {GEngine, GEngineE, PMASK} from "./game/physics/GEngine";
+import {Controller} from "./game/Controller";
 
 window.onload = () => {
     // console.log(window.location)
-    const platform = Platform()
+    const platform = CreateDetectedPlatform()
 
     const canvas = DOMUtils.createElement('canvas', 'gameCanvas')
     document.body.appendChild(canvas)
@@ -63,7 +62,7 @@ window.onload = () => {
                     l.name.toLowerCase() + '_' + i.toString(),
                     'pixel',
                     obj.x, obj.y, obj.width, obj.height,
-                    Util.hexColorToRgbInt(l.color), CONST.PMASK[l.name]
+                    Util.hexColorToRgbInt(l.color), PMASK[l.name]
                 )
                 rend.addObject(go)
                 phys.addBody(go.body)

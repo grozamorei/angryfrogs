@@ -1,5 +1,5 @@
-import {GBody} from "../sim/GBody";
-import {GPoint} from "../sim/GUtils";
+import {GBody} from "../physics/GBody";
+import {GPoint} from "../physics/GUtils";
 
 export const createTemplate = (state, name, texture, x, y, w, h, tint, physicsMask, isStatic, isInteractive = false) => {
     let s = new PIXI.Sprite(window.resources.getTexture(texture))

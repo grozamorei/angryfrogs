@@ -1,6 +1,5 @@
 import * as GUtils from "./GUtils";
 import {emitterTemplate} from "../utils/EmitterBehaviour";
-import {CONST} from "../utils/CONST";
 import {INTERSECTION} from "./GUtils";
 
 export const GEngineE = {
@@ -9,6 +8,12 @@ export const GEngineE = {
     WALLED: 'walled',
     HEADHIT: 'headHit',
     AIRBORNE: 'airborne'
+}
+
+export const PMASK = {
+    FROG: 0x0001,
+    DEATH: 0x0002,
+    REGULAR: 0x0004
 }
 
 export const GEngine = () => {
@@ -70,10 +75,10 @@ export const GEngine = () => {
                     if (!result) return
 
                     switch (b.collisionMask) {
-                        case CONST.PMASK.DEATH:
+                        case PMASK.DEATH:
                             self.emit('death');
                             break
-                        case CONST.PMASK.REGULAR:
+                        case PMASK.REGULAR:
 
                             //
                             // determining entering collisions

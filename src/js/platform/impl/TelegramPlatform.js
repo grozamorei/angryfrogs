@@ -1,19 +1,8 @@
-import * as pl from "../PlatformBehaviours";
-import {Util} from "../../utils/Util";
+import * as pl from "../PlatformTools";
 
-export const TelegramPlatformDetector = {
-    isThisPlatform: () => {
-        if ('TelegramGameProxy' in window) {
-            return 'tgShareScoreUrl' in window.TelegramGameProxy.initParams
-        }
-        return false
-    },
-    createPlatform: () => TelegramPlatform()
-}
+export const TelegramPlatform = () => {
 
-const TelegramPlatform = () => {
-
-    const platformArgs = Util.parseUrlVars(window.location.search)
+    const platformArgs = pl.parseUrlVars(window.location.search)
 
     const state = {
         id: 'telegram',
@@ -25,9 +14,7 @@ const TelegramPlatform = () => {
 
     }
 
-    Object.assign(self, pl.platformGetId(state))
-    Object.assign(self, pl.platformGetUserName(state))
-    Object.assign(self, pl.platformGetUserData(state))
+    Object.assign(self, pl.platformTemplate(state))
 
     return self
 }

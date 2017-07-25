@@ -15,16 +15,6 @@ export const Util = {
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
 
-    parseUrlVars: (searchQuery) => {
-        const queryParts = searchQuery.substring(1).split('&')
-        const resultObj = {}
-        queryParts.forEach(qp => {
-            const objParts = qp.split('=')
-            resultObj[objParts[0]] = decodeURIComponent(objParts[1])
-        })
-        return resultObj
-    },
-
     postRequest: (url, strData) => {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest()

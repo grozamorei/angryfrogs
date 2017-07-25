@@ -1,29 +1,39 @@
-import {TelegramPlatformDetector} from "./impl/TelegramPlatform";
-import {StandalonePlatformDetector} from "./impl/StandalonePlatform";
+import {TelegramPlatform} from "./impl/TelegramPlatform";
+import {StandalonePlatform} from "./impl/StandalonePlatform";
 
-export const Platform = () => {
+const TelegramPlatformDetector = {
+    isThisPlatform: () => {
+        if ('TelegramGameProxy' in window) {
+            return 'tgShareScoreUrl' in window.TelegramGameProxy.initParams
+        }
+        return false
+    },
+    createPlatform: () => TelegramPlatform()
+}
 
-    let current = null
+const StandalonePlatformDetector = {
+    isThisPlatform: () => true,
+    createPlatform: () => StandalonePlatform()
+}
+
+export const CreateDetectedPlatform = () => {
+    let platform = null
     const detectors = [TelegramPlatformDetector, StandalonePlatformDetector]
 
     let dCurrent = 0
-    while (current === null && dCurrent < detectors.length) {
+    while (platform === null && dCurrent < detectors.length) {
         if (detectors[dCurrent].isThisPlatform()) {
-            current = detectors[dCurrent].createPlatform()
+            platform = detectors[dCurrent].createPlatform()
             break
         }
         dCurrent += 1
     }
 
-    if (current === null) {
+    if (platform === null) {
         throw 'Could not detect any platform, lalka'
     }
 
-    console.log('initialized with platform ' + current.id)
+    console.log('initialized with platform ' + platform.id)
 
-    return {
-        get current() { return current.id },
-        get userName() { return current.userName },
-        get userData() { return current.userData }
-    }
+    return platform
 }

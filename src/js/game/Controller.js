@@ -1,6 +1,6 @@
 import {Util} from "./utils/Util";
-import {Frog} from "./game/Frog";
-import {CONST} from "./utils/CONST";
+import {Frog} from "./go/Frog";
+import {PMASK} from "./physics/GEngine";
 
 export const Controller = (renderer, physics, input, gos) => {
 
@@ -31,7 +31,7 @@ export const Controller = (renderer, physics, input, gos) => {
             frog = Frog(
                 {idle: 'frog.idle', jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
                 randomRespawn.x, randomRespawn.y,
-                160, 160, CONST.PMASK.FROG)
+                160, 160, PMASK.FROG)
             console.log(frog)
             renderer.addObject(frog)
             physics.addBody(frog.body)

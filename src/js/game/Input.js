@@ -1,4 +1,4 @@
-import {emitterTemplate} from "../utils/EmitterBehaviour";
+import {emitterTemplate} from "./utils/EmitterBehaviour";
 export const Input = (canvas, debug) => {
     const emitter = {}
     const self =  {
