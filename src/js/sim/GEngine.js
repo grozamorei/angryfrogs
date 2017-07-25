@@ -2,6 +2,15 @@ import * as GUtils from "./GUtils";
 import {emitterTemplate} from "../utils/EmitterBehaviour";
 import {CONST} from "../utils/CONST";
 import {INTERSECTION} from "./GUtils";
+
+export const GEngineE = {
+    DEATH: 'death',
+    GROUNDED: 'grounded',
+    WALLED: 'walled',
+    HEADHIT: 'headHit',
+    AIRBORNE: 'airborne'
+}
+
 export const GEngine = () => {
 
     const gravity = 13
@@ -52,6 +61,7 @@ export const GEngine = () => {
                 b.center.x += b.velocity.x * dt
             })
 
+
             // apply collision responses
             movingBodies.forEach(a => {
                 staticBodies.forEach(b => {
@@ -89,18 +99,22 @@ export const GEngine = () => {
                                 if (result.bodyA === INTERSECTION.DOWN) {
                                     a.center.y -= result.penetration
                                     a.velocity.y = a.velocity.x = 0
+                                    collisionEnter && self.emit(GEngineE.GROUNDED)
                                 }
                                 if (result.bodyA === INTERSECTION.TOP) {
                                     a.center.y += result.penetration
                                     a.velocity.y = -a.velocity.y/2
+                                    collisionEnter && self.emit(GEngineE.HEADHIT)
                                 }
                                 if (result.bodyA === INTERSECTION.RIGHT) {
                                     a.center.x -= result.penetration
                                     a.velocity.x = 0
+                                    collisionEnter && self.emit(GEngineE.WALLED)
                                 }
                                 if (result.bodyA === INTERSECTION.LEFT) {
                                     a.center.x += result.penetration
                                     a.velocity.x = 0
+                                    collisionEnter && self.emit(GEngineE.WALLED)
                                 }
                             }
                             break
@@ -115,6 +129,7 @@ export const GEngine = () => {
                         const old = a.collisions.splice(i, 1)
                         console.log('ending collision: ', staticBodies.get(old[0].id).label, currentFrame, a.velocity.toString())
                         a.responseUnlock(old[0].id)
+                        self.emit(GEngineE.AIRBORNE)
                     }
                 }
             })

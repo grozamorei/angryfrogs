@@ -5,9 +5,9 @@ import {Resources} from "./utils/Resources";
 import {Util} from "./utils/Util";
 import {Platform} from "./platform/Platform";
 import {StaticObject} from "./game/StaticObject";
-import {Frog} from "./game/Frog";
 import {Renderer} from "./Renderer";
-import {GEngine} from "./sim/GEngine";
+import {GEngine, GEngineE} from "./sim/GEngine";
+import {Controller} from "./Controller";
 
 window.onload = () => {
     // console.log(window.location)
@@ -21,9 +21,7 @@ window.onload = () => {
     const phys = GEngine()
     const input = Input(canvas, rend.debugDrawLayer)
     const gos = []
-
-    const respawnLocations = []
-    let frog = null
+    const controller = Controller(rend, phys, input, gos)
 
     let frameCounter = 0
     const gameLoop = () => {
@@ -31,53 +29,20 @@ window.onload = () => {
 
         // do routines
         gos.forEach(go => go.update())
-
         input.update()
-
         phys.update(16, frameCounter++)
-
         rend.update()
     }
 
-    input.on('touchEnded', (vector) => {
-        if (Number.isNaN(vector.x) || Number.isNaN(vector.y)) {
-            console.log('CLICK')
-        } else {
-            if (vector.y > 0) return
-            vector.y /= 15; vector.y = Math.max(-6, vector.y)
-            vector.x *= 100; vector.x = vector.x > 0 ? Math.min(300, vector.x) : Math.max(-300, vector.x)
-            // console.log(vector)
-            phys.applyForce(frog.body.id, vector)
-        }
-    })
-
-    const respawn = () => {
-        if (frog) {
-            rend.removeObject(frog)
-            phys.removeBody(frog.body.id)
-            gos.splice(gos.indexOf(frog), 1)
-            frog.destroy()
-        }
-
-        const respawns = respawnLocations[Util.getRandomInt(0, respawnLocations.length-1)]
-
-        frog = Frog(
-            {idle: 'frog.idle', jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
-            respawns.x, respawns.y,
-            160, 160, CONST.PMASK.FROG)
-        console.log(frog)
-        rend.addObject(frog)
-        phys.addBody(frog.body)
-        gos.push(frog)
-    }
-    phys.on('death', () => {
+    const respawnLocations = []
+    phys.on(GEngineE.DEATH, () => {
         let data = Object.assign({score: Util.getRandomInt(1, 10000)}, platform.userData)
         console.log(data.score)
         Util.postRequest(window.location.protocol + '//' + window.location.hostname + ':8443/setScore', JSON.stringify(data)).then(
             () => { console.log ('URL REQUEST: SUCCESS') },
             () => {console.log('URL REQUEST: FAILED')}
         )
-        respawn()
+        controller.respawn(respawnLocations)
     })
 
     const startGame = () => {
@@ -106,7 +71,7 @@ window.onload = () => {
             }
         })
 
-        respawn()
+        controller.respawn(respawnLocations)
 
         requestAnimationFrame(gameLoop)
     }
