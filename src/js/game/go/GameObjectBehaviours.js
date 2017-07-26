@@ -1,16 +1,27 @@
 import {GBody} from "../physics/GBody";
 import {GPoint} from "../physics/GUtils";
 
-export const createTemplate = (state, name, texture, x, y, w, h, tint, physicsMask, isStatic, isInteractive = false) => {
+export const createTemplate = (state, name, texture, x, y, w, h, tint, physicsMask, isStatic, isInteractive = false, collider = undefined) => {
     let s = new PIXI.Sprite(window.resources.getTexture(texture))
     s.width = w; s.height = h
     s.x = x + w/2; s.y = y + h/2
     s.tint = tint
-    s.anchor.x = s.anchor.y = 0.5
     state.sprite = s
 
-    state.body = GBody(GPoint(x + w/2, y + h/2), GPoint(w/2, h/2))
-        .setOption('label', name)
+    if (collider) {
+        state.body = GBody(
+            GPoint(x + collider.x + collider.w/2, y + collider.y + collider.h/2),
+            GPoint(collider.w/2, collider.h/2)
+        )
+        s.anchor.x = (collider.x + collider.w/2) / w
+        s.anchor.y = (collider.y + collider.h/2) / h
+        console.log(s.anchor)
+    } else {
+        state.body = GBody(GPoint(x + w/2, y + h/2), GPoint(w/2, h/2))
+        s.anchor.x = s.anchor.y = 0.5
+    }
+
+    state.body.setOption('label', name)
         .setOption('isStatic', isStatic)
         .setOption('isInteractive', isInteractive)
         .setOption('collisionFilter', physicsMask)

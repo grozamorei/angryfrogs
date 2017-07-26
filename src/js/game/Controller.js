@@ -67,10 +67,9 @@ export const Controller = (renderer, physics, input, gos) => {
 
             const randomRespawn = respawnLocations[Util.getRandomInt(0, respawnLocations.length-1)]
 
-            frog = Frog(
-                {idle: 'frog.idle', jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
+            frog = Frog({idle: 'frog.idle',jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
                 randomRespawn.x, randomRespawn.y,
-                160, 160, PMASK.FROG)
+                256, 256, PMASK.FROG, {x: 68, y: 70, w: 120, h: 186})
             console.log(frog)
             renderer.addObject(frog)
             physics.addBody(frog.body)

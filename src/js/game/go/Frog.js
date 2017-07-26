@@ -1,5 +1,5 @@
 import * as go from "./GameObjectBehaviours"
-export const Frog = (animations, x, y, w, h, physicsMask) => {
+export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
     const state = {
         /** @type PIXI.Sprite */
         sprite: null,
@@ -21,8 +21,8 @@ export const Frog = (animations, x, y, w, h, physicsMask) => {
         }
     }
 
-    Object.assign(self, go.createTemplate(state, 'frog', animations.idle, x, y, w, h, 0xFFFFFF, physicsMask, false, true))
-    Object.assign(self, go.debugVisualTemplate(state, w, h, 0xCC0000, 0.3))
+    Object.assign(self, go.createTemplate(state, 'frog', animations.idle, x, y, w, h, 0xFFFFFF, physicsMask, false, true, collider))
+    Object.assign(self, go.debugVisualTemplate(state, collider.w, collider.h, 0xCC0000, 0))
 
     return self
 }

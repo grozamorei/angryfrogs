@@ -158,7 +158,7 @@ export const GEngine = () => {
                         }
                         if (c.intersection === INTERSECTION.TOP) {
                             a.center.y += c.penetration
-                            a.velocity.y = -a.velocity.y/2
+                            a.velocity.y = -a.velocity.y/3
                             c.justEntered && self.emit(GEngineE.HEADHIT)
                             console.log('headhit')
                         }
