@@ -25,6 +25,7 @@ export const Controller = (renderer, physics, input, gos) => {
     })
 
     physics.on(GEngineE.WALLED, () => {
+        // console.log('walled')
         frog.updateAnimation('walljump', lastFacing)
         canJump = false
         canWallJump = true
@@ -45,6 +46,7 @@ export const Controller = (renderer, physics, input, gos) => {
                 physics.applyForce(frog.body.id, vector)
             }
             if (canWallJump) {
+                if (vector.x === 0) return
                 if (lastFacing > 0 && vector.x > 0) return
                 if (lastFacing < 0 && vector.x < 0) return
                 vector.y /= 15; vector.y = Math.max(-5, vector.y)

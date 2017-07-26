@@ -83,44 +83,27 @@ export const GEngine = () => {
                             //
                             // determining entering collisions
                             let collisionEnter = true
-                            a.collisions.forEach(c => {
-                                if (c.mask === b.collisionMask) {
+                            a.collisions.forEach((c, id)=> {
+                                if (id === b.id) {
                                     c.frame = currentFrame
                                     collisionEnter = false
                                 }
                             })
                             if (collisionEnter) {
                                 // console.log('entering collision: ', b.label, currentFrame, result.bodyB, a.velocity.toString())
-                                a.collisions.push({id: b.id, mask: b.collisionMask, frame: currentFrame})
+                                a.collisions.set(b.id, {
+                                    justEntered: true, intersection: result.bodyA, penetration: result.penetration,
+                                    mask: b.collisionMask, frame: currentFrame
+                                })
 
                                 if (result.bodyB !== INTERSECTION.TOP) {
                                     if (b.radius.y < a.radius.y / 2) { // fly trough the thin platform
                                         a.responseLock(b.id)
                                     }
                                 }
-                            }
-
-                            if (!a.haveResponseLock(b.id)) {
-                                if (result.bodyA === INTERSECTION.DOWN) {
-                                    a.center.y -= result.penetration
-                                    a.velocity.y = a.velocity.x = 0
-                                    collisionEnter && self.emit(GEngineE.GROUNDED)
-                                }
-                                if (result.bodyA === INTERSECTION.TOP) {
-                                    a.center.y += result.penetration
-                                    a.velocity.y = -a.velocity.y/2
-                                    collisionEnter && self.emit(GEngineE.HEADHIT)
-                                }
-                                if (result.bodyA === INTERSECTION.RIGHT) {
-                                    a.center.x -= result.penetration
-                                    a.velocity.x = 0
-                                    collisionEnter && self.emit(GEngineE.WALLED)
-                                }
-                                if (result.bodyA === INTERSECTION.LEFT) {
-                                    a.center.x += result.penetration
-                                    a.velocity.x = 0
-                                    collisionEnter && self.emit(GEngineE.WALLED)
-                                }
+                            } else {
+                                a.collisions.get(b.id).penetration = result.penetration
+                                a.collisions.get(b.id).justEntered = false
                             }
                             break
                     }
@@ -129,14 +112,69 @@ export const GEngine = () => {
 
             // swipe previous collisions
             movingBodies.forEach(a => {
-                for (let i = a.collisions.length-1; i >= 0; i--) {
-                    if (a.collisions[i].frame < currentFrame) {
-                        const old = a.collisions.splice(i, 1)
-                        // console.log('ending collision: ', staticBodies.get(old[0].id).label, currentFrame, a.velocity.toString())
-                        a.responseUnlock(old[0].id)
-                        self.emit(GEngineE.AIRBORNE)
+                const remove = []
+                a.collisions.forEach((c, key) => {
+                    if (c.frame < currentFrame) {
+                        remove.push(key)
+                    }
+                })
+                remove.forEach(r => {
+                    // console.log('ending collision: ', a.collisions.get(r).intersection, staticBodies.get(r).label, currentFrame, a.velocity.toString())
+                    a.responseUnlock(r)
+                    a.collisions.delete(r)
+                })
+
+                let locked = false
+                a.collisions.forEach((c, key) => {
+                    if (a.haveResponseLock(key)) {
+                        locked = true
+                    }
+                })
+                if (remove.length > 0 && (locked || a.collisions.size === 0)) {
+                    self.emit(GEngineE.AIRBORNE)
+                }
+
+                if (a.collisions.size === 1 && remove.length > 0) {
+                    // console.log(a.collisions)
+                    const id = a.collisions.entries().next().value[0]
+                    const c = a.collisions.entries().next().value[1]
+                    // console.log(c)
+                    if (c.intersection === INTERSECTION.LEFT || c.intersection === INTERSECTION.RIGHT) {
+                        self.emit(GEngineE.WALLED)
                     }
                 }
+            })
+
+            //
+            // resolve response priority
+            movingBodies.forEach(a => {
+
+                a.collisions.forEach((c, id) => {
+                    if (!a.haveResponseLock(id)) {
+                        if (c.intersection === INTERSECTION.DOWN) {
+                            a.center.y -= c.penetration
+                            a.velocity.y = a.velocity.x = 0
+                            c.justEntered && self.emit(GEngineE.GROUNDED)
+                        }
+                        if (c.intersection === INTERSECTION.TOP) {
+                            a.center.y += c.penetration
+                            a.velocity.y = -a.velocity.y/2
+                            c.justEntered && self.emit(GEngineE.HEADHIT)
+                            console.log('headhit')
+                        }
+                        if (c.intersection === INTERSECTION.RIGHT) {
+                            a.center.x -= c.penetration
+                            a.velocity.x = 0
+                            c.justEntered && self.emit(GEngineE.WALLED)
+                        }
+                        if (c.intersection === INTERSECTION.LEFT) {
+                            a.center.x += c.penetration
+                            a.velocity.x = 0
+                            c.justEntered && self.emit(GEngineE.WALLED)
+                        }
+                    }
+                })
+
             })
         }
     }

@@ -10,7 +10,7 @@ export const GBody = (center, halfsizes) => {
     const id = nextUniqueId()
 
     const velocity = GPoint(0, 0)
-    const collisions = []
+    const collisions = new Map()
     let lock = []
 
     const self = {
@@ -34,12 +34,16 @@ export const GBody = (center, halfsizes) => {
             }
         },
         get velocity() { return velocity },
+        /**
+         * @return {Map}
+         */
         get collisions() { return collisions },
         haveResponseLock(bodyId) { return lock.indexOf(bodyId) !== -1 },
         responseLock(bodyId) {
             lock.push(bodyId)
         },
         responseUnlock(bodyId) {
+            if (!self.haveResponseLock(bodyId)) return
             lock.splice(lock.indexOf(bodyId), 1)
         }
     }
