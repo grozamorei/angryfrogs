@@ -79,6 +79,7 @@ export const Controller = (renderer, physics, input, gos) => {
 
             // console.log(frog.body.center.y, renderer.scroll.y-renderer.size.y)
             if (Math.abs(frog.body.center.y) < renderer.scroll.y-renderer.size.y || frog.body.center.y > 0) {
+                physics.emit('death')
                 self.respawn()
                 return
             }
