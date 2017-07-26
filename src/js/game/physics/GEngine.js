@@ -66,7 +66,6 @@ export const GEngine = () => {
                 b.center.x += b.velocity.x * dt
             })
 
-
             // apply collision responses
             movingBodies.forEach(a => {
                 staticBodies.forEach(b => {
@@ -79,7 +78,6 @@ export const GEngine = () => {
                             self.emit('death');
                             break
                         case PMASK.REGULAR:
-
                             //
                             // determining entering collisions
                             let collisionEnter = true
@@ -97,7 +95,7 @@ export const GEngine = () => {
                                 })
 
                                 if (result.bodyB !== INTERSECTION.TOP) {
-                                    if (b.radius.y < a.radius.y / 2) { // fly trough the thin platform
+                                    if (b.radius.y < a.radius.y * 0.8) { // fly trough the thin platform
                                         a.responseLock(b.id)
                                     }
                                 }
@@ -135,11 +133,9 @@ export const GEngine = () => {
                 }
 
                 if (a.collisions.size === 1 && remove.length > 0) {
-                    // console.log(a.collisions)
                     const id = a.collisions.entries().next().value[0]
                     const c = a.collisions.entries().next().value[1]
-                    // console.log(c)
-                    if (c.intersection === INTERSECTION.LEFT || c.intersection === INTERSECTION.RIGHT) {
+                    if (!a.haveResponseLock(id) && (c.intersection === INTERSECTION.LEFT || c.intersection === INTERSECTION.RIGHT)) {
                         self.emit(GEngineE.WALLED)
                     }
                 }
@@ -160,7 +156,6 @@ export const GEngine = () => {
                             a.center.y += c.penetration
                             a.velocity.y = -a.velocity.y/3
                             c.justEntered && self.emit(GEngineE.HEADHIT)
-                            console.log('headhit')
                         }
                         if (c.intersection === INTERSECTION.RIGHT) {
                             a.center.x -= c.penetration

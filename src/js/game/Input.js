@@ -54,7 +54,7 @@ export const Input = (canvas, debug) => {
 
     window.onkeypress = (e) => {
         e.preventDefault()
-        // console.log(e.keyCode)
+        console.log(e.keyCode)
         if (e.keyCode === 119) {
             self.emit('touchEnded', {x: 0, y: -100})
         }

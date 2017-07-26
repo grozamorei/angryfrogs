@@ -15,6 +15,12 @@ export const Util = {
         return Math.floor(Math.random() * (max - min + 1) + min);
     },
 
+    lerp: (v1, v2, t) => {
+        t = t < 0 ? 0 : t;
+        t = t > 1 ? 1 : t;
+        return v1 + (v2 - v1) * t;
+    },
+
     postRequest: (url, strData) => {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest()

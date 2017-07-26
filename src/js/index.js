@@ -26,16 +26,15 @@ window.onload = () => {
     const gameLoop = () => {
         requestAnimationFrame(gameLoop)
 
-        // do routines
-        gos.forEach(go => go.update())
         input.update()
         phys.update(16, frameCounter++)
+        controller.update()
         rend.update()
     }
 
     const respawnLocations = []
     phys.on(GEngineE.DEATH, () => {
-        let data = Object.assign({score: Util.getRandomInt(1, 10000)}, platform.userData)
+        let data = Object.assign({score: controller.score}, platform.userData)
         console.log(data.score)
         Util.postRequest(window.location.protocol + '//' + window.location.hostname + ':8443/setScore', JSON.stringify(data)).then(
             () => { console.log ('URL REQUEST: SUCCESS') },
@@ -61,7 +60,7 @@ window.onload = () => {
                 const go = StaticObject(
                     l.name.toLowerCase() + '_' + i.toString(),
                     'pixel',
-                    obj.x, obj.y, obj.width, obj.height,
+                    obj.x, obj.y-rend.size.y, obj.width, obj.height,
                     Util.hexColorToRgbInt(l.color), PMASK[l.name]
                 )
                 rend.addObject(go)

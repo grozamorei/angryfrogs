@@ -9,7 +9,7 @@ export const StaticObject = (name, texture, x, y, w, h, tint, physicsMask) => {
     }
 
     const self = {
-        update: () => {}
+        isOutOfBounds: yBound => Math.abs(y + h/2) < yBound,
     }
 
     Object.assign(self, go.createTemplate(state, name, texture, x, y, w, h, tint, physicsMask, true))
