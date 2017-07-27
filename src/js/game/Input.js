@@ -57,13 +57,13 @@ export const Input = (canvas, debug) => {
         e.preventDefault()
         // console.log(e.keyCode)
         if (e.keyCode === 119) {
-            self.emit('touchEnded', {x: 0, y: -100})
+            self.emit('touchEnded', {x: 0, y: -1000})
         }
         if (e.keyCode === 97) {
-            self.emit('touchEnded', {x: -5, y: -100})
+            self.emit('touchEnded', {x: -1000, y: -1000})
         }
         if (e.keyCode === 100) {
-            self.emit('touchEnded', {x: 5, y: -100})
+            self.emit('touchEnded', {x: 1000, y: -1000})
         }
     }
 
