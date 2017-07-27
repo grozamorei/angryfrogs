@@ -33,8 +33,9 @@ export const Input = (canvas, debug) => {
 
         debug.clear()
         debug.lineStyle(2, 0xFF00FF)
-        debug.moveTo(50, 100)
-        debug.lineTo(50 + (lastSeenAt.x - startedAt.x), 100 + (lastSeenAt.y - startedAt.y))
+        debug.drawCircle(700, 100, 90)
+        debug.moveTo(700, 100)
+        debug.lineTo(700 + (lastSeenAt.x - startedAt.x), 100 + (lastSeenAt.y - startedAt.y))
     }
 
     const onTouchEnd = (e) => {
@@ -54,7 +55,7 @@ export const Input = (canvas, debug) => {
 
     window.onkeypress = (e) => {
         e.preventDefault()
-        console.log(e.keyCode)
+        // console.log(e.keyCode)
         if (e.keyCode === 119) {
             self.emit('touchEnded', {x: 0, y: -100})
         }

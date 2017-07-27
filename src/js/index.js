@@ -35,7 +35,7 @@ window.onload = () => {
     const respawnLocations = []
     phys.on(GEngineE.DEATH, () => {
         let data = Object.assign({score: controller.score}, platform.userData)
-        console.log(data.score)
+        console.log('sending score: ', data.score)
         Util.postRequest(window.location.protocol + '//' + window.location.hostname + ':8443/setScore', JSON.stringify(data)).then(
             () => { console.log ('URL REQUEST: SUCCESS') },
             () => {console.log('URL REQUEST: FAILED')}

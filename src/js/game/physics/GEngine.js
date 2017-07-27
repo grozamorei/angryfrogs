@@ -29,7 +29,6 @@ export const GEngine = () => {
             if (value.isStatic) {
                 staticBodies.set(value.id, value)
             } else {
-                console.log('adding body to moving')
                 movingBodies.set(value.id, value)
             }
         },

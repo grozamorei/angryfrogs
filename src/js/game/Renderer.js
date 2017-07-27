@@ -15,6 +15,7 @@ export const Renderer = (canvas) => {
         backgroundColor: 0x817066
     })
     const graphics = new PIXI.Graphics()
+    stage.addChild(graphics)
 
     const resizeCanvas = () => {
         canvasW = Math.max(window.innerWidth || 0, document.documentElement.clientWidth)
@@ -40,7 +41,6 @@ export const Renderer = (canvas) => {
             if ('debugVisual' in go) {
                 scrollContainer.addChild(go.debugVisual)
             }
-            scrollContainer.addChild(graphics)
         },
         removeObject: (go) => {
             scrollContainer.removeChild(go.visual)

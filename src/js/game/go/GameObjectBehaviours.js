@@ -15,7 +15,6 @@ export const createTemplate = (state, name, texture, x, y, w, h, tint, physicsMa
         )
         s.anchor.x = (collider.x + collider.w/2) / w
         s.anchor.y = (collider.y + collider.h/2) / h
-        console.log(s.anchor)
     } else {
         state.body = GBody(GPoint(x + w/2, y + h/2), GPoint(w/2, h/2))
         s.anchor.x = s.anchor.y = 0.5

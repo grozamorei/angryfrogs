@@ -45,7 +45,7 @@ export const Controller = (renderer, physics, input, gos) => {
 
     input.on('touchEnded', (vector) => {
         if (Number.isNaN(vector.x) || Number.isNaN(vector.y)) {
-            console.log('CLICK')
+            // console.log('CLICK')
         } else {
             if (vector.y > 0) return
             if (canJump) {
@@ -91,7 +91,6 @@ export const Controller = (renderer, physics, input, gos) => {
                 renderer.scroll.y = Util.lerp(renderer.scroll.y, renderer.scroll.y + 500 - diff, 0.11)
                 // console.log(checkpoint, renderer.scroll.y)
                 if (renderer.scroll.y - checkpoint > 100) {
-                    console.log('generate!')
                     checkpoint = renderer.scroll.y
 
                     let go
@@ -119,7 +118,6 @@ export const Controller = (renderer, physics, input, gos) => {
                 for (let i = gos.length-1; i >= 0; i--) {
                     const go = gos[i]
                     if (go.isOutOfBounds(renderer.scroll.y-renderer.size.y)) {
-                        console.log(go, 'is out of bounds')
                         gos.splice(i, 1)
                         renderer.removeObject(go)
                         physics.removeBody(go.body.id)
@@ -141,7 +139,6 @@ export const Controller = (renderer, physics, input, gos) => {
                 respawnPoint.y -= renderer.size.y
             } else {
                 respawnPoint = {x: Util.getRandomInt(100, renderer.size.x-100), y: -(renderer.scroll.y-renderer.size.y) - renderer.size.y*0.7}
-                console.log(respawnPoint)
             }
 
             frog = Frog({idle: 'frog.idle',jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
