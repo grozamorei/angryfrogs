@@ -81,7 +81,7 @@ export const Controller = (renderer, physics, input, gos) => {
                 if (vector.x === 0) return
                 if (lastFacing > 0 && vector.x > 0) return
                 if (lastFacing < 0 && vector.x < 0) return
-                jump(vector, maxXImpulse*1.4, maxYImpulse*0.7, maxMagnitude)
+                jump(vector, maxXImpulse*1.4, maxYImpulse*0.9, maxMagnitude)
                 return
             }
             if (canDoubleJump) {
