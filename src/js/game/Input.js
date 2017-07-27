@@ -35,7 +35,7 @@ export const Input = (canvas, debug) => {
         debug.lineStyle(2, 0xFF00FF)
         debug.drawCircle(700, 100, 90)
         debug.moveTo(700, 100)
-        debug.lineTo(700 + (lastSeenAt.x - startedAt.x), 100 + (lastSeenAt.y - startedAt.y))
+        debug.lineTo(700 + 0.5 * (lastSeenAt.x - startedAt.x), 100 + 0.5 * (lastSeenAt.y - startedAt.y))
     }
 
     const onTouchEnd = (e) => {

@@ -9,6 +9,7 @@ export const Controller = (renderer, physics, input, gos) => {
 
     let canJump = false
     let canWallJump = false
+    let canDoubleJump = false
 
     let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0x000000, align : 'center'})
     scoreTxt.anchor.x = 0
@@ -20,6 +21,7 @@ export const Controller = (renderer, physics, input, gos) => {
     physics.on(GEngineE.GROUNDED, () => {
         frog.updateAnimation('idle', lastFacing)
         canJump = true
+        canDoubleJump = true
         canWallJump = false
     })
 
@@ -41,25 +43,50 @@ export const Controller = (renderer, physics, input, gos) => {
 
     physics.on(GEngineE.HEADHIT, () => {
         frog.updateAnimation('midair', lastFacing)
+        canJump = false
+        canDoubleJump = false
+        canWallJump = false
+    })
+
+    const jump = (vector, maxXImpulse, maxYImpulse, maxMagnitude) => {
+        vector.x = maxXImpulse * vector.x/maxMagnitude
+        vector.y = maxYImpulse * vector.y/maxMagnitude
+        physics.applyForce(frog.body.id, vector)
+        lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
+        frog.updateAnimation('jump', lastFacing)
+    }
+
+    input.on('touchStarted', () => {
+        if (canJump === false && canWallJump === false && canDoubleJump === true) {
+            frog.updateAnimation('midair', lastFacing)
+        }
     })
 
     input.on('touchEnded', (vector) => {
+        const maxMagnitude = 180
+        const maxYImpulse = 7.5
+        const maxXImpulse = 500
+        const magnitude = Util.clampMagnitude(vector, 80, maxMagnitude)
+        console.log(Math.floor(Math.atan2(vector.y, vector.x) * 180/Math.PI), magnitude)
         if (Number.isNaN(vector.x) || Number.isNaN(vector.y)) {
             // console.log('CLICK')
         } else {
-            if (vector.y > 0) return
+            if (vector.y > 0) vector.y = 0
             if (canJump) {
-                vector.y /= 15; vector.y = Math.max(-7, vector.y)
-                vector.x *= 100; vector.x = vector.x > 0 ? Math.min(350, vector.x) : Math.max(-350, vector.x)
-                physics.applyForce(frog.body.id, vector)
+                jump(vector, maxXImpulse, maxYImpulse, maxMagnitude)
+                return
             }
+            console.log(canWallJump, lastFacing, vector)
             if (canWallJump) {
                 if (vector.x === 0) return
                 if (lastFacing > 0 && vector.x > 0) return
                 if (lastFacing < 0 && vector.x < 0) return
-                vector.y /= 15; vector.y = Math.max(-5, vector.y)
-                vector.x *= 100; vector.x = vector.x > 0 ? Math.min(500, vector.x) : Math.max(-500, vector.x)
-                physics.applyForce(frog.body.id, vector)
+                jump(vector, maxXImpulse*1.4, maxYImpulse*0.5, maxMagnitude)
+                return
+            }
+            if (canDoubleJump) {
+                jump(vector, maxXImpulse*1.1, maxYImpulse*0.8, maxMagnitude)
+                canDoubleJump = false
             }
         }
     })
@@ -143,7 +170,7 @@ export const Controller = (renderer, physics, input, gos) => {
 
             frog = Frog({idle: 'frog.idle',jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
                 respawnPoint.x, respawnPoint.y,
-                256, 256, PMASK.FROG, {x: 68, y: 70, w: 120, h: 186})
+                192, 192, PMASK.FROG, {x: 50, y: 56, w: 90, h: 136})
             score = {actual: 0, anchor: respawnPoint.y}
             renderer.addObject(frog)
             physics.addBody(frog.body)
