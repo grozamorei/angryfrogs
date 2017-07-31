@@ -2,6 +2,7 @@ import {Util} from "./utils/Util";
 import {Frog} from "./go/Frog";
 import {PMASK, GEngineE} from "./physics/GEngine";
 import {StaticObject} from "./go/StaticObject";
+import {INTERSECTION} from "./physics/GUtils";
 
 export const Controller = (renderer, physics, input, gos) => {
     let frog = null
@@ -65,13 +66,29 @@ export const Controller = (renderer, physics, input, gos) => {
     input.on('touchEnded', (vector) => {
         const maxMagnitude = 150
         const maxYImpulse = 7.5
-        const maxXImpulse = 500
+        let maxXImpulse = 500
+        if (vector.y > 0) {
+            vector.y = 0
+
+            //
+            // pointing down jump while standing still is not allowed
+            let anyFloorCollisions = false
+            if (frog.body.collisions.size > 0) {
+                frog.body.collisions.forEach(c => {
+                    if (c.intersection === INTERSECTION.DOWN) {
+                        anyFloorCollisions = true
+                    }
+                })
+            }
+            if (anyFloorCollisions) return
+            maxXImpulse = 700
+        }
+
         const magnitude = Util.clampMagnitude(vector, 70, maxMagnitude)
         // console.log(Math.floor(Math.atan2(vector.y, vector.x) * 180/Math.PI), magnitude)
         if (Number.isNaN(vector.x) || Number.isNaN(vector.y)) {
             // console.log('CLICK')
         } else {
-            if (vector.y > 0) vector.y = 0
             if (canJump) {
                 jump(vector, maxXImpulse, maxYImpulse, maxMagnitude)
                 return
@@ -81,7 +98,7 @@ export const Controller = (renderer, physics, input, gos) => {
                 if (vector.x === 0) return
                 if (lastFacing > 0 && vector.x > 0) return
                 if (lastFacing < 0 && vector.x < 0) return
-                jump(vector, maxXImpulse*1.4, maxYImpulse*0.9, maxMagnitude)
+                jump(vector, maxXImpulse*1.5, maxYImpulse*0.95, maxMagnitude)
                 return
             }
             if (canDoubleJump) {
