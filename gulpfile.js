@@ -54,11 +54,39 @@ gulp.task('deploy-static', ['clean'], () => {
     gulp.src(['src/index.html'])
         .pipe(gulp.dest('build/'));
 
-    gulp.src('assets/**/*')
+    return gulp.src('assets/**/*')
         .pipe(gulp.dest('build/assets'))
 })
 
-gulp.task('deploy', ['clean', 'pack', 'pack-css', 'deploy-static'], () => {
+gulp.task('pack-maps', ['clean', 'deploy-static'], () => {
+    const through = require('through2')
+    const path = require('path')
+
+    const patternDigest = {}
+    gulp.src(['build/assets/patterns/**/*.json'])
+        .pipe(through.obj(
+            (ch, enc, cb) => {
+                const loadPath = path.relative(path.join(ch.cwd, 'build'), ch.path)
+                const relative = path.relative(path.join(ch.cwd, 'build', 'assets', 'patterns'), ch.path)
+                const category = path.dirname(relative)
+                const name = path.basename(relative)
+
+                // console.log(loadPath)
+                if (category in patternDigest) {
+                    patternDigest[category].push({alias: name, path: loadPath})
+                } else {
+                    patternDigest[category] = [{alias: name, path: loadPath}]
+                }
+
+                cb(null, ch)
+            },
+            (cb) => {
+                require('fs').writeFileSync('build/assets/patterns/digest.json', JSON.stringify(patternDigest))
+                cb()
+            }))
+})
+
+gulp.task('deploy', ['clean', 'pack', 'pack-css', 'deploy-static', 'pack-maps'], () => {
     gulp.src(['src/**/*']).pipe(connect.reload());
 });
 

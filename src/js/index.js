@@ -83,6 +83,6 @@ window.onload = () => {
         .add('frog.jump', 'assets/frog/jump.png')
         .add('frog.walljump', 'assets/frog/walljump.png')
         .add('frog.midair', 'assets/frog/midair.png')
-        .add('map', 'assets/maptest2.json')
+        .add('map', 'assets\\patterns\\start\\start0.json')
         .load(startGame)
 }
