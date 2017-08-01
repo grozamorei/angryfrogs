@@ -115,15 +115,21 @@ export const Controller = (renderer, physics, input, gos) => {
     const self = {
         get score() { return Math.floor(score.actual) * 10 },
         update: () => {
+            //
+            // update score
             score.actual = Math.max(score.anchor - frog.visual.y, score.actual)
             scoreTxt.text = self.score
+
+            //
+            // move frog to the other side of the screen where there are no walls
             if (frog.body.center.x <= 0) {
                 frog.body.center.x = renderer.size.x-1
             } else if (frog.body.center.x >= renderer.size.x) {
                 frog.body.center.x = 1
             }
 
-            // console.log(frog.body.center.y, renderer.scroll.y-renderer.size.y)
+            //
+            // die if frog went below screen
             if (Math.abs(frog.body.center.y) < renderer.scroll.y-renderer.size.y || frog.body.center.y > 0) {
                 physics.emit('death')
                 self.respawn()
@@ -132,10 +138,14 @@ export const Controller = (renderer, physics, input, gos) => {
 
             frog.update()
 
+            //
+            // update camera position
             const diff = renderer.scroll.y - Math.abs(frog.visual.y)
-            if (diff < 500) {
+            if (diff < 500) { // camera position will be changed
                 renderer.scroll.y = Util.lerp(renderer.scroll.y, renderer.scroll.y + 500 - diff, 0.11)
-                // console.log(checkpoint, renderer.scroll.y)
+
+                //
+                // spawn screen platforms somehow
                 if (renderer.scroll.y - checkpoint > nextCheckpointHeight) {
                     checkpoint = renderer.scroll.y
 
@@ -163,6 +173,9 @@ export const Controller = (renderer, physics, input, gos) => {
                     gos.push(go)
                     renderer.addObject(frog)
                 }
+
+                //
+                // spawn walls
                 if (Math.floor(renderer.scroll.y / renderer.size.y) > lastWallCheckPoint) {
                     let go1, go2
                     if (Math.random() < 0.1) { // dont create walls
@@ -198,9 +211,13 @@ export const Controller = (renderer, physics, input, gos) => {
                     }
                     lastWallCheckPoint+=1
                 }
+
+                //
+                // sweep objects that went below screen
+                const yBound = renderer.scroll.y-renderer.size.y
                 for (let i = gos.length-1; i >= 0; i--) {
                     const go = gos[i]
-                    if (go.isOutOfBounds(renderer.scroll.y-renderer.size.y)) {
+                    if (Math.abs(go.body.bottom) < yBound) { // bodies y-coordinate is negative up, so..
                         gos.splice(i, 1)
                         renderer.removeObject(go)
                         physics.removeBody(go.body.id)

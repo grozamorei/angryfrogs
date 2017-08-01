@@ -26,6 +26,7 @@ export const createTemplate = (state, name, texture, x, y, w, h, tint, physicsMa
         .setOption('collisionFilter', physicsMask)
 
     return {
+        get name() { return name },
         get visual() { return state.sprite },
         get body() { return state.body },
         destroy: () => {
