@@ -22,12 +22,16 @@ window.onload = () => {
     const controller = Controller(rend, phys, input)
 
     let frameCounter = 0
+    let time = Date.now()
     const gameLoop = () => {
+        const dt = Date.now() - time
+        time = Date.now()
+
         requestAnimationFrame(gameLoop)
 
         input.update()
-        phys.update(16, frameCounter++)
-        controller.update()
+        phys.update(dt, frameCounter++)
+        controller.update(dt)
         rend.update()
     }
 

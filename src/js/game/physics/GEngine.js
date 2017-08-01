@@ -74,7 +74,7 @@ export const GEngine = () => {
 
                     switch (b.collisionMask) {
                         case PMASK.DEATH:
-                            self.emit('death');
+                            self.emit(GEngineE.DEATH);
                             break
                         case PMASK.REGULAR:
                             //

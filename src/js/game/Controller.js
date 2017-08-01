@@ -3,10 +3,12 @@ import {Frog} from "./go/Frog";
 import {PMASK, GEngineE} from "./physics/GEngine";
 import {StaticObject} from "./go/StaticObject";
 import {INTERSECTION} from "./physics/GUtils";
+import {Lava} from "./go/Lava";
 
 export const Controller = (renderer, physics, input) => {
     const environment = []
     let frog = null
+    let lava = null
     let lastFacing = 1
 
     let canJump = false
@@ -116,22 +118,31 @@ export const Controller = (renderer, physics, input) => {
             renderer.addObject(go)
             physics.addBody(go.body)
             isEnvironment && environment.push(go)
-            frog && (go !== frog) && renderer.addObject(frog)
+            if (frog && isEnvironment) {
+                renderer.addObject(frog)
+            }
         },
-        removeObject: (go, index = undefined) => {
+        removeObject: (go, index = -1) => {
             if (!go) return
+            // console.log('removing ', go.name, index)
             renderer.removeObject(go)
             physics.removeBody(go.body.id)
             go.destroy()
 
-            index && environment.splice(index, 1)
+            index > -1 && environment.splice(index, 1)
         },
+
         get score() { return Math.floor(score.actual) * 10 },
-        update: () => {
+        update: (dt) => {
+
             //
             // update score
             score.actual = Math.max(score.anchor - frog.visual.y, score.actual)
             scoreTxt.text = self.score
+
+            //
+            // update lava rise
+            lava.updateRise(dt, score.actual)
 
             //
             // move frog to the other side of the screen where there are no walls
@@ -144,8 +155,7 @@ export const Controller = (renderer, physics, input) => {
             //
             // die if frog went below screen
             if (Math.abs(frog.body.center.y) < renderer.scroll.y-renderer.size.y || frog.body.center.y > 0) {
-                physics.emit('death')
-                self.respawn()
+                physics.emit(GEngineE.DEATH)
                 return
             }
 
@@ -155,6 +165,8 @@ export const Controller = (renderer, physics, input) => {
             // update camera position
             const diff = renderer.scroll.y - Math.abs(frog.visual.y)
             if (diff < 500) { // camera position will be changed
+                lava.updatePosition(renderer.scroll, renderer.size)
+
                 renderer.scroll.y = Util.lerp(renderer.scroll.y, renderer.scroll.y + 500 - diff, 0.11)
 
                 //
@@ -232,6 +244,10 @@ export const Controller = (renderer, physics, input) => {
         },
         respawn: (respawnLocations = undefined) => {
             self.removeObject(frog)
+            self.removeObject(lava)
+
+            lava = Lava('pixel', 0xCC0000)
+            self.addObject(lava, false)
 
             let respawnPoint
             if (respawnLocations) {

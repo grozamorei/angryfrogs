@@ -14,6 +14,7 @@ export const testBody = (a, b) => {
             return 0
         })
 
+        // console.log(bounds, bounds[0].body === bounds[1].body)
         // console.log(bounds[1].bound, bounds[2].bound, approximately(bounds[1].bound, bounds[2].bound))
         if (bounds[0].body !== bounds[1].body || // offset collision
             approximately(bounds[1].bound, bounds[2].bound)) { // almost perfect collision
