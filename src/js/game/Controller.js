@@ -70,7 +70,7 @@ export const Controller = (renderer, physics, input) => {
         const maxMagnitude = 150
         const maxYImpulse = 7.5
         let maxXImpulse = 500
-        if (vector.y > 0) {
+        if (vector.y >= 0) {
             vector.y = 0
 
             //
