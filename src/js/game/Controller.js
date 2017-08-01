@@ -4,7 +4,8 @@ import {PMASK, GEngineE} from "./physics/GEngine";
 import {StaticObject} from "./go/StaticObject";
 import {INTERSECTION} from "./physics/GUtils";
 
-export const Controller = (renderer, physics, input, gos) => {
+export const Controller = (renderer, physics, input) => {
+    const environment = []
     let frog = null
     let lastFacing = 1
 
@@ -85,7 +86,6 @@ export const Controller = (renderer, physics, input, gos) => {
         }
 
         const magnitude = Util.clampMagnitude(vector, 70, maxMagnitude)
-        // console.log(Math.floor(Math.atan2(vector.y, vector.x) * 180/Math.PI), magnitude)
         if (Number.isNaN(vector.x) || Number.isNaN(vector.y)) {
             // console.log('CLICK')
         } else {
@@ -93,7 +93,6 @@ export const Controller = (renderer, physics, input, gos) => {
                 jump(vector, maxXImpulse, maxYImpulse, maxMagnitude)
                 return
             }
-            // console.log(canWallJump, lastFacing, vector)
             if (canWallJump) {
                 if (vector.x === 0) return
                 if (lastFacing > 0 && vector.x > 0) return
@@ -113,6 +112,20 @@ export const Controller = (renderer, physics, input, gos) => {
     let lastWallCheckPoint = 0
     let score = {anchor : 0, actual: 0}
     const self = {
+        addObject: (go, isEnvironment = true) => {
+            renderer.addObject(go)
+            physics.addBody(go.body)
+            isEnvironment && environment.push(go)
+            frog && (go !== frog) && renderer.addObject(frog)
+        },
+        removeObject: (go, index = undefined) => {
+            if (!go) return
+            renderer.removeObject(go)
+            physics.removeBody(go.body.id)
+            go.destroy()
+
+            index && environment.splice(index, 1)
+        },
         get score() { return Math.floor(score.actual) * 10 },
         update: () => {
             //
@@ -152,7 +165,7 @@ export const Controller = (renderer, physics, input, gos) => {
                     let go
                     if (Math.random() < 0.9 || nextCheckpointHeight === 200) {
                         go = StaticObject(
-                            'regular_' + gos.length,
+                            'regular_' + environment.length,
                             'pixel',
                             Util.getRandomInt(100, renderer.size.x-100), -renderer.scroll.y, Util.getRandomInt(120, 180), 40,
                             Util.hexColorToRgbInt('#55557f'), PMASK.REGULAR
@@ -160,18 +173,14 @@ export const Controller = (renderer, physics, input, gos) => {
                         nextCheckpointHeight = 100
                     } else {
                         go = StaticObject(
-                            'regular_' + gos.length,
+                            'regular_' + environment.length,
                             'pixel',
                             Util.getRandomInt(150, renderer.size.x-150), -renderer.scroll.y-150, Util.getRandomInt(30, 50), Util.getRandomInt(300, 350),
                             Util.hexColorToRgbInt('#55557f'), PMASK.REGULAR
                         )
                         nextCheckpointHeight = 200
                     }
-
-                    renderer.addObject(go)
-                    physics.addBody(go.body)
-                    gos.push(go)
-                    renderer.addObject(frog)
+                    self.addObject(go)
                 }
 
                 //
@@ -182,32 +191,30 @@ export const Controller = (renderer, physics, input, gos) => {
 
                     } else if (Math.random() < 0.4) { // create walls
                         go1 = StaticObject(
-                            'wall_' + gos.length, 'pixel',
+                            'wall_' + environment.length, 'pixel',
                             0, -1 * (renderer.size.y*2 + lastWallCheckPoint*renderer.size.y), 20, renderer.size.y,
                             Util.hexColorToRgbInt('#55557f'), PMASK.REGULAR)
 
                         go2 = StaticObject(
-                            'wall_' + gos.length, 'pixel',
+                            'wall_' + environment.length, 'pixel',
                             780, -1 * (renderer.size.y*2 + lastWallCheckPoint*renderer.size.y), 20, renderer.size.y,
                             Util.hexColorToRgbInt('#55557f'), PMASK.REGULAR)
                     } else {
                         const mask1 = Math.random() > 0.5 ? PMASK.DEATH : PMASK.REGULAR
                         go1 = StaticObject(
-                            'wall_' + gos.length, 'pixel',
+                            'wall_' + environment.length, 'pixel',
                             0, -1 * (renderer.size.y*2 + lastWallCheckPoint*renderer.size.y), 20, renderer.size.y,
                             Util.hexColorToRgbInt(mask1 === PMASK.DEATH ? "#000000" : '#55557f'), mask1)
 
                         const mask2 = mask1 === PMASK.REGULAR ? PMASK.DEATH : Math.random() > 0.5 ? PMASK.DEATH : PMASK.REGULAR
                         go2 = StaticObject(
-                            'wall_' + gos.length, 'pixel',
+                            'wall_' + environment.length, 'pixel',
                             780, -1 * (renderer.size.y*2 + lastWallCheckPoint*renderer.size.y), 20, renderer.size.y,
                             Util.hexColorToRgbInt(mask2 === PMASK.DEATH ? "#000000": '#55557f'), mask2)
                     }
                     if (go1 || go2) {
-                        renderer.addObject(go1); renderer.addObject(go2)
-                        physics.addBody(go1.body); physics.addBody(go2.body);
-                        gos.push(go1); gos.push(go2)
-                        renderer.addObject(frog)
+                        self.addObject(go1)
+                        self.addObject(go2)
                     }
                     lastWallCheckPoint+=1
                 }
@@ -215,23 +222,16 @@ export const Controller = (renderer, physics, input, gos) => {
                 //
                 // sweep objects that went below screen
                 const yBound = renderer.scroll.y-renderer.size.y
-                for (let i = gos.length-1; i >= 0; i--) {
-                    const go = gos[i]
+                for (let i = environment.length-1; i >= 0; i--) {
+                    const go = environment[i]
                     if (Math.abs(go.body.bottom) < yBound) { // bodies y-coordinate is negative up, so..
-                        gos.splice(i, 1)
-                        renderer.removeObject(go)
-                        physics.removeBody(go.body.id)
-                        go.destroy()
+                        self.removeObject(go, i)
                     }
                 }
             }
         },
         respawn: (respawnLocations = undefined) => {
-            if (frog) {
-                renderer.removeObject(frog)
-                physics.removeBody(frog.body.id)
-                frog.destroy()
-            }
+            self.removeObject(frog)
 
             let respawnPoint
             if (respawnLocations) {
@@ -245,8 +245,7 @@ export const Controller = (renderer, physics, input, gos) => {
                 respawnPoint.x, respawnPoint.y,
                 192, 192, PMASK.FROG, {x: 50, y: 56, w: 90, h: 136})
             score = {actual: 0, anchor: respawnPoint.y}
-            renderer.addObject(frog)
-            physics.addBody(frog.body)
+            self.addObject(frog, false)
         }
     }
     return self

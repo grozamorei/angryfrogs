@@ -19,8 +19,7 @@ window.onload = () => {
     const rend = Renderer(canvas)
     const phys = GEngine()
     const input = Input(canvas, rend.debugDrawLayer)
-    const gos = []
-    const controller = Controller(rend, phys, input, gos)
+    const controller = Controller(rend, phys, input)
 
     let frameCounter = 0
     const gameLoop = () => {
@@ -63,9 +62,7 @@ window.onload = () => {
                     obj.x, obj.y-rend.size.y, obj.width, obj.height,
                     Util.hexColorToRgbInt(l.color), PMASK[l.name]
                 )
-                rend.addObject(go)
-                phys.addBody(go.body)
-                gos.push(go)
+                controller.addObject(go)
             }
         })
 
