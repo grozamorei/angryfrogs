@@ -69,7 +69,7 @@ gulp.task('pack-maps', ['clean', 'deploy-static'], () => {
                 const loadPath = path.relative(path.join(ch.cwd, 'build'), ch.path)
                 const relative = path.relative(path.join(ch.cwd, 'build', 'assets', 'patterns'), ch.path)
                 const category = path.dirname(relative)
-                const name = path.basename(relative)
+                const name = path.basename(relative).replace('.json', '')
 
                 // console.log(loadPath)
                 if (category in patternDigest) {
