@@ -6,7 +6,7 @@ import {CreateDetectedPlatform} from "./platform/Platform";
 import {StaticObject} from "./game/go/StaticObject";
 import {Renderer} from "./game/Renderer";
 import {GEngine, GEngineE, PMASK} from "./game/physics/GEngine";
-import {Controller} from "./game/Controller";
+import {Controller} from "./game/controller/Controller";
 
 window.onload = () => {
     // console.log(window.location)
@@ -38,7 +38,7 @@ window.onload = () => {
     const respawnLocations = []
     phys.on(GEngineE.DEATH, () => {
         let data = Object.assign({score: controller.score}, platform.userData)
-        console.log('sending score: ', data.score)
+        // console.log('sending score: ', data.score)
         Util.postRequest(window.location.protocol + '//' + window.location.hostname + ':8443/setScore', JSON.stringify(data)).then(
             () => { console.log ('URL REQUEST: SUCCESS') },
             () => {console.log('URL REQUEST: FAILED')}
@@ -94,9 +94,8 @@ window.onload = () => {
         .add('frog.walljump', 'assets/frog/walljump.png')
         .add('frog.midair', 'assets/frog/midair.png')
         .load(() => {
-            resources.getJSON('patterns').start.forEach(t => {
-                resources.add(t.alias, t.path)
-            })
+            resources.getJSON('patterns').first.forEach(t=>resources.add(t.alias, t.path))
+            resources.getJSON('patterns').start.forEach(t =>resources.add(t.alias, t.path))
             resources.load(startGame)
         })
 }

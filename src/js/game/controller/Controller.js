@@ -1,9 +1,10 @@
-import {Util} from "./utils/Util";
-import {Frog} from "./go/Frog";
-import {PMASK, GEngineE} from "./physics/GEngine";
-import {StaticObject} from "./go/StaticObject";
-import {INTERSECTION} from "./physics/GUtils";
-import {Lava} from "./go/Lava";
+import {Util} from "../utils/Util";
+import {Frog} from "../go/Frog";
+import {PMASK, GEngineE} from "../physics/GEngine";
+import {StaticObject} from "../go/StaticObject";
+import {INTERSECTION} from "../physics/GUtils";
+import {Lava} from "../go/Lava";
+import {LevelGenerator} from "./LevelGenerator";
 
 export const Controller = (renderer, physics, input) => {
     const environment = []
@@ -109,10 +110,12 @@ export const Controller = (renderer, physics, input) => {
         }
     })
 
-    let checkpoint = renderer.scroll.y
-    let nextCheckpointHeight = 200
-    let lastWallCheckPoint = 0
+    // let checkpoint = renderer.scroll.y
+    // let nextCheckpointHeight = 200
+    // let lastWallCheckPoint = 0
     let score = {anchor : 0, actual: 0}
+
+    const generator = LevelGenerator(renderer.scroll.y, renderer.size)
     const self = {
         addObject: (go, isEnvironment = true) => {
             renderer.addObject(go)
@@ -165,71 +168,12 @@ export const Controller = (renderer, physics, input) => {
             // update camera position
             const diff = renderer.scroll.y - Math.abs(frog.visual.y)
             if (diff < 500) { // camera position will be changed
+
                 lava.updatePosition(renderer.scroll, renderer.size)
 
                 renderer.scroll.y = Util.lerp(renderer.scroll.y, renderer.scroll.y + 500 - diff, 0.11)
 
-                //
-                // spawn screen platforms somehow
-                if (renderer.scroll.y - checkpoint > nextCheckpointHeight) {
-                    checkpoint = renderer.scroll.y
-
-                    let go
-                    if (Math.random() < 0.9 || nextCheckpointHeight === 200) {
-                        go = StaticObject(
-                            'regular_' + environment.length,
-                            'pixel',
-                            Util.getRandomInt(100, renderer.size.x-100), -renderer.scroll.y, Util.getRandomInt(120, 180), 40,
-                            Util.hexColorToRgbInt('#55557f'), PMASK.REGULAR
-                        )
-                        nextCheckpointHeight = 100
-                    } else {
-                        go = StaticObject(
-                            'regular_' + environment.length,
-                            'pixel',
-                            Util.getRandomInt(150, renderer.size.x-150), -renderer.scroll.y-150, Util.getRandomInt(30, 50), Util.getRandomInt(300, 350),
-                            Util.hexColorToRgbInt('#55557f'), PMASK.REGULAR
-                        )
-                        nextCheckpointHeight = 200
-                    }
-                    self.addObject(go)
-                }
-
-                //
-                // spawn walls
-                if (Math.floor(renderer.scroll.y / renderer.size.y) > lastWallCheckPoint) {
-                    let go1, go2
-                    if (Math.random() < 0.1) { // dont create walls
-
-                    } else if (Math.random() < 0.4) { // create walls
-                        go1 = StaticObject(
-                            'wall_' + environment.length, 'pixel',
-                            0, -1 * (renderer.size.y*2 + lastWallCheckPoint*renderer.size.y), 20, renderer.size.y,
-                            Util.hexColorToRgbInt('#55557f'), PMASK.REGULAR)
-
-                        go2 = StaticObject(
-                            'wall_' + environment.length, 'pixel',
-                            780, -1 * (renderer.size.y*2 + lastWallCheckPoint*renderer.size.y), 20, renderer.size.y,
-                            Util.hexColorToRgbInt('#55557f'), PMASK.REGULAR)
-                    } else {
-                        const mask1 = Math.random() > 0.5 ? PMASK.DEATH : PMASK.REGULAR
-                        go1 = StaticObject(
-                            'wall_' + environment.length, 'pixel',
-                            0, -1 * (renderer.size.y*2 + lastWallCheckPoint*renderer.size.y), 20, renderer.size.y,
-                            Util.hexColorToRgbInt(mask1 === PMASK.DEATH ? "#000000" : '#55557f'), mask1)
-
-                        const mask2 = mask1 === PMASK.REGULAR ? PMASK.DEATH : Math.random() > 0.5 ? PMASK.DEATH : PMASK.REGULAR
-                        go2 = StaticObject(
-                            'wall_' + environment.length, 'pixel',
-                            780, -1 * (renderer.size.y*2 + lastWallCheckPoint*renderer.size.y), 20, renderer.size.y,
-                            Util.hexColorToRgbInt(mask2 === PMASK.DEATH ? "#000000": '#55557f'), mask2)
-                    }
-                    if (go1 || go2) {
-                        self.addObject(go1)
-                        self.addObject(go2)
-                    }
-                    lastWallCheckPoint+=1
-                }
+                generator.update(renderer.scroll.y, self.addObject)
 
                 //
                 // sweep objects that went below screen
@@ -264,5 +208,6 @@ export const Controller = (renderer, physics, input) => {
             self.addObject(frog, false)
         }
     }
+
     return self
 }

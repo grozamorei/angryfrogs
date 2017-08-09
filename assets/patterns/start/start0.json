@@ -26,7 +26,18 @@
          "color":"#000000",
          "draworder":"topdown",
          "name":"DEATH",
-         "objects":[],
+         "objects":[
+                {
+                 "height":74.6666666666667,
+                 "id":120,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":800,
+                 "x":-1.33333333333333,
+                 "y":1205.33333333333
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -68,8 +79,8 @@
                  "type":"",
                  "visible":true,
                  "width":270,
-                 "x":74,
-                 "y":1064
+                 "x":64.6666666666667,
+                 "y":1049.33333333333
                 }, 
                 {
                  "height":34,
@@ -143,7 +154,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":119,
+ "nextobjectid":124,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",
