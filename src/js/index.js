@@ -60,12 +60,20 @@ window.onload = () => {
 
             for (let i = 0; i < l.objects.length; i++) {
                 const obj = l.objects[i]
-                const go = StaticObject(
-                    l.name.toLowerCase() + '_' + i.toString(),
-                    'pixel',
-                    obj.x, obj.y-rend.size.y, obj.width, obj.height,
-                    Util.hexColorToRgbInt(l.color), PMASK[l.name]
-                )
+                let go
+                if (l.name === 'IMAGE') {
+                    go = StaticObject(
+                        obj.name, 'assets/' + obj.name,
+                        obj.x, obj.y-rend.size.y, obj.width, obj.height,
+                        0xFFFFFF, PMASK.NONE)
+                } else {
+                    go = StaticObject(
+                        l.name.toLowerCase() + '_' + i.toString(),
+                        'pixel',
+                        obj.x, obj.y-rend.size.y, obj.width, obj.height,
+                        Util.hexColorToRgbInt(l.color), PMASK[l.name]
+                    )
+                }
                 controller.addObject(go)
             }
         })
@@ -83,6 +91,6 @@ window.onload = () => {
         .add('frog.jump', 'assets/frog/jump.png')
         .add('frog.walljump', 'assets/frog/walljump.png')
         .add('frog.midair', 'assets/frog/midair.png')
-        .add('map', 'assets\\patterns\\start\\start0.json')
+        .add('map', 'assets/patterns/start/start1.json')
         .load(startGame)
 }

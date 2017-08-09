@@ -1,6 +1,28 @@
 { "height":80,
  "layers":[
         {
+         "color":"#007800",
+         "draworder":"topdown",
+         "name":"IMAGE",
+         "objects":[
+                {
+                 "height":600,
+                 "id":113,
+                 "name":"rules",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":800,
+                 "x":-2,
+                 "y":110
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "color":"#000000",
          "draworder":"topdown",
          "name":"DEATH",
@@ -17,16 +39,15 @@
          "name":"RESPAWN",
          "objects":[
                 {
-                 "ellipse":true,
-                 "height":72,
-                 "id":78,
+                 "height":192,
+                 "id":117,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":74,
-                 "x":192,
-                 "y":650
+                 "width":192,
+                 "x":122,
+                 "y":796
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -40,15 +61,15 @@
          "name":"REGULAR",
          "objects":[
                 {
-                 "height":34,
+                 "height":52,
                  "id":79,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":210,
-                 "x":136,
-                 "y":886
+                 "width":270,
+                 "x":74,
+                 "y":1064
                 }, 
                 {
                  "height":34,
@@ -58,8 +79,8 @@
                  "type":"",
                  "visible":true,
                  "width":230,
-                 "x":489,
-                 "y":715
+                 "x":469,
+                 "y":993
                 }, 
                 {
                  "height":34,
@@ -69,8 +90,8 @@
                  "type":"",
                  "visible":true,
                  "width":230,
-                 "x":109,
-                 "y":567
+                 "x":67,
+                 "y":705
                 }, 
                 {
                  "height":426,
@@ -80,8 +101,8 @@
                  "type":"",
                  "visible":true,
                  "width":60,
-                 "x":617,
-                 "y":257
+                 "x":663,
+                 "y":469
                 }, 
                 {
                  "height":34,
@@ -124,8 +145,8 @@
                  "type":"",
                  "visible":true,
                  "width":60,
-                 "x":40,
-                 "y":143
+                 "x":10,
+                 "y":275
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -133,7 +154,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":113,
+ "nextobjectid":119,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",

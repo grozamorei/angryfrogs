@@ -6,15 +6,15 @@
          "name":"IMAGE",
          "objects":[
                 {
-                 "height":600,
+                 "height":325,
                  "id":7,
-                 "name":"level\/rules.png",
+                 "name":"image_addr.png",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":800,
-                 "x":0,
-                 "y":100
+                 "width":585,
+                 "x":24,
+                 "y":89
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -35,30 +35,19 @@
                  "type":"",
                  "visible":true,
                  "width":284,
-                 "x":90.3333333333333,
-                 "y":1042.66666666667
+                 "x":93,
+                 "y":636
                 }, 
                 {
-                 "height":28.6666666666667,
-                 "id":12,
+                 "height":370,
+                 "id":6,
                  "name":"regular",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":208,
-                 "x":135.333333333333,
-                 "y":696.333333333333
-                }, 
-                {
-                 "height":28.6667,
-                 "id":13,
-                 "name":"regular",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":208,
-                 "x":440,
-                 "y":180.333316666667
+                 "width":62,
+                 "x":433,
+                 "y":129
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -70,7 +59,18 @@
          "color":"#0096fa",
          "draworder":"topdown",
          "name":"SLIPPERY",
-         "objects":[],
+         "objects":[
+                {
+                 "height":54,
+                 "id":4,
+                 "name":"slippery",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":344,
+                 "x":93,
+                 "y":800
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -81,7 +81,18 @@
          "color":"#e69632",
          "draworder":"topdown",
          "name":"STICKY",
-         "objects":[],
+         "objects":[
+                {
+                 "height":269,
+                 "id":9,
+                 "name":"sticky",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":470.333333333333,
+                 "y":542
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -101,8 +112,8 @@
                  "type":"",
                  "visible":true,
                  "width":90,
-                 "x":189,
-                 "y":717.333333333333
+                 "x":201,
+                 "y":404
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -116,15 +127,15 @@
          "name":"DEATH",
          "objects":[
                 {
-                 "height":109.666666666667,
+                 "height":51,
                  "id":3,
                  "name":"death",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":805.666666666667,
-                 "x":-3.33333333333331,
-                 "y":1184.33333333333
+                 "width":259,
+                 "x":442,
+                 "y":987
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -132,7 +143,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":14,
+ "nextobjectid":11,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",

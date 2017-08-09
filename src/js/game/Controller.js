@@ -116,7 +116,7 @@ export const Controller = (renderer, physics, input) => {
     const self = {
         addObject: (go, isEnvironment = true) => {
             renderer.addObject(go)
-            physics.addBody(go.body)
+            go.body && physics.addBody(go.body)
             isEnvironment && environment.push(go)
             if (frog && isEnvironment) {
                 renderer.addObject(frog)
@@ -126,7 +126,7 @@ export const Controller = (renderer, physics, input) => {
             if (!go) return
             // console.log('removing ', go.name, index)
             renderer.removeObject(go)
-            physics.removeBody(go.body.id)
+            go.body && physics.removeBody(go.body.id)
             go.destroy()
 
             index > -1 && environment.splice(index, 1)

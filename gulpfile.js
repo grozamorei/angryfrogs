@@ -54,7 +54,7 @@ gulp.task('deploy-static', ['clean'], () => {
     gulp.src(['src/index.html'])
         .pipe(gulp.dest('build/'));
 
-    return gulp.src('assets/**/*')
+    return gulp.src(['assets/**/*', '!assets/patterns/template.json'])
         .pipe(gulp.dest('build/assets'))
 })
 
@@ -81,7 +81,7 @@ gulp.task('pack-maps', ['clean', 'deploy-static'], () => {
                 cb(null, ch)
             },
             (cb) => {
-                require('fs').writeFileSync('build/assets/patterns/digest.json', JSON.stringify(patternDigest))
+                require('fs').writeFileSync('build/assets/patterns/digest.json', JSON.stringify(patternDigest, null, '  '))
                 cb()
             }))
 })

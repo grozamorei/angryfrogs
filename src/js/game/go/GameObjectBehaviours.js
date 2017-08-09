@@ -2,11 +2,18 @@ import {GBody} from "../physics/GBody";
 import {GPoint} from "../physics/GUtils";
 
 export const createTemplate = (state, name, texture, x, y, w, h, tint, physicsMask, isStatic, isInteractive = false, collider = undefined) => {
-    let s = new PIXI.Sprite(window.resources.getTexture(texture))
+    let s = new PIXI.Sprite()
     s.width = w; s.height = h
     s.x = x + w/2; s.y = y + h/2
     s.tint = tint
     state.sprite = s
+    if (texture in PIXI.loader.resources) {
+        s.texture = window.resources.getTexture(texture)
+    } else {
+        window.resources.add(texture).load(() => {
+            s.texture = window.resources.getTexture(texture)
+        })
+    }
 
     if (collider) {
         state.body = GBody(
