@@ -47,6 +47,7 @@ export const Controller = (renderer, physics, input) => {
     })
 
     physics.on(GEngineE.HEADHIT, () => {
+        if (canJump) return
         frog.updateAnimation('midair', lastFacing)
         canJump = false
         canDoubleJump = false

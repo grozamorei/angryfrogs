@@ -12,7 +12,7 @@ export const Lava = (texture, tint) => {
             dt = dt / 1000
 
             let speed = 0
-            if (jumpHeight < 500) {
+            if (jumpHeight < 1500) {
                 speed = 0
             } else if (jumpHeight < 1000) {
                 speed = 40

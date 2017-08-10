@@ -3,7 +3,7 @@
         {
          "color":"#55557f",
          "draworder":"topdown",
-         "name":"REGULAR",
+         "name":"PLATFORM_STICKY_THIN",
          "objects":[
                 {
                  "height":51.3333333333333,
@@ -15,28 +15,6 @@
                  "width":253.333333333333,
                  "x":117,
                  "y":1192
-                }, 
-                {
-                 "height":1139.33333333333,
-                 "id":6,
-                 "name":"regular",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":62,
-                 "x":-6.99999999999999,
-                 "y":25
-                }, 
-                {
-                 "height":662,
-                 "id":11,
-                 "name":"regular",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":62,
-                 "x":297,
-                 "y":267.666666666667
                 }, 
                 {
                  "height":36.6666666666667,

@@ -3,7 +3,7 @@
         {
          "color":"#55557f",
          "draworder":"topdown",
-         "name":"REGULAR",
+         "name":"PLATFORM_STICKY_THIN",
          "objects":[
                 {
                  "height":40.6666666666667,
@@ -15,50 +15,6 @@
                  "width":338.666666666667,
                  "x":-0.333333333333286,
                  "y":1220
-                }, 
-                {
-                 "height":736.666666666667,
-                 "id":6,
-                 "name":"regular",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40.6666666666667,
-                 "x":3.66666666666669,
-                 "y":47.6666666666667
-                }, 
-                {
-                 "height":40.6667,
-                 "id":11,
-                 "name":"regular",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":552.000333333333,
-                 "x":250.6665,
-                 "y":962.333316666667
-                }, 
-                {
-                 "height":40.6667,
-                 "id":12,
-                 "name":"regular",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":464,
-                 "x":56.0000000000001,
-                 "y":744.999983333333
-                }, 
-                {
-                 "height":329.999666666667,
-                 "id":14,
-                 "name":"regular",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":70.0000333333333,
-                 "x":237.999983333333,
-                 "y":233.666833333333
                 }, 
                 {
                  "height":34.0000333333333,
@@ -100,21 +56,32 @@
          "y":0
         }, 
         {
-         "color":"#0096fa",
+         "color":"#3232c8",
          "draworder":"topdown",
-         "name":"SLIPPERY",
-         "objects":[],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "color":"#e69632",
-         "draworder":"topdown",
-         "name":"STICKY",
-         "objects":[],
+         "name":"PLATFORM_STICKY_SOLID",
+         "objects":[
+                {
+                 "height":29.3333333333334,
+                 "id":26,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":578.666666666667,
+                 "x":244,
+                 "y":962.666666666667
+                }, 
+                {
+                 "height":36,
+                 "id":28,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":559.999666666667,
+                 "x":-5.33316666666667,
+                 "y":750
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -242,7 +209,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":26,
+ "nextobjectid":29,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",
