@@ -11,7 +11,7 @@ export const GBody = (center, halfsizes) => {
 
     const velocity = GPoint(0, 0)
     const collisions = new Map()
-    let lock = []
+    const lock = []
 
     const self = {
         get id() { return id },
@@ -38,6 +38,20 @@ export const GBody = (center, halfsizes) => {
          * @return {Map}
          */
         get collisions() { return collisions },
+        getCollisionsByMask(mask) {
+            const maskedCollisions = []
+            collisions.forEach(c => {
+                if (c.mask === mask) maskedCollisions.push(c)
+            })
+            return maskedCollisions
+        },
+        getCollisionsByIntersection(inter) {
+            const colls = []
+            collisions.forEach(c => {
+                if (c.intersection === inter) colls.push(c)
+            })
+            return colls
+        },
         haveResponseLock(bodyId) { return lock.indexOf(bodyId) !== -1 },
         responseLock(bodyId) {
             lock.push(bodyId)

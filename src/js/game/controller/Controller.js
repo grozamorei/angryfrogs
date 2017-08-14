@@ -40,7 +40,6 @@ export const Controller = (renderer, physics, input) => {
     })
 
     physics.on(GEngineE.WALLED, () => {
-        // console.log('walled')
         frog.updateAnimation('walljump', lastFacing)
         canJump = false
         canWallJump = true

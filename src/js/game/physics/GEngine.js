@@ -27,7 +27,8 @@ export const PMASK = {
 export const GEngine = () => {
 
     const gravity = 13
-    const wallGravity = gravity * 0.92
+    const slipperyWallGravity = gravity * 0.92
+    const stickyWallGravity = gravity * 0.4
 
     const staticBodies = new Map()
     const movingBodies = new Map()
@@ -61,12 +62,8 @@ export const GEngine = () => {
 
     const stickToWall = (body, collision) => {
         body.center.x += collision.penetration * (collision.intersection === INTERSECTION.LEFT ? 1 : -1)
-        if (body.velocity.y < 0) body.velocity.y = 0
-        collision.justEntered && self.emit(GEngineE.WALLED)
-    }
-
-    const slideOnWall = (body, collision) => {
-        body.center.x += collision.penetration * (collision.intersection === INTERSECTION.LEFT ? 1 : -1)
+        body.velocity.x = 0
+        if (body.getCollisionsByIntersection(INTERSECTION.DOWN).length > 0) return
         collision.justEntered && self.emit(GEngineE.WALLED)
     }
 
@@ -101,6 +98,12 @@ export const GEngine = () => {
     responses[PMASK.WALL_STICKY][INTERSECTION.LEFT] = stickToWall
     responses[PMASK.WALL_STICKY][INTERSECTION.RIGHT] = stickToWall
 
+    responses[PMASK.WALL_SLIPPERY] = {}
+    responses[PMASK.WALL_SLIPPERY][INTERSECTION.DOWN] = slipOnFloor
+    responses[PMASK.WALL_SLIPPERY][INTERSECTION.TOP] = hitSurface
+    responses[PMASK.WALL_SLIPPERY][INTERSECTION.LEFT] = stickToWall
+    responses[PMASK.WALL_SLIPPERY][INTERSECTION.RIGHT] = stickToWall
+
     const self = {
         addBody: (value) => {
             if (value.isStatic) {
@@ -125,21 +128,22 @@ export const GEngine = () => {
                 //
                 // falling down with acceleration
                 let g = 0
-                let wallStick = false
-                if (b.collisions.length > 0 && b.velocity.x === 0 && b.velocity.y > 0) {
-                    g = wallGravity
-                    // if (b.mask === PMASK.WALL_STICKY) {
-                    //
-                    // }
+
+                if (b.getCollisionsByMask(PMASK.WALL_STICKY).length > 0) {
+                    if (b.velocity.y < 0) {
+                        g = gravity
+                    } else {
+                        g = stickyWallGravity
+                    }
+                } else if (b.getCollisionsByMask(PMASK.WALL_SLIPPERY).length > 0) {
+                    g = slipperyWallGravity
                 } else {
                     g = gravity
                 }
 
                 const startVelY = b.velocity.y
                 let currentVelY = startVelY + g * dt
-                // if (wallStick) {
-                //     if (currentVelY < 0)
-                // }
+                // console.log('vel: ', currentVelY, '; gravity: ', g, b.collisions.size, b.getCollisionsByMask(PMASK.WALL_STICKY).length, b.getCollisionsByMask(PMASK.WALL_SLIPPERY).length)
                 const path = (((currentVelY*currentVelY) - (startVelY*startVelY)) / 2*g)
                 b.velocity.y = currentVelY
                 b.center.y += path
@@ -230,11 +234,7 @@ export const GEngine = () => {
                 a.collisions.forEach((c, id) => {
                     if (a.haveResponseLock(id)) return
 
-                    try {
-                        responses[c.mask][c.intersection](a, c)
-                    } catch (e) {
-                        console.log(e)
-                    }
+                    responses[c.mask][c.intersection](a, c)
                 })
 
             })

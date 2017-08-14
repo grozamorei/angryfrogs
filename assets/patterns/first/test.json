@@ -1,20 +1,64 @@
 { "height":80,
  "layers":[
         {
+         "color":"#c85050",
+         "draworder":"topdown",
+         "name":"WALL_STICKY",
+         "objects":[
+                {
+                 "height":554,
+                 "id":13,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":7,
+                 "y":423
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "color":"#fa3232",
+         "draworder":"topdown",
+         "name":"WALL_SLIPPERY",
+         "objects":[
+                {
+                 "height":415,
+                 "id":15,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":28,
+                 "x":289,
+                 "y":416
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "color":"#28284c",
          "draworder":"topdown",
          "name":"PLATFORM_SLIPPERY_SOLID",
          "objects":[
                 {
-                 "height":36,
+                 "height":26,
                  "id":8,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":85,
-                 "x":331,
-                 "y":728
+                 "width":130,
+                 "x":324,
+                 "y":630
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -37,6 +81,17 @@
                  "width":517,
                  "x":93,
                  "y":995
+                }, 
+                {
+                 "height":30,
+                 "id":26,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":823,
+                 "x":-6.5,
+                 "y":1256
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -50,37 +105,15 @@
          "name":"PLATFORM_STICKY_SOLID",
          "objects":[
                 {
-                 "height":38,
+                 "height":28,
                  "id":5,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":153,
-                 "x":639,
+                 "width":118,
+                 "x":674,
                  "y":802
-                }, 
-                {
-                 "height":399,
-                 "id":11,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":59,
-                 "x":266.5,
-                 "y":436
-                }, 
-                {
-                 "height":464,
-                 "id":12,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":59,
-                 "x":41.5,
-                 "y":488.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -94,15 +127,37 @@
          "name":"PLATFORM_STICKY_THIN",
          "objects":[
                 {
-                 "height":48,
-                 "id":3,
+                 "height":22,
+                 "id":17,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":803,
-                 "x":-2,
-                 "y":1230
+                 "width":138,
+                 "x":489,
+                 "y":717
+                }, 
+                {
+                 "height":22,
+                 "id":24,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":138,
+                 "x":384,
+                 "y":287
+                }, 
+                {
+                 "height":22,
+                 "id":25,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":138,
+                 "x":578,
+                 "y":26
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -143,7 +198,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":13,
+ "nextobjectid":27,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",
