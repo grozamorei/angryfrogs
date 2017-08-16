@@ -66,7 +66,7 @@ export const GEngine = () => {
         if (body.getCollisionsByIntersection(INTERSECTION.DOWN).length > 0) return
 
         if (collision.wallslip.needEmit) {
-            if (collision.wallslip.slipping) self.emit(GEngineE.WALLED)
+            if (collision.wallslip.slipping) self.emit(GEngineE.WALLED, collision.intersection)
             else self.emit(GEngineE.AIRBORNE)
             collision.wallslip.needEmit = false
         }
@@ -243,7 +243,7 @@ export const GEngine = () => {
                     const id = a.collisions.entries().next().value[0]
                     const c = a.collisions.entries().next().value[1]
                     if (!a.haveResponseLock(id) && (c.intersection === INTERSECTION.LEFT || c.intersection === INTERSECTION.RIGHT)) {
-                        self.emit(GEngineE.WALLED)
+                        self.emit(GEngineE.WALLED, c.intersection)
                     }
                 }
             })
