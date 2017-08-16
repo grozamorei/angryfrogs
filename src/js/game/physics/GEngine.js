@@ -28,7 +28,7 @@ export const GEngine = () => {
 
     const gravity = 13
     const slipperyWallGravity = gravity * 0.92
-    const stickyWallGravity = gravity * 0.4
+    const stickyWallGravity = gravity * 0.5
 
     const staticBodies = new Map()
     const movingBodies = new Map()
@@ -60,11 +60,16 @@ export const GEngine = () => {
         collision.justEntered && self.emit(GEngineE.HEADHIT)
     }
 
-    const stickToWall = (body, collision) => {
+    const behaveOnWall = (body, collision) => {
         body.center.x += collision.penetration * (collision.intersection === INTERSECTION.LEFT ? 1 : -1)
         body.velocity.x = 0
         if (body.getCollisionsByIntersection(INTERSECTION.DOWN).length > 0) return
-        collision.justEntered && self.emit(GEngineE.WALLED)
+
+        if (collision.wallslip.needEmit) {
+            if (collision.wallslip.slipping) self.emit(GEngineE.WALLED)
+            else self.emit(GEngineE.AIRBORNE)
+            collision.wallslip.needEmit = false
+        }
     }
 
     const responses = {}
@@ -95,14 +100,14 @@ export const GEngine = () => {
     responses[PMASK.WALL_STICKY] = {}
     responses[PMASK.WALL_STICKY][INTERSECTION.DOWN] = stickToFloor
     responses[PMASK.WALL_STICKY][INTERSECTION.TOP] = hitSurface
-    responses[PMASK.WALL_STICKY][INTERSECTION.LEFT] = stickToWall
-    responses[PMASK.WALL_STICKY][INTERSECTION.RIGHT] = stickToWall
+    responses[PMASK.WALL_STICKY][INTERSECTION.LEFT] = behaveOnWall
+    responses[PMASK.WALL_STICKY][INTERSECTION.RIGHT] = behaveOnWall
 
     responses[PMASK.WALL_SLIPPERY] = {}
     responses[PMASK.WALL_SLIPPERY][INTERSECTION.DOWN] = slipOnFloor
     responses[PMASK.WALL_SLIPPERY][INTERSECTION.TOP] = hitSurface
-    responses[PMASK.WALL_SLIPPERY][INTERSECTION.LEFT] = stickToWall
-    responses[PMASK.WALL_SLIPPERY][INTERSECTION.RIGHT] = stickToWall
+    responses[PMASK.WALL_SLIPPERY][INTERSECTION.LEFT] = behaveOnWall
+    responses[PMASK.WALL_SLIPPERY][INTERSECTION.RIGHT] = behaveOnWall
 
     const self = {
         addBody: (value) => {
@@ -129,13 +134,15 @@ export const GEngine = () => {
                 // falling down with acceleration
                 let g = 0
 
-                if (b.getCollisionsByMask(PMASK.WALL_STICKY).length > 0) {
+                const sticky = b.getCollisionsByMask(PMASK.WALL_STICKY)
+                const slippery = b.getCollisionsByMask(PMASK.WALL_SLIPPERY)
+                if (sticky.length > 0 && sticky[0].wallslip.slipping) {
                     if (b.velocity.y < 0) {
                         g = gravity
                     } else {
                         g = stickyWallGravity
                     }
-                } else if (b.getCollisionsByMask(PMASK.WALL_SLIPPERY).length > 0) {
+                } else if (slippery.length > 0 && slippery[0].wallslip.slipping) {
                     g = slipperyWallGravity
                 } else {
                     g = gravity
@@ -174,12 +181,21 @@ export const GEngine = () => {
                     })
 
                     if (collisionEnter) {
-                        console.log('entering collision: ', b.label, currentFrame, result.bodyB, a.velocity.toString())
+                        // console.log('entering collision: ', b.label, currentFrame, result.bodyB, a.velocity.toString())
 
-                        a.collisions.set(b.id, {
-                            justEntered: true, intersection: result.bodyA, penetration: result.penetration,
+                        const collision = {
+                            justEntered: true, intersection: result.bodyA,
+                            penetration: result.penetration,
+                            wallslip: {
+                                overlap: result.overlap,
+                                overlapFirstBody: result.overlapBodyA,
+                                slipping: false,
+                                needEmit: false
+                            },
                             mask: b.collisionMask, frame: currentFrame
-                        })
+                        }
+                        a.collisions.set(b.id, collision)
+                        GUtils.detectSlippingState(a, collision)
 
                         // fly through thin platforms
                         if (b.collisionMask === PMASK.PLATFORM_STICKY_THIN ||
@@ -191,6 +207,10 @@ export const GEngine = () => {
                     } else {
                         a.collisions.get(b.id).penetration = result.penetration
                         a.collisions.get(b.id).justEntered = false
+
+                        a.collisions.get(b.id).wallslip.overlap = result.overlap
+                        a.collisions.get(b.id).wallslip.overlapFirstBody = result.overlapBodyA
+                        GUtils.detectSlippingState(a, a.collisions.get(b.id))
                     }
                 })
             })

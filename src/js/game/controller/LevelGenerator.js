@@ -67,7 +67,6 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
         console.log('generating template ' + template)
 
         map.layers.forEach(l => {
-            console.log(l.name)
             if (l.name === 'RESPAWN') return
             l.objects.forEach(o => {
                 objectAdder(StaticObject(

@@ -46,7 +46,9 @@ export const testBody = (a, b) => {
             bodyAid: xCollision.firstBody,
             bodyB: xCollision.firstBody === b.id ? INTERSECTION.RIGHT : INTERSECTION.LEFT,
             bodyBid: xCollision.secondBody,
-            penetration: xCollision.penetration
+            penetration: xCollision.penetration,
+            overlap: yCollision.penetration,
+            overlapBodyA: yCollision.firstBody
         }
     } else { // collision on Y axis
         return {
@@ -68,5 +70,32 @@ export const GPoint = (x, y) => {
         get y() { return yPos },
         set y(value) { yPos = value },
         toString() { return 'x: ' + xPos + '; y: ' + yPos }
+    }
+}
+
+export const detectSlippingState = (body, collision) => {
+    if (!('overlap' in collision.wallslip)) return
+    if (collision.wallslip.overlapFirstBody === body.id) {  // slipping from top
+        // console.log(body)
+        // console.log('from top: ', collision.wallslip.overlap, body.radius.y)
+        if (collision.wallslip.overlap > body.radius.y*2) {   // slipping
+            if (collision.wallslip.slipping) return
+            collision.wallslip.needEmit = true
+            collision.wallslip.slipping = true
+        } else {
+            if (!collision.wallslip.slipping) return
+            collision.wallslip.needEmit = true
+            collision.wallslip.slipping = false
+        }
+    } else {                                                // slipping from bottom
+        if (collision.wallslip.overlap > body.radius.y) {   // slipping
+            if (collision.wallslip.slipping) return
+            collision.wallslip.needEmit = true
+            collision.wallslip.slipping = true
+        } else {
+            if (!collision.wallslip.slipping) return
+            collision.wallslip.needEmit = true
+            collision.wallslip.slipping = false
+        }
     }
 }
