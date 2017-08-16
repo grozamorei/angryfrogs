@@ -73,7 +73,7 @@ export const Controller = (renderer, physics, input) => {
     })
 
     input.on('touchEnded', (vector) => {
-        const maxMagnitude = 150
+        const maxMagnitude = 120
         const maxYImpulse = 7.5
         let maxXImpulse = 500
         if (vector.y >= 0) {

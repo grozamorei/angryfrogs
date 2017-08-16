@@ -33,7 +33,7 @@ export const Input = (canvas, debug) => {
 
         debug.clear()
         debug.lineStyle(2, 0xFF00FF)
-        debug.drawCircle(700, 100, 90)
+        debug.drawCircle(700, 100, 60)
         debug.moveTo(700, 100)
         debug.lineTo(700 + 0.5 * (lastSeenAt.x - startedAt.x), 100 + 0.5 * (lastSeenAt.y - startedAt.y))
     }
