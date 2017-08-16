@@ -46,9 +46,12 @@ export const Controller = (renderer, physics, input) => {
         canWallJump = true
     })
 
-    physics.on(GEngineE.HEADHIT, () => {
+    physics.on(GEngineE.HEADHIT, (intersection) => {
         if (frog.lastAnimation === 'walljump') return
         if (canJump) return
+        if (intersection === INTERSECTION.RIGHT) lastFacing = 1
+        if (intersection === INTERSECTION.LEFT) lastFacing = -1
+
         frog.updateAnimation('midair', lastFacing)
         canJump = false
         canDoubleJump = false

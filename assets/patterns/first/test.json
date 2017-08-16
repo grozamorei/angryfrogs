@@ -61,15 +61,15 @@
          "name":"PLATFORM_SLIPPERY_SOLID",
          "objects":[
                 {
-                 "height":16,
+                 "height":71,
                  "id":8,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":130,
-                 "x":386.666666666667,
-                 "y":627.333333333333
+                 "width":96,
+                 "x":373.166666666667,
+                 "y":719.833333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -116,15 +116,15 @@
          "name":"PLATFORM_STICKY_SOLID",
          "objects":[
                 {
-                 "height":16,
+                 "height":68,
                  "id":5,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":118,
-                 "x":674,
-                 "y":802
+                 "x":679,
+                 "y":771
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -144,9 +144,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":138,
-                 "x":487.666666666667,
-                 "y":718.333333333333
+                 "width":96,
+                 "x":535.666666666667,
+                 "y":695.333333333333
                 }, 
                 {
                  "height":22,
@@ -209,7 +209,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":28,
+ "nextobjectid":31,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",

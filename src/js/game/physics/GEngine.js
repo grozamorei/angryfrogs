@@ -56,8 +56,9 @@ export const GEngine = () => {
         } else {
             body.center.x += collision.penetration * (collision.intersection === INTERSECTION.LEFT ? 1 : -1)
             body.velocity.x *= -1
+            body.velocity.x *= 1.1
         }
-        collision.justEntered && self.emit(GEngineE.HEADHIT)
+        collision.justEntered && self.emit(GEngineE.HEADHIT, collision.intersection)
     }
 
     const behaveOnWall = (body, collision) => {
