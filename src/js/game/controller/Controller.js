@@ -208,7 +208,7 @@ export const Controller = (renderer, physics, input) => {
 
             frog = Frog({idle: 'frog.idle',jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
                 respawnPoint.x, respawnPoint.y,
-                192, 192, PMASK.FROG, {x: 50, y: 56, w: 90, h: 136})
+                218, 192, PMASK.FROG, {x: 59, y: 8, w: 100, h: 184})
             score = {actual: 0, anchor: respawnPoint.y}
             self.addObject(frog, false)
         }
