@@ -48,6 +48,7 @@ export const Controller = (renderer, physics, input) => {
 
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
         if (frog.lastAnimation.indexOf('jump') === -1) {
+            console.log('what is this?')
             frog.updateAnimation('jump_01', lastFacing, true)
         }
 
@@ -73,14 +74,18 @@ export const Controller = (renderer, physics, input) => {
         canWallJump = false
     })
 
-    const jump = (vector, maxXImpulse, maxYImpulse, maxMagnitude) => {
+    const applyForce = (vector, maxXImpulse, maxYImpulse, maxMagnitude, slipping = false) => {
         vector.x = maxXImpulse * vector.x/maxMagnitude
         vector.y = maxYImpulse * vector.y/maxMagnitude
 
-        if (walled()) {
-            frog.updateAnimation('jump_01', lastFacing, true)
+        if (slipping) {
+            // frog.updateAnimation('slide_00', lastFacing, true)
         } else {
-            frog.updateAnimation('jump_00', lastFacing, true)
+            if (walled()) {
+                frog.updateAnimation('jump_01', lastFacing, true)
+            } else {
+                frog.updateAnimation('jump_00', lastFacing, true)
+            }
         }
         physics.applyForce(frog.body.id, vector)
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
@@ -150,16 +155,16 @@ export const Controller = (renderer, physics, input) => {
             ground()
         } else {
             if (grounded()) {
-                jump(vector, maxXImpulse, maxYImpulse, maxMagnitude)
+                applyForce(vector, maxXImpulse, maxYImpulse, maxMagnitude, slipFloorJump)
                 return
             }
             if (walled()) {
                 if (vector.x === 0) return
-                isWallJumpDirectionRight(vector.x)&&jump(vector, maxXImpulse*1.5, maxYImpulse*0.95, maxMagnitude)
+                isWallJumpDirectionRight(vector.x)&&applyForce(vector, maxXImpulse*1.5, maxYImpulse*0.95, maxMagnitude)
                 return
             }
             if (airbourne()) {
-                jump(vector, maxXImpulse*1.1, maxYImpulse*0.9, maxMagnitude)
+                applyForce(vector, maxXImpulse*1.1, maxYImpulse*0.9, maxMagnitude)
                 canDoubleJump = false
             }
         }
@@ -260,6 +265,7 @@ export const Controller = (renderer, physics, input) => {
                     'prepare.jump.00': 'frog.prepare.jump.00', 'prepare.jump.01': 'frog.prepare.jump.01',
                     walled: 'frog.walled', 'walled.prepare.jump': 'frog.walled.prepare.jump',
                     'midair.head.hit': 'frog.midair.head.hit', 'midair.prepare.jump': 'frog.midair.prepare.jump',
+                    'slide_00': 'frog.slide_00', 'slide_01': 'frog.slide_01'
                 },
                 respawnPoint.x, respawnPoint.y,
                 256, 256, PMASK.FROG, {x: 78, y: 72, w: 100, h: 184})
