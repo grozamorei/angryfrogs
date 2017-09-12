@@ -1,4 +1,5 @@
 import * as go from "./GameObjectBehaviours"
+import {Util} from "../utils/Util";
 export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
     const state = {
         /** @type PIXI.Sprite */
@@ -15,9 +16,21 @@ export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
         },
         get lastAnimation() { return lastAnimationKey },
         updateAnimation(name, faceDir) {
+            const scaleX = state.sprite.scale.x
+            if (name === lastAnimationKey && Util.normalizeValue(scaleX) === faceDir) return
+            // console.log('update animation to', name, faceDir)
             lastAnimationKey = name
             state.sprite.texture = window.resources.getTexture(animations[name])
-            state.sprite.scale.x = faceDir * Math.abs(state.sprite.scale.x)
+            state.sprite.scale.x = faceDir * Math.abs(scaleX)
+        },
+        getCollisions(intersection, doWhat) {
+            if (state.body.collisions.size > 0) {
+                state.body.collisions.forEach(c => {
+                    if (intersection & c.intersection) {
+                        doWhat(c)
+                    }
+                })
+            }
         }
     }
 

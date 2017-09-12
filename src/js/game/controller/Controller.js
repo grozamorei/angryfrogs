@@ -7,6 +7,13 @@ import {Lava} from "../go/Lava";
 import {LevelGenerator} from "./LevelGenerator";
 
 export const Controller = (renderer, physics, input) => {
+    let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0x000000, align : 'center'})
+    scoreTxt.anchor.x = 0
+    scoreTxt.anchor.y = 1
+    scoreTxt.x = 20
+    scoreTxt.y = renderer.size.y - 20
+    renderer.stage.addChild(scoreTxt)
+
     const environment = []
     let frog = null
     let lava = null
@@ -16,19 +23,25 @@ export const Controller = (renderer, physics, input) => {
     let canWallJump = false
     let canDoubleJump = false
 
-    let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0x000000, align : 'center'})
-    scoreTxt.anchor.x = 0
-    scoreTxt.anchor.y = 1
-    scoreTxt.x = 20
-    scoreTxt.y = renderer.size.y - 20
-    renderer.stage.addChild(scoreTxt)
-
-    physics.on(GEngineE.GROUNDED, () => {
+    const grounded = () => canJump
+    const airbourne = () => !canJump && !canWallJump && canDoubleJump
+    const walled = () => canWallJump
+    const ground = () => {
         frog.updateAnimation('idle', lastFacing)
         canJump = true
         canDoubleJump = true
         canWallJump = false
-    })
+    }
+    const isWallJumpDirectionRight = (dir) => {
+        let isDirectionRight = false
+        frog.getCollisions(INTERSECTION.LEFT | INTERSECTION.RIGHT, c => {
+            if (c.intersection&INTERSECTION.LEFT) isDirectionRight = dir > 0
+            if (c.intersection&INTERSECTION.RIGHT) isDirectionRight = dir < 0
+        })
+        return isDirectionRight
+    }
+
+    physics.on(GEngineE.GROUNDED, ground)
 
     physics.on(GEngineE.AIRBORNE, () => {
         if (frog.lastAnimation === 'midair') return
@@ -41,13 +54,13 @@ export const Controller = (renderer, physics, input) => {
 
     physics.on(GEngineE.WALLED, (intersection) => {
         lastFacing = intersection === INTERSECTION.RIGHT ? 1 : -1
-        frog.updateAnimation('walljump', lastFacing)
+        frog.updateAnimation('walled', lastFacing)
         canJump = false
         canWallJump = true
     })
 
     physics.on(GEngineE.HEADHIT, (intersection) => {
-        if (frog.lastAnimation === 'walljump') return
+        if (frog.lastAnimation === 'walled') return
         if (canJump) return
         if (intersection === INTERSECTION.RIGHT) lastFacing = 1
         if (intersection === INTERSECTION.LEFT) lastFacing = -1
@@ -67,8 +80,36 @@ export const Controller = (renderer, physics, input) => {
     }
 
     input.on('touchStarted', () => {
-        if (canJump === false && canWallJump === false && canDoubleJump === true) {
-            frog.updateAnimation('midair', lastFacing)
+        if (airbourne()) {
+            frog.updateAnimation('midair.prepare.jump', lastFacing)
+        } else if (grounded()) {
+            frog.updateAnimation('prepare.jump.00', lastFacing)
+        }
+    })
+
+    input.on('touchMove', (magnitude, direction) => {
+        if (!Util.approximately(direction, 0)) {
+            lastFacing = direction
+        }
+
+        if (grounded()) {
+            if (magnitude > 30) {
+                frog.updateAnimation('prepare.jump.01', lastFacing)
+            } else {
+                frog.updateAnimation('prepare.jump.00', lastFacing)
+            }
+        } else if (walled()) {
+            if (isWallJumpDirectionRight(direction)) {
+                if (magnitude > 15) {
+                    frog.updateAnimation('walled.prepare.jump', lastFacing*-1)
+                } else {
+                    frog.updateAnimation('walled', lastFacing*-1)
+                }
+            } else {
+                frog.updateAnimation('walled', lastFacing)
+            }
+        } else if (airbourne()) {
+            frog.updateAnimation(frog.lastAnimation, lastFacing)
         }
     })
 
@@ -76,26 +117,30 @@ export const Controller = (renderer, physics, input) => {
         const maxMagnitude = 120
         const maxYImpulse = 7.5
         let maxXImpulse = 500
+        let slipFloorJump = false
         if (vector.y >= 0) {
             vector.y = 0
 
             //
             // pointing down jump while standing still is not allowed
-            let anyFloorCollisions = false
-            if (frog.body.collisions.size > 0) {
-                frog.body.collisions.forEach(c => {
-                    if (c.intersection === INTERSECTION.DOWN) {
-                        anyFloorCollisions = true
-                    }
-                })
+            let hardFloorCollisions = false
+            frog.getCollisions(INTERSECTION.DOWN, c => {
+                if (c.mask.indexOf('slippery') === -1) {
+                    hardFloorCollisions = true
+                } else {
+                    slipFloorJump = true
+                }
+            })
+            if (hardFloorCollisions) {
+                ground()
+                return
             }
-            if (anyFloorCollisions) return
-            maxXImpulse = 700
+            maxXImpulse = 800
         }
 
         const magnitude = Util.clampMagnitude(vector, 70, maxMagnitude)
         if (Number.isNaN(vector.x) || Number.isNaN(vector.y)) {
-            // console.log('CLICK')
+            ground()
         } else {
             if (canJump) {
                 jump(vector, maxXImpulse, maxYImpulse, maxMagnitude)
@@ -103,9 +148,7 @@ export const Controller = (renderer, physics, input) => {
             }
             if (canWallJump) {
                 if (vector.x === 0) return
-                if (lastFacing > 0 && vector.x > 0) return
-                if (lastFacing < 0 && vector.x < 0) return
-                jump(vector, maxXImpulse*1.5, maxYImpulse*0.95, maxMagnitude)
+                isWallJumpDirectionRight(vector.x)&&jump(vector, maxXImpulse*1.5, maxYImpulse*0.95, maxMagnitude)
                 return
             }
             if (canDoubleJump) {
@@ -115,9 +158,6 @@ export const Controller = (renderer, physics, input) => {
         }
     })
 
-    // let checkpoint = renderer.scroll.y
-    // let nextCheckpointHeight = 200
-    // let lastWallCheckPoint = 0
     let score = {anchor : 0, actual: 0}
 
     const generator = LevelGenerator(renderer.scroll.y, renderer.size)
@@ -206,7 +246,13 @@ export const Controller = (renderer, physics, input) => {
                 respawnPoint = {x: Util.getRandomInt(100, renderer.size.x-100), y: -(renderer.scroll.y-renderer.size.y) - renderer.size.y*0.9}
             }
 
-            frog = Frog({idle: 'frog.idle',jump: 'frog.jump', walljump: 'frog.walljump', midair: 'frog.midair'},
+            frog = Frog(
+                {
+                    idle: 'frog.idle',
+                    jump: 'frog.jump', 'prepare.jump.00': 'frog.prepare.jump.00', 'prepare.jump.01': 'frog.prepare.jump.01',
+                    walled: 'frog.walled', 'walled.prepare.jump': 'frog.walled.prepare.jump',
+                    midair: 'frog.midair', 'midair.prepare.jump': 'frog.midair.prepare.jump',
+                },
                 respawnPoint.x, respawnPoint.y,
                 218, 192, PMASK.FROG, {x: 59, y: 8, w: 100, h: 184})
             score = {actual: 0, anchor: respawnPoint.y}

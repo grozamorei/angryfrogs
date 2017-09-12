@@ -95,8 +95,12 @@ window.onload = () => {
         // .add('frog.midair', 'assets/frog/midair.png')
         .add('frog.idle', 'assets/frog.draft/idle.png')
         .add('frog.jump', 'assets/frog.draft/jump.png')
-        .add('frog.walljump', 'assets/frog.draft/walljump.png')
+        .add('frog.walled', 'assets/frog.draft/walled.png')
+        .add('frog.walled.prepare.jump', 'assets/frog.draft/walled.prepare.jump.png')
         .add('frog.midair', 'assets/frog.draft/midair.png')
+        .add('frog.prepare.jump.00', 'assets/frog.draft/prepare.jump.00.png')
+        .add('frog.prepare.jump.01', 'assets/frog.draft/prepare.jump.01.png')
+        .add('frog.midair.prepare.jump', 'assets/frog.draft/midair.prepare.jump.png')
         .load(() => {
             resources.getJSON('patterns').first.forEach(t=>resources.add(t.alias, t.path))
             resources.getJSON('patterns').start.forEach(t =>resources.add(t.alias, t.path))

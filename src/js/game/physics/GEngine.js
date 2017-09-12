@@ -28,7 +28,7 @@ export const GEngine = () => {
 
     const gravity = 13
     const slipperyWallGravity = gravity * 0.92
-    const stickyWallGravity = gravity * 0.5
+    const stickyWallGravity = gravity * 0.4
 
     const staticBodies = new Map()
     const movingBodies = new Map()

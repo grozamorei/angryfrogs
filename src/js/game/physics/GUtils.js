@@ -1,10 +1,8 @@
-
+import {Util} from "../utils/Util";
 let uniqueId = 0
 export const nextUniqueId = () => ++uniqueId
 
-export const INTERSECTION = {NONE: 'none', TOP: 'top', DOWN: 'down', LEFT: 'left', RIGHT: 'right'}
-
-export const approximately = (a, b) => { return Math.abs(a - b) < 0.001 }
+export const INTERSECTION = {NONE: 0, TOP: 1, DOWN: 2, LEFT: 4, RIGHT: 8}
 
 export const testBody = (a, b) => {
     const axisCollision = (bounds) => {
@@ -17,7 +15,7 @@ export const testBody = (a, b) => {
         // console.log(bounds, bounds[0].body === bounds[1].body)
         // console.log(bounds[1].bound, bounds[2].bound, approximately(bounds[1].bound, bounds[2].bound))
         if (bounds[0].body !== bounds[1].body || // offset collision
-            approximately(bounds[1].bound, bounds[2].bound)) { // almost perfect collision
+            Util.approximately(bounds[1].bound, bounds[2].bound)) { // almost perfect collision
             return {
                 test: true,
                 firstBody: bounds[0].body.id,
