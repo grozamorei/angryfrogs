@@ -45,7 +45,7 @@ export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
             const scaleX = state.sprite.scale.x
             if (name === lastAnimationKey && Util.normalizeValue(scaleX) === faceDir) return
             // console.log('update animation to', name, faceDir, keyFrameSwitch)
-            nextAnimationFrameIn = keyFrameSwitch ? 2 : NaN
+            nextAnimationFrameIn = keyFrameSwitch ? 1 : NaN
             lastAnimationKey = name
             state.sprite.texture = window.resources.getTexture(animations[name])
             state.sprite.scale.x = faceDir * Math.abs(scaleX)
