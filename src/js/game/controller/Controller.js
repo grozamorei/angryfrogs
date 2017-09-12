@@ -44,10 +44,12 @@ export const Controller = (renderer, physics, input) => {
     physics.on(GEngineE.GROUNDED, ground)
 
     physics.on(GEngineE.AIRBORNE, () => {
-        if (frog.lastAnimation === 'midair') return
+        if (frog.lastAnimation === 'midair.head.hit') return
 
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
-        frog.updateAnimation('jump', lastFacing)
+        if (frog.lastAnimation.indexOf('jump') === -1) {
+            frog.updateAnimation('jump_01', lastFacing, true)
+        }
 
         canWallJump = canJump = false
     })
@@ -65,7 +67,7 @@ export const Controller = (renderer, physics, input) => {
         if (intersection === INTERSECTION.RIGHT) lastFacing = 1
         if (intersection === INTERSECTION.LEFT) lastFacing = -1
 
-        frog.updateAnimation('midair', lastFacing)
+        frog.updateAnimation('midair.head.hit', lastFacing)
         canJump = false
         canDoubleJump = false
         canWallJump = false
@@ -74,9 +76,14 @@ export const Controller = (renderer, physics, input) => {
     const jump = (vector, maxXImpulse, maxYImpulse, maxMagnitude) => {
         vector.x = maxXImpulse * vector.x/maxMagnitude
         vector.y = maxYImpulse * vector.y/maxMagnitude
+
+        if (walled()) {
+            frog.updateAnimation('jump_01', lastFacing, true)
+        } else {
+            frog.updateAnimation('jump_00', lastFacing, true)
+        }
         physics.applyForce(frog.body.id, vector)
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
-        frog.updateAnimation('jump', lastFacing)
     }
 
     input.on('touchStarted', () => {
@@ -142,16 +149,16 @@ export const Controller = (renderer, physics, input) => {
         if (Number.isNaN(vector.x) || Number.isNaN(vector.y)) {
             ground()
         } else {
-            if (canJump) {
+            if (grounded()) {
                 jump(vector, maxXImpulse, maxYImpulse, maxMagnitude)
                 return
             }
-            if (canWallJump) {
+            if (walled()) {
                 if (vector.x === 0) return
                 isWallJumpDirectionRight(vector.x)&&jump(vector, maxXImpulse*1.5, maxYImpulse*0.95, maxMagnitude)
                 return
             }
-            if (canDoubleJump) {
+            if (airbourne()) {
                 jump(vector, maxXImpulse*1.1, maxYImpulse*0.9, maxMagnitude)
                 canDoubleJump = false
             }
@@ -249,12 +256,13 @@ export const Controller = (renderer, physics, input) => {
             frog = Frog(
                 {
                     idle: 'frog.idle',
-                    jump: 'frog.jump', 'prepare.jump.00': 'frog.prepare.jump.00', 'prepare.jump.01': 'frog.prepare.jump.01',
+                    'jump_00': 'frog.jump_00', 'jump_01': 'frog.jump_01', 'jump_02': 'frog.jump_02',
+                    'prepare.jump.00': 'frog.prepare.jump.00', 'prepare.jump.01': 'frog.prepare.jump.01',
                     walled: 'frog.walled', 'walled.prepare.jump': 'frog.walled.prepare.jump',
-                    midair: 'frog.midair', 'midair.prepare.jump': 'frog.midair.prepare.jump',
+                    'midair.head.hit': 'frog.midair.head.hit', 'midair.prepare.jump': 'frog.midair.prepare.jump',
                 },
                 respawnPoint.x, respawnPoint.y,
-                218, 192, PMASK.FROG, {x: 59, y: 8, w: 100, h: 184})
+                256, 256, PMASK.FROG, {x: 78, y: 72, w: 100, h: 184})
             score = {actual: 0, anchor: respawnPoint.y}
             self.addObject(frog, false)
         }

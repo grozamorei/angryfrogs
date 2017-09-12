@@ -199,8 +199,7 @@ export const GEngine = () => {
                         GUtils.detectSlippingState(a, collision)
 
                         // fly through thin platforms
-                        if (b.collisionMask === PMASK.PLATFORM_STICKY_THIN ||
-                            b.collisionMask === PMASK.PLATFORM_SLIPPERY_THIN) {
+                        if (b.collisionMask.indexOf('thin') > -1) {
                             if (result.bodyB !== INTERSECTION.TOP) {
                                 a.responseLock(b.id)
                             }
@@ -243,7 +242,7 @@ export const GEngine = () => {
                 if (a.collisions.size === 1 && remove.length > 0) {
                     const id = a.collisions.entries().next().value[0]
                     const c = a.collisions.entries().next().value[1]
-                    if (!a.haveResponseLock(id) && (c.intersection === INTERSECTION.LEFT || c.intersection === INTERSECTION.RIGHT)) {
+                    if (!a.haveResponseLock(id) && ((INTERSECTION.LEFT|INTERSECTION.RIGHT)&c.intersection)) {
                         self.emit(GEngineE.WALLED, c.intersection)
                     }
                 }
