@@ -76,7 +76,7 @@ export const detectSlippingState = (body, collision) => {
     if (collision.wallslip.overlapFirstBody === body.id) {  // slipping from top
         // console.log(body)
         // console.log('from top: ', collision.wallslip.overlap, body.radius.y)
-        if (collision.wallslip.overlap > body.radius.y*2) {   // slipping
+        if (collision.wallslip.overlap > body.radius.y*1.35) {   // slipping
             if (collision.wallslip.slipping) return
             collision.wallslip.needEmit = true
             collision.wallslip.slipping = true
@@ -86,7 +86,7 @@ export const detectSlippingState = (body, collision) => {
             collision.wallslip.slipping = false
         }
     } else {                                                // slipping from bottom
-        if (collision.wallslip.overlap > body.radius.y) {   // slipping
+        if (collision.wallslip.overlap > body.radius.y*1.2) {   // slipping
             if (collision.wallslip.slipping) return
             collision.wallslip.needEmit = true
             collision.wallslip.slipping = true

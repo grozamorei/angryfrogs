@@ -1,7 +1,6 @@
 import {Util} from "../utils/Util";
 import {Frog} from "../go/Frog";
 import {PMASK, GEngineE} from "../physics/GEngine";
-import {StaticObject} from "../go/StaticObject";
 import {INTERSECTION} from "../physics/GUtils";
 import {Lava} from "../go/Lava";
 import {LevelGenerator} from "./LevelGenerator";
@@ -150,7 +149,7 @@ export const Controller = (renderer, physics, input) => {
             maxXImpulse = 800
         }
 
-        const magnitude = Util.clampMagnitude(vector, 70, maxMagnitude)
+        /*const magnitude = */Util.clampMagnitude(vector, 70, maxMagnitude)
         if (Number.isNaN(vector.x) || Number.isNaN(vector.y)) {
             ground()
         } else {
@@ -268,7 +267,7 @@ export const Controller = (renderer, physics, input) => {
                     'slide_00': 'frog.slide_00', 'slide_01': 'frog.slide_01'
                 },
                 respawnPoint.x, respawnPoint.y,
-                256, 256, PMASK.FROG, {x: 78, y: 72, w: 100, h: 184})
+                220, 220, PMASK.FROG, {x: 70, y: 58, w: 81, h: 162})
             score = {actual: 0, anchor: respawnPoint.y}
             self.addObject(frog, false)
         }
