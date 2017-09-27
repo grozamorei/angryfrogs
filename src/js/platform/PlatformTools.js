@@ -2,7 +2,10 @@
 export const platformTemplate = (state) => ({
     get id() { return state.id },
     get userName() { return state.userName },
-    get userData() { return state.userData }
+    get userData() { return state.userData },
+    sendScore(_) {
+        console.warn('Score sending on platform ' + state.id + ' is not supported')
+    }
 })
 
 export const parseUrlVars = (searchQuery) => {
