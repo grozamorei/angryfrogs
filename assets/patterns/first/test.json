@@ -193,15 +193,37 @@
          "name":"RESPAWN",
          "objects":[
                 {
-                 "height":170,
-                 "id":2,
+                 "height":81,
+                 "id":34,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":120,
-                 "x":81,
-                 "y":970
+                 "width":81,
+                 "x":56,
+                 "y":1173.33333333333
+                }, 
+                {
+                 "height":81,
+                 "id":36,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":81,
+                 "x":543.5,
+                 "y":607.5
+                }, 
+                {
+                 "height":81,
+                 "id":37,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":81,
+                 "x":408.833333333333,
+                 "y":199.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -209,7 +231,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":31,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",

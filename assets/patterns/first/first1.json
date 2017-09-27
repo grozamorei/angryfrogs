@@ -6,7 +6,7 @@
          "name":"WALL_STICKY",
          "objects":[
                 {
-                 "height":554,
+                 "height":436,
                  "id":13,
                  "name":"",
                  "rotation":0,
@@ -14,7 +14,7 @@
                  "visible":true,
                  "width":41.3333333333333,
                  "x":493.666666666667,
-                 "y":244.333333333333
+                 "y":362.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -100,9 +100,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":70.3330000000001,
-                 "x":477.500166666667,
-                 "y":221.666683333333
+                 "width":196.333,
+                 "x":349.500166666667,
+                 "y":333.666683333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -144,9 +144,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":282,
-                 "x":19.6666666666667,
-                 "y":585
+                 "width":328,
+                 "x":23.6666666666667,
+                 "y":527
                 }, 
                 {
                  "height":22,
@@ -156,8 +156,8 @@
                  "type":"",
                  "visible":true,
                  "width":139.333333333333,
-                 "x":53,
-                 "y":485
+                 "x":49,
+                 "y":449
                 }, 
                 {
                  "height":22,
@@ -167,8 +167,8 @@
                  "type":"",
                  "visible":true,
                  "width":139.333,
-                 "x":221.000166666667,
-                 "y":294.333333333333
+                 "x":205.000166666667,
+                 "y":272.333333333333
                 }, 
                 {
                  "height":22,
@@ -178,8 +178,8 @@
                  "type":"",
                  "visible":true,
                  "width":139.333,
-                 "x":595.666833333333,
-                 "y":347.666666666667
+                 "x":589.666833333333,
+                 "y":459.666666666667
                 }, 
                 {
                  "height":22,
@@ -226,15 +226,15 @@
                  "y":991.999833333333
                 }, 
                 {
-                 "height":52,
+                 "height":28,
                  "id":28,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":172,
-                 "x":30,
-                 "y":525.333333333333
+                 "width":194,
+                 "x":32,
+                 "y":489.333333333333
                 }, 
                 {
                  "height":344,
@@ -314,15 +314,59 @@
          "name":"RESPAWN",
          "objects":[
                 {
-                 "height":119.333333333333,
+                 "height":81,
                  "id":2,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":92,
-                 "x":670.333333333333,
-                 "y":1139.33333333333
+                 "width":81,
+                 "x":362.333333333333,
+                 "y":945.33333333333
+                }, 
+                {
+                 "height":81,
+                 "id":42,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":81,
+                 "x":81.5,
+                 "y":1159.5
+                }, 
+                {
+                 "height":81,
+                 "id":43,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":81,
+                 "x":621.5,
+                 "y":689.5
+                }, 
+                {
+                 "height":81,
+                 "id":44,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":81,
+                 "x":81.5,
+                 "y":351.5
+                }, 
+                {
+                 "height":81,
+                 "id":45,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":81,
+                 "x":59.5,
+                 "y":-4.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -330,7 +374,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":42,
+ "nextobjectid":46,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.2",
