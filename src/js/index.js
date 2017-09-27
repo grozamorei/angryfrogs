@@ -37,24 +37,19 @@ window.onload = () => {
 
     const respawnLocations = []
     phys.on(GEngineE.DEATH, () => {
-        let data = Object.assign({score: controller.score}, platform.userData)
-        // console.log('sending score: ', data.score)
-        Util.postRequest(window.location.protocol + '//' + window.location.hostname + ':8443/setScore', JSON.stringify(data)).then(
-            () => { console.log ('URL REQUEST: SUCCESS') },
-            () => {console.log('URL REQUEST: FAILED')}
-        )
+        platform.sendScore(controller.score)
         controller.respawn(respawnLocations)
     })
 
     const startGame = () => {
         const possibleMaps = resources.getJSON('patterns').start
         const startMap = possibleMaps[Util.getRandomInt(0, possibleMaps.length-1)].alias
-        const map = resources.getJSON(/*startMap*/'test')
+        const map = resources.getJSON(/*startMap*/'first1')
         console.log('starting with map ' + startMap)
         map.layers.forEach(l => {
             if (l.name === 'RESPAWN') {
                 l.objects.forEach(resp => {
-                    respawnLocations.push({x:resp.x, y: resp.y})
+                    controller.addRespawn({x:resp.x + resp.width/2, y: resp.y + resp.height/2 - rend.size.y})
                 })
                 return
             }
@@ -89,10 +84,6 @@ window.onload = () => {
     resources
         .add('patterns', 'assets/patterns/digest.json')
         .add('pixel', 'assets/pixel.png')
-        // .add('frog.idle', 'assets/frog/idle.png')
-        // .add('frog.jump', 'assets/frog/jump.png')
-        // .add('frog.walljump', 'assets/frog/walljump.png')
-        // .add('frog.midair', 'assets/frog/midair.png')
         .add('frog.idle', 'assets/frog.draft/idle.png')
         .add('frog.jump_00', 'assets/frog.draft/jump_00.png')
         .add('frog.jump_01', 'assets/frog.draft/jump_01.png')

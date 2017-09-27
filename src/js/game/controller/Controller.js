@@ -4,6 +4,7 @@ import {PMASK, GEngineE} from "../physics/GEngine";
 import {INTERSECTION} from "../physics/GUtils";
 import {Lava} from "../go/Lava";
 import {LevelGenerator} from "./LevelGenerator";
+import {StaticObject} from "../go/StaticObject";
 
 export const Controller = (renderer, physics, input) => {
     let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0x000000, align : 'center'})
@@ -14,6 +15,7 @@ export const Controller = (renderer, physics, input) => {
     renderer.stage.addChild(scoreTxt)
 
     const environment = []
+    const respawns = []
     let frog = null
     let lava = null
     let lastFacing = 1
@@ -173,13 +175,26 @@ export const Controller = (renderer, physics, input) => {
 
     const generator = LevelGenerator(renderer.scroll.y, renderer.size)
     const self = {
-        addObject: (go, isEnvironment = true) => {
+        addObject: (go) => {
             renderer.addObject(go)
             go.body && physics.addBody(go.body)
-            isEnvironment && environment.push(go)
-            if (frog && isEnvironment) {
+            if (frog && go !== frog) {
                 renderer.addObject(frog)
             }
+        },
+        addEnvironment: (go) => {
+            renderer.addObject(go)
+            environment.push(go)
+            if (frog) {
+                renderer.addObject(frog)
+            }
+        },
+        addRespawn: (resp) => {
+            respawns.push(resp)
+            // renderer.addObject(StaticObject(
+            //     'resp', 'pixel',
+            //     resp.x-40, resp.y-40, 80, 80,
+            //     0xCCCCCC, PMASK.NONE))
         },
         removeObject: (go, index = -1) => {
             if (!go) return
@@ -193,7 +208,6 @@ export const Controller = (renderer, physics, input) => {
 
         get score() { return Math.floor(score.actual) * 10 },
         update: (dt) => {
-
             //
             // update score
             score.actual = Math.max(score.anchor - frog.visual.y, score.actual)
@@ -229,7 +243,7 @@ export const Controller = (renderer, physics, input) => {
 
                 renderer.scroll.y = Util.lerp(renderer.scroll.y, renderer.scroll.y + 500 - diff, 0.11)
 
-                generator.update(renderer.scroll.y, self.addObject)
+                generator.update(renderer.scroll.y, self.addObject, self.addEnvironment, self.addRespawn)
 
                 //
                 // sweep objects that went below screen
@@ -240,23 +254,38 @@ export const Controller = (renderer, physics, input) => {
                         self.removeObject(go, i)
                     }
                 }
+
+                const spawnYBound = renderer.scroll.y - renderer.size.y + 200
+                for (let i = respawns.length-1; i>=0; i--) {
+                    if (Math.abs(respawns[i].y) < spawnYBound) {
+                        // console.log('removing spawn at ', respawns[i], respawns[i].y, spawnYBound)
+                        respawns.splice(i, 1)
+                    }
+                }
             }
         },
-        respawn: (respawnLocations = undefined) => {
-            self.removeObject(frog)
+        respawn: () => {
             self.removeObject(lava)
 
             lava = Lava('pixel', 0xCC0000)
-            self.addObject(lava, false)
+            self.addObject(lava)
 
             let respawnPoint
-            if (respawnLocations) {
-                respawnPoint = respawnLocations[Util.getRandomInt(0, respawnLocations.length-1)]
-                respawnPoint.y -= renderer.size.y
+            if (respawns.length > 0) {
+                respawnPoint = respawns.reduce((current, el) => {
+                    if (Math.abs(el.y) < Math.abs(current.y)) {
+                        current.x = el.x
+                        current.y = el.y
+                    }
+                    return current
+                }, {x: Number.MAX_VALUE, y: Number.MAX_VALUE})
+                respawnPoint.x -= 106
+                respawnPoint.y -= 180
             } else {
                 respawnPoint = {x: Util.getRandomInt(100, renderer.size.x-100), y: -(renderer.scroll.y-renderer.size.y) - renderer.size.y*0.9}
             }
 
+            self.removeObject(frog)
             frog = Frog(
                 {
                     idle: 'frog.idle',
@@ -269,7 +298,7 @@ export const Controller = (renderer, physics, input) => {
                 respawnPoint.x, respawnPoint.y,
                 220, 220, PMASK.FROG, {x: 70, y: 58, w: 81, h: 162})
             score = {actual: 0, anchor: respawnPoint.y}
-            self.addObject(frog, false)
+            self.addObject(frog)
         }
     }
 

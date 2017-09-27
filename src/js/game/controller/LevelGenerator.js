@@ -60,32 +60,37 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
         // }
     }
 
-    const generateTemplateEnvironment = (key, scrollPosition, objectAdder) => {
+    const generateTemplateEnvironment = (key, scrollPosition, objectAdder, envAdder, respAdder) => {
         const possibleTemplates = resources.getJSON('patterns')[key]
         const template = possibleTemplates[Util.getRandomInt(0, possibleTemplates.length-1)].alias
         const map = resources.getJSON(template)
         console.log('generating template ' + template)
 
         map.layers.forEach(l => {
-            if (l.name === 'RESPAWN') return
-            l.objects.forEach(o => {
-                objectAdder(StaticObject(
-                    'regular_' + Util.getRandomInt(0, 1000), 'pixel', o.x, -scrollPosition - (sceneSize.y - o.y),
-                    o.width, o.height, Util.hexColorToRgbInt(l.color), PMASK[l.name]
-                ))
-            })
+            if (l.name === 'RESPAWN') {
+                l.objects.forEach(resp => {
+                    respAdder({x:resp.x + resp.width/2, y: -scrollPosition - sceneSize.y + (resp.y + resp.height/2)})
+                })
+            } else {
+                l.objects.forEach(o => {
+                    objectAdder(StaticObject(
+                        'regular_' + Util.getRandomInt(0, 1000), 'pixel', o.x, -scrollPosition - (sceneSize.y - o.y),
+                        o.width, o.height, Util.hexColorToRgbInt(l.color), PMASK[l.name]
+                    ))
+                })
+            }
         })
 
         nextGenerationIn = 1400
     }
 
     return {
-        update(scrollPosition, objectAdder) {
+        update(scrollPosition, objectAdder, envAdder, respAdder) {
             if (scrollPosition - checkpoint < nextGenerationIn) return
             checkpoint = scrollPosition
 
             if (Math.random() < 0.1) {
-                generateTemplateEnvironment('first', scrollPosition, objectAdder)
+                generateTemplateEnvironment('first', scrollPosition, objectAdder, envAdder, respAdder)
             } else{
                 generateRandomEnvironment(scrollPosition, objectAdder)
             }

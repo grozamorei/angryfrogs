@@ -42,7 +42,7 @@ export const GEngine = () => {
     const slipOnFloor = (body, collision) => {
         body.center.y -= collision.penetration
         body.velocity.y = 0
-        body.velocity.x = Util.lerp(body.velocity.x, 0, 0.025)
+        body.velocity.x = Util.lerp(body.velocity.x, 0, 0.015)
         if (Math.abs(body.velocity.x) < 0.1) {
             body.velocity.x = 0
         }
