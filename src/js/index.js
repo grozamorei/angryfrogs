@@ -42,9 +42,12 @@ window.onload = () => {
     })
 
     const startGame = () => {
+        const params = resources.getJSON('params')
+
         const possibleMaps = resources.getJSON('patterns').start
-        const startMap = possibleMaps[Util.getRandomInt(0, possibleMaps.length-1)].alias
-        const map = resources.getJSON(/*startMap*/'test')
+        const randomMap = possibleMaps[Util.getRandomInt(0, possibleMaps.length-1)].alias
+        const startMap = params.levels.start || randomMap
+        const map = resources.getJSON(startMap)
         console.log('starting with map ' + startMap)
         map.layers.forEach(l => {
             if (l.name === 'RESPAWN') {
@@ -82,6 +85,7 @@ window.onload = () => {
     //
     // preload all assets
     resources
+        .add('params', 'assets/params.json')
         .add('patterns', 'assets/patterns/digest.json')
         .add('pixel', 'assets/pixel.png')
         .add('frog.idle', 'assets/frog.draft/idle.png')
@@ -97,8 +101,8 @@ window.onload = () => {
         .add('frog.slide_00', 'assets/frog.draft/slide_00.png')
         .add('frog.slide_01', 'assets/frog.draft/slide_01.png')
         .load(() => {
-            resources.getJSON('patterns').first.forEach(t=>resources.add(t.alias, t.path))
-            resources.getJSON('patterns').start.forEach(t =>resources.add(t.alias, t.path))
+            resources.getJSON('patterns')['first'].forEach(t=>resources.add(t.alias, t.path))
+            resources.getJSON('patterns')['start'].forEach(t =>resources.add(t.alias, t.path))
             resources.load(startGame)
         })
 }
