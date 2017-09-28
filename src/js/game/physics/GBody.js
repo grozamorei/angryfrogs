@@ -1,4 +1,5 @@
 import {GPoint, nextUniqueId} from "./GUtils";
+import {GMap} from "../utils/GMap";
 export const GBody = (center, halfsizes) => {
 
     const state = {
@@ -10,7 +11,7 @@ export const GBody = (center, halfsizes) => {
     const id = nextUniqueId()
 
     const velocity = GPoint(0, 0)
-    const collisions = new Map()
+    const collisions = new GMap()
     const lock = []
 
     const self = {
@@ -35,7 +36,7 @@ export const GBody = (center, halfsizes) => {
         },
         get velocity() { return velocity },
         /**
-         * @return {Map}
+         * @return {GMap}
          */
         get collisions() { return collisions },
         getCollisionsByMask(mask) {

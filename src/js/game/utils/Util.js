@@ -53,7 +53,7 @@ export const Util = {
 
     normalizeValue: (v) => {
         if (Util.approximately(v, 0)) return 0
-        if (Number.isFinite(v) || Number.isSafeInteger(v) || Number.isInteger(v)) return v/Math.abs(v)
+        if (isFinite(v)) return v/Math.abs(v)
         return NaN
     }
 }
