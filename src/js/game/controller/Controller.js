@@ -152,7 +152,7 @@ export const Controller = (renderer, physics, input) => {
         }
 
         /*const magnitude = */Util.clampMagnitude(vector, 70, maxMagnitude)
-        if (Number.isNaN(vector.x) || Number.isNaN(vector.y)) {
+        if (isNaN(vector.x) || isNaN(vector.y)) {
             ground()
         } else {
             if (grounded()) {

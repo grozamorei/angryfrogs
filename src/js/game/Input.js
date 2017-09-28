@@ -16,8 +16,8 @@ export const Input = (canvas, debug) => {
         return e.clientY
     }
 
-    const startedAt = {x: Number.NaN, y: Number.NaN}
-    const lastSeenAt = {x: Number.NaN, y: Number.NaN}
+    const startedAt = {x: NaN, y: NaN}
+    const lastSeenAt = {x: NaN, y: NaN}
     const onTouchStart = (e) => {
         e.preventDefault()
 
@@ -28,7 +28,7 @@ export const Input = (canvas, debug) => {
 
     const onTouchMove = (e) => {
         e.preventDefault()
-        if (Number.isNaN(startedAt.x)) return
+        if (isNaN(startedAt.x)) return
         lastSeenAt.x = getX(e)
         lastSeenAt.y = getY(e)
 
@@ -49,7 +49,7 @@ export const Input = (canvas, debug) => {
         e.preventDefault()
 
         self.emit('touchEnded', {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)})
-        startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = Number.NaN
+        startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = NaN
     }
 
     canvas.ontouchstart = onTouchStart

@@ -1,20 +1,22 @@
 import {GPoint, nextUniqueId} from "./GUtils";
+import {GMap} from "../utils/GMap";
 export const GBody = (center, halfsizes) => {
 
     const state = {
+        id: nextUniqueId(),
         label: '',
         collisionFilter: 0,
         isStatic: false,
         isInteractive: false
     }
-    const id = nextUniqueId()
 
     const velocity = GPoint(0, 0)
-    const collisions = new Map()
+    const collisions = new GMap()
     const lock = []
 
     const self = {
-        get id() { return id },
+        get state() { return state },
+        get id() { return state.id },
         get label() { return state.label },
         get isStatic() { return state.isStatic },
         get isInteractive() { return state.isInteractive },
@@ -35,7 +37,7 @@ export const GBody = (center, halfsizes) => {
         },
         get velocity() { return velocity },
         /**
-         * @return {Map}
+         * @return {GMap}
          */
         get collisions() { return collisions },
         getCollisionsByMask(mask) {

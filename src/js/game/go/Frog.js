@@ -17,13 +17,13 @@ export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
         update: () => {
             state.sprite.x = state.debugSprite.x = state.body.center.x
             state.sprite.y = state.debugSprite.y = state.body.center.y
-            if (!Number.isNaN(nextAnimationFrameIn)) {
+            if (!isNaN(nextAnimationFrameIn)) {
                 nextAnimationFrameIn -= 1
                 if (nextAnimationFrameIn === 0) {
                     const scaleX = state.sprite.scale.x
                     const aData = lastAnimationKey.split('_')
                     const anim = aData[0]
-                    const frame = Number.parseInt(aData[1])
+                    const frame = parseInt(aData[1])
                     if (animationType[anim] === 'linear') { // progress frames
                         if (frame < maxFrame[aData[0]]) {
                             self.updateAnimation(aData[0] + '_0' + (frame+1), Util.normalizeValue(scaleX), true)

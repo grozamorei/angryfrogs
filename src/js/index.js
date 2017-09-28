@@ -44,7 +44,7 @@ window.onload = () => {
     const startGame = () => {
         const possibleMaps = resources.getJSON('patterns').start
         const startMap = possibleMaps[Util.getRandomInt(0, possibleMaps.length-1)].alias
-        const map = resources.getJSON(/*startMap*/'first1')
+        const map = resources.getJSON(/*startMap*/'test')
         console.log('starting with map ' + startMap)
         map.layers.forEach(l => {
             if (l.name === 'RESPAWN') {

@@ -2,6 +2,7 @@ import * as GUtils from "./GUtils";
 import {emitterTemplate} from "../utils/EmitterBehaviour";
 import {INTERSECTION} from "./GUtils";
 import {Util} from "../utils/Util";
+import {GMap} from "../utils/GMap";
 
 export const GEngineE = {
     DEATH: 'death',
@@ -30,8 +31,8 @@ export const GEngine = () => {
     const slipperyWallGravity = gravity * 0.92
     const stickyWallGravity = gravity * 0.4
 
-    const staticBodies = new Map()
-    const movingBodies = new Map()
+    const staticBodies = new GMap()
+    const movingBodies = new GMap()
 
     const stickToFloor = (body, collision) => {
         body.center.y -= collision.penetration
@@ -240,10 +241,10 @@ export const GEngine = () => {
                 }
 
                 if (a.collisions.size === 1 && remove.length > 0) {
-                    const id = a.collisions.entries().next().value[0]
-                    const c = a.collisions.entries().next().value[1]
-                    if (!a.haveResponseLock(id) && ((INTERSECTION.LEFT|INTERSECTION.RIGHT)&c.intersection)) {
-                        self.emit(GEngineE.WALLED, c.intersection)
+                    const set = a.collisions.getSetAt(0)
+                    // console.log(a.collisions, id, c)
+                    if (!a.haveResponseLock(set.k) && ((INTERSECTION.LEFT|INTERSECTION.RIGHT)&set.v.intersection)) {
+                        self.emit(GEngineE.WALLED, set.v.intersection)
                     }
                 }
             })
