@@ -44,7 +44,7 @@ window.onload = () => {
     const startGame = () => {
         const params = resources.getJSON('params')
 
-        const possibleMaps = resources.getJSON('patterns').start
+        const possibleMaps = resources.getJSON('patterns').first
         const randomMap = possibleMaps[Util.getRandomInt(0, possibleMaps.length-1)].alias
         const startMap = params.levels.start || randomMap
         const map = resources.getJSON(startMap)
@@ -102,7 +102,7 @@ window.onload = () => {
         .add('frog.slide_01', 'assets/frog.draft/slide_01.png')
         .load(() => {
             resources.getJSON('patterns')['first'].forEach(t=>resources.add(t.alias, t.path))
-            resources.getJSON('patterns')['start'].forEach(t =>resources.add(t.alias, t.path))
+            // resources.getJSON('patterns')['start'].forEach(t =>resources.add(t.alias, t.path))
             resources.load(startGame)
         })
 }
