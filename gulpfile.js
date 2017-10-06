@@ -73,9 +73,9 @@ gulp.task('pack-maps', ['clean', 'deploy-static'], () => {
 
                 // console.log(loadPath)
                 if (category in patternDigest) {
-                    patternDigest[category].push({alias: name, path: loadPath})
+                    patternDigest[category].push({alias: category + '_' + name, path: loadPath})
                 } else {
-                    patternDigest[category] = [{alias: name, path: loadPath}]
+                    patternDigest[category] = [{alias: category + '_' + name, path: loadPath}]
                 }
 
                 cb(null, ch)

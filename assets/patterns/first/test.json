@@ -12,9 +12,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":20,
-                 "x":7,
-                 "y":423
+                 "width":32,
+                 "x":0.333333333333333,
+                 "y":421.666666666667
                 }, 
                 {
                  "height":387.333333333333,
@@ -23,8 +23,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":20,
-                 "x":342,
+                 "width":16,
+                 "x":346,
                  "y":415
                 }],
          "opacity":1,
@@ -45,7 +45,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":28,
+                 "width":32,
                  "x":769,
                  "y":193.333333333333
                 }],
@@ -61,15 +61,15 @@
          "name":"PLATFORM_SLIPPERY_SOLID",
          "objects":[
                 {
-                 "height":71,
+                 "height":64,
                  "id":8,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":96,
-                 "x":373.166666666667,
-                 "y":719.833333333333
+                 "width":128,
+                 "x":370.5,
+                 "y":722.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -83,26 +83,26 @@
          "name":"PLATFORM_SLIPPERY_THIN",
          "objects":[
                 {
-                 "height":30,
+                 "height":16,
                  "id":7,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":517,
-                 "x":93,
-                 "y":995
+                 "x":74.3333333333333,
+                 "y":993.666666666667
                 }, 
                 {
-                 "height":30,
+                 "height":16,
                  "id":26,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":823,
-                 "x":-6.5,
-                 "y":1256
+                 "x":-7.83333333333331,
+                 "y":1260
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -116,15 +116,15 @@
          "name":"PLATFORM_STICKY_SOLID",
          "objects":[
                 {
-                 "height":68,
+                 "height":128,
                  "id":5,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":118,
-                 "x":677.666666666667,
-                 "y":656.333333333333
+                 "width":128,
+                 "x":696.333333333334,
+                 "y":657.666666666666
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -145,11 +145,11 @@
                  "type":"",
                  "visible":true,
                  "width":96,
-                 "x":535.666666666667,
-                 "y":695.333333333333
+                 "x":537,
+                 "y":699.333333333333
                 }, 
                 {
-                 "height":22,
+                 "height":16,
                  "id":24,
                  "name":"",
                  "rotation":0,

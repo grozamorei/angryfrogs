@@ -101,8 +101,10 @@ window.onload = () => {
         .add('frog.slide_00', 'assets/frog.draft/slide_00.png')
         .add('frog.slide_01', 'assets/frog.draft/slide_01.png')
         .load(() => {
-            resources.getJSON('patterns')['first'].forEach(t=>resources.add(t.alias, t.path))
-            // resources.getJSON('patterns')['start'].forEach(t =>resources.add(t.alias, t.path))
+            for (const category in resources.getJSON('patterns')) {
+                resources.getJSON('patterns')[category].forEach(t=>resources.add(t.alias, t.path))
+            }
+
             resources.load(startGame)
         })
 }

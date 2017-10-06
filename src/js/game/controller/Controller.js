@@ -296,7 +296,7 @@ export const Controller = (renderer, physics, input) => {
                     'slide_00': 'frog.slide_00', 'slide_01': 'frog.slide_01'
                 },
                 respawnPoint.x, respawnPoint.y,
-                220, 220, PMASK.FROG, {x: 70, y: 58, w: 81, h: 162})
+                256, 256, PMASK.FROG, {x: 86, y: 106, w: 80, h: 150})
             score = {actual: 0, anchor: respawnPoint.y}
             self.addObject(frog)
         }
