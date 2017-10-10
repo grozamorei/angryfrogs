@@ -241,7 +241,7 @@ export const Controller = (renderer, physics, input) => {
 
                 lava.updatePosition(renderer.scroll, renderer.size)
 
-                renderer.scroll.y = Util.lerp(renderer.scroll.y, renderer.scroll.y + 500 - diff, 0.11)
+                renderer.scroll.y = Math.floor(Util.lerp(renderer.scroll.y, renderer.scroll.y + 500 - diff, 0.11))
 
                 generator.update(renderer.scroll.y, self.addObject, self.addEnvironment, self.addRespawn)
 

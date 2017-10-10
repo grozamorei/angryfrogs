@@ -9,7 +9,7 @@ export const Renderer = (canvas) => {
     scrollContainer.y = 1280
 
     const renderer = PIXI.autoDetectRenderer({
-        roundPixels: true,
+        roundPixels: false,
         width: vSize.x,
         height: vSize.y,
         view: canvas,
