@@ -5,13 +5,14 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
 
     let lastWallCheckPoint = 0
     let nextGenerationIn = 200
+    let sizes = [64, 96, 128, 160, 192]
 
     const generateRandomEnvironment = (scrollPosition, objectAdder) => {
         if (Math.random() < 0.9 || nextGenerationIn === 200) {
             objectAdder(StaticObject(
                 'horizontal_' + Util.getRandomInt(0, 100),
-                'pixel',
-                Util.getRandomInt(100, sceneSize.x-100), -scrollPosition, Util.getRandomInt(120, 180), 40,
+                'pl_sticky_thin',
+                Util.getRandomInt(100, sceneSize.x-100), -scrollPosition, sizes[Util.getRandomInt(0, sizes.length)], 32,
                 Util.hexColorToRgbInt('#55557f'), PMASK.PLATFORM_STICKY_THIN
             ))
             nextGenerationIn = 100
@@ -74,7 +75,7 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
             } else {
                 l.objects.forEach(o => {
                     objectAdder(StaticObject(
-                        'regular_' + Util.getRandomInt(0, 1000), 'pixel', o.x, -scrollPosition - (sceneSize.y - o.y),
+                        'regular_' + Util.getRandomInt(0, 1000), PMASK[l.name], o.x, -scrollPosition - (sceneSize.y - o.y),
                         o.width, o.height, Util.hexColorToRgbInt(l.color), PMASK[l.name]
                     ))
                 })

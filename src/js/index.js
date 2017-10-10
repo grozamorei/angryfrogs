@@ -16,32 +16,34 @@ window.onload = () => {
     document.body.appendChild(canvas)
 
     const resources = window.resources = Resources()
-    const rend = Renderer(canvas)
-    const phys = GEngine()
-    const input = Input(canvas, rend.debugDrawLayer)
-    const controller = Controller(rend, phys, input)
-
-    let frameCounter = 0
-    let time = Date.now()
-    const gameLoop = () => {
-        const dt = Date.now() - time
-        time = Date.now()
-
-        requestAnimationFrame(gameLoop)
-
-        input.update()
-        phys.update(dt, frameCounter++)
-        controller.update(dt)
-        rend.update()
-    }
-
-    const respawnLocations = []
-    phys.on(GEngineE.DEATH, () => {
-        platform.sendScore(controller.score)
-        controller.respawn(respawnLocations)
-    })
+    PIXI.settings.MIPMAP_TEXTURES = false;
 
     const startGame = () => {
+        const rend = Renderer(canvas)
+        const phys = GEngine()
+        const input = Input(canvas, rend.debugDrawLayer)
+        const controller = Controller(rend, phys, input)
+
+        let frameCounter = 0
+        let time = Date.now()
+        const gameLoop = () => {
+            const dt = Date.now() - time
+            time = Date.now()
+
+            requestAnimationFrame(gameLoop)
+
+            input.update()
+            phys.update(dt, frameCounter++)
+            controller.update(dt)
+            rend.update()
+        }
+
+        const respawnLocations = []
+        phys.on(GEngineE.DEATH, () => {
+            platform.sendScore(controller.score)
+            controller.respawn(respawnLocations)
+        })
+
         const params = resources.getJSON('params')
 
         const possibleMaps = resources.getJSON('patterns').first
@@ -68,7 +70,7 @@ window.onload = () => {
                 } else {
                     go = StaticObject(
                         l.name.toLowerCase() + '_' + i.toString(),
-                        'pixel',
+                        PMASK[l.name],
                         obj.x, obj.y-rend.size.y, obj.width, obj.height,
                         Util.hexColorToRgbInt(l.color), PMASK[l.name]
                     )
@@ -98,6 +100,10 @@ window.onload = () => {
         .add('frog.prepare.jump.01', 'assets/frog.draft/prepare.jump.01.png')
         .add('frog.midair.prepare.jump', 'assets/frog.draft/midair.prepare.jump.png')
         .add('frog.midair.head.hit', 'assets/frog.draft/midair.head.hit.png')
+        .add('pl_slippery_thin', 'assets/level/pl_slippery_thin.png')
+        .add('pl_sticky_thin', 'assets/level/pl_sticky_thin.png')
+        .add('shader.vert.mesh', 'assets/shaders/vert.mesh.glsl')
+        .add('shader.frag.slice3', 'assets/shaders/frag.slice3.glsl')
         .load(() => {
             for (const category in resources.getJSON('patterns')) {
                 resources.getJSON('patterns')[category].forEach(t=>resources.add(t.alias, t.path))

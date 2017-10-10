@@ -54,7 +54,10 @@ gulp.task('deploy-static', ['clean'], () => {
     gulp.src(['src/index.html'])
         .pipe(gulp.dest('build/'));
 
-    return gulp.src(['assets/**/*', '!assets/patterns/template.json'])
+    return gulp.src([
+            'assets/**/*.png', 'assets/**/*.json',
+            'assets/**/*.glsl', 'assets/**/*.ttf',
+            '!assets/patterns/template.json'])
         .pipe(gulp.dest('build/assets'))
 })
 

@@ -83,7 +83,7 @@
          "name":"PLATFORM_SLIPPERY_THIN",
          "objects":[
                 {
-                 "height":23.3333333333334,
+                 "height":32,
                  "id":7,
                  "name":"",
                  "rotation":0,
@@ -94,15 +94,15 @@
                  "y":1264.33333333333
                 }, 
                 {
-                 "height":23.3333,
+                 "height":32,
                  "id":33,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":196.333,
-                 "x":349.500166666667,
-                 "y":333.666683333333
+                 "width":192,
+                 "x":348.500166666667,
+                 "y":324.666683333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -138,59 +138,59 @@
          "name":"PLATFORM_STICKY_THIN",
          "objects":[
                 {
-                 "height":22,
+                 "height":32,
                  "id":17,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":328,
+                 "width":320,
                  "x":23.6666666666667,
                  "y":527
                 }, 
                 {
-                 "height":22,
+                 "height":32,
                  "id":29,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":139.333333333333,
-                 "x":49,
-                 "y":449
+                 "width":128,
+                 "x":57,
+                 "y":448
                 }, 
                 {
-                 "height":22,
+                 "height":32,
                  "id":31,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":139.333,
+                 "width":128,
                  "x":205.000166666667,
                  "y":272.333333333333
                 }, 
                 {
-                 "height":22,
+                 "height":32,
                  "id":36,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":139.333,
+                 "width":128,
                  "x":589.666833333333,
                  "y":459.666666666667
                 }, 
                 {
-                 "height":22,
+                 "height":32,
                  "id":41,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":105.999666666667,
-                 "x":51.6668333333334,
-                 "y":91.6666666666667
+                 "width":96,
+                 "x":56.6668333333334,
+                 "y":93.6666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",

@@ -10,7 +10,7 @@ export const Resources = () => {
             PIXI.loader.load(onComplete)
             return self
         },
-        getTexture: (alias) => PIXI.loader.resources[alias].texture,
+        getTexture: (alias) => PIXI.loader.resources[alias] ? PIXI.loader.resources[alias].texture : PIXI.loader.resources.pixel.texture,
         getJSON: (alias) => PIXI.loader.resources[alias].data
     }
     return self

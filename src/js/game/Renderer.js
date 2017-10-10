@@ -7,12 +7,17 @@ export const Renderer = (canvas) => {
     const scrollContainer = new PIXI.Container()
     stage.addChild(scrollContainer)
     scrollContainer.y = 1280
+
     const renderer = PIXI.autoDetectRenderer({
         roundPixels: true,
         width: vSize.x,
         height: vSize.y,
         view: canvas,
-        backgroundColor: 0x817066
+        backgroundColor: 0x817066,
+        antialias: false,
+        resolution: 1,
+        forceFXAA: false,
+        // autoResize: false
     })
     const graphics = new PIXI.Graphics()
     stage.addChild(graphics)
@@ -21,7 +26,7 @@ export const Renderer = (canvas) => {
         canvasW = Math.max(window.innerWidth || 0, document.documentElement.clientWidth)
         canvasH = Math.max(window.innerHeight || 0, document.documentElement.clientHeight)
 
-        renderer.resize(vSize.x * (canvasH / vSize.y), canvasH)
+        renderer.resize(Math.round(vSize.x * (canvasH / vSize.y)), canvasH)
         const hMargin = (canvasW - renderer.width) / 2
         canvas.style.marginLeft = hMargin.toString() + 'px'
 
