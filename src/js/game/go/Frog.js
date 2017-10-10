@@ -15,8 +15,8 @@ export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
 
     const self = {
         update: () => {
-            state.sprite.x = state.debugSprite.x = state.body.center.x
-            state.sprite.y = state.debugSprite.y = state.body.center.y
+            state.sprite.x = state.debugSprite.x = Math.round(state.body.center.x)
+            state.sprite.y = state.debugSprite.y = Math.round(state.body.center.y)
             if (!isNaN(nextAnimationFrameIn)) {
                 nextAnimationFrameIn -= 1
                 if (nextAnimationFrameIn === 0) {
