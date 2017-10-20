@@ -114,18 +114,7 @@
          "color":"#64644b",
          "draworder":"topdown",
          "name":"PLATFORM_STICKY_SOLID",
-         "objects":[
-                {
-                 "height":28,
-                 "id":5,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":118,
-                 "x":888.666666666667,
-                 "y":463.333333333333
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
