@@ -5,6 +5,7 @@ export const Resources = () => {
     const res = loader.resources
 
     const self = {
+        get raw() { return res },
         add: (alias, path) => {
             loader.add(alias, path)
             return self
@@ -20,7 +21,11 @@ export const Resources = () => {
         },
         getJSON: (alias) => {
             if (alias in res) return res[alias].data
-            throw '   Cannot find JSON with name ' + alias
+            throw '   Cannot find JSON with alias ' + alias
+        },
+        getText: (alias) => {
+            if (alias in res) return res[alias].data
+            throw '   Cannot find TEXT with alias ' + alias
         }
     }
     return self

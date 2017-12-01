@@ -19,6 +19,7 @@ window.onload = () => {
     PIXI.settings.MIPMAP_TEXTURES = false;
 
     const startGame = () => {
+        console.log(resources.raw)
         const rend = Renderer(canvas)
         const phys = GEngine()
         const input = Input(canvas, rend.debugDrawLayer)
@@ -46,7 +47,7 @@ window.onload = () => {
 
         const params = resources.getJSON('params')
 
-        const possibleMaps = resources.getJSON('patterns').first
+        const possibleMaps = resources.getJSON('digest.patterns')
         const randomMap = possibleMaps[Util.getRandomInt(0, possibleMaps.length-1)].alias
         const startMap = params.levels.start || randomMap
         const map = resources.getJSON(startMap)
@@ -64,13 +65,13 @@ window.onload = () => {
                 let go
                 if (l.name === 'IMAGE') {
                     go = StaticObject(
-                        obj.name, 'assets/' + obj.name,
+                        obj.name, 'image.' + obj.name,
                         obj.x, obj.y-rend.size.y, obj.width, obj.height,
                         0xFFFFFF, PMASK.NONE)
                 } else {
                     go = StaticObject(
                         l.name.toLowerCase() + '_' + i.toString(),
-                        PMASK[l.name],
+                        'level.' + PMASK[l.name],
                         obj.x, obj.y-rend.size.y, obj.width, obj.height,
                         Util.hexColorToRgbInt(l.color), PMASK[l.name]
                     )
@@ -86,29 +87,21 @@ window.onload = () => {
 
     //
     // preload all assets
+    const assetCategories = ['art', 'patterns', 'shaders']
     resources
         .add('params', 'assets/params.json')
-        .add('patterns', 'assets/patterns/digest.json')
         .add('pixel', 'assets/pixel.png')
-        .add('frog.idle', 'assets/frog.draft/idle.png')
-        .add('frog.jump_00', 'assets/frog.draft/jump_00.png')
-        .add('frog.jump_01', 'assets/frog.draft/jump_01.png')
-        .add('frog.jump_02', 'assets/frog.draft/jump_02.png')
-        .add('frog.walled', 'assets/frog.draft/walled.png')
-        .add('frog.walled.prepare.jump', 'assets/frog.draft/walled.prepare.jump.png')
-        .add('frog.prepare.jump.00', 'assets/frog.draft/prepare.jump.00.png')
-        .add('frog.prepare.jump.01', 'assets/frog.draft/prepare.jump.01.png')
-        .add('frog.midair.prepare.jump', 'assets/frog.draft/midair.prepare.jump.png')
-        .add('frog.midair.head.hit', 'assets/frog.draft/midair.head.hit.png')
-        .add('pl_slippery_thin', 'assets/level/pl_slippery_thin.png')
-        .add('pl_sticky_thin', 'assets/level/pl_sticky_thin.png')
-        .add('shader.vert.mesh', 'assets/shaders/vert.mesh.glsl')
-        .add('shader.frag.slice3', 'assets/shaders/frag.slice3.glsl')
         .load(() => {
-            for (const category in resources.getJSON('patterns')) {
-                resources.getJSON('patterns')[category].forEach(t=>resources.add(t.alias, t.path))
-            }
-
-            resources.load(startGame)
+            assetCategories.forEach(cat => {
+                resources.add('digest.' + cat, 'assets/' + cat + '/digest.json')
+            })
+            resources.load(() => {
+                assetCategories.forEach(cat => {
+                    resources.getJSON('digest.' + cat).forEach(digestItem => {
+                        resources.add(digestItem.alias, digestItem.path)
+                    })
+                })
+                resources.load(startGame)
+            })
         })
 }

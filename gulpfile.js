@@ -2,7 +2,6 @@ const gulp = require('gulp')
 const connect = require('gulp-connect')
 
 gulp.task('connect', () => {
-    const fs = require('fs')
     connect.server({
         root: 'build/',
         port: '8100',
@@ -61,35 +60,38 @@ gulp.task('deploy-static', ['clean'], () => {
         .pipe(gulp.dest('build/assets'))
 })
 
-gulp.task('pack-maps', ['clean', 'deploy-static'], () => {
+gulp.task('pack-digests', ['clean', 'deploy-static'], () => {
     const through = require('through2')
     const path = require('path')
 
-    const patternDigest = {}
-    gulp.src(['build/assets/patterns/**/*.json'])
-        .pipe(through.obj(
-            (ch, enc, cb) => {
-                const loadPath = path.relative(path.join(ch.cwd, 'build'), ch.path)
-                const relative = path.relative(path.join(ch.cwd, 'build', 'assets', 'patterns'), ch.path)
-                const category = path.dirname(relative)
-                const name = path.basename(relative).replace('.json', '')
+    const buildDigest = (assetPath, assetType) => {
+        const digest = []
+        gulp.src(['build/assets/' + assetPath + '/**/*.' + assetType])
+            .pipe(through.obj(
+                (ch, enc, cb) => {
+                    const loadPath = path.relative(path.join(ch.cwd, 'build'), ch.path)
 
-                // console.log(loadPath)
-                if (category in patternDigest) {
-                    patternDigest[category].push({alias: category + '_' + name, path: loadPath})
-                } else {
-                    patternDigest[category] = [{alias: category + '_' + name, path: loadPath}]
-                }
+                    const relative = path.relative(path.join(ch.cwd, 'build', 'assets', assetPath), ch.path)
+                    const baseName = relative.split(path.sep).pop().replace('.' + assetType, '')
+                    const subpath = relative.split(path.sep)
+                    subpath.pop()
+                    const suffix = subpath.join('.')
+                    const alias =  suffix.length > 0 ? suffix + '.' + baseName : baseName
+                    digest.push({alias: alias, path: loadPath})
+                    cb(null, ch)
+                },
+                (cb) => {
+                    require('fs').writeFileSync('build/assets/' + assetPath + '/digest.json', JSON.stringify(digest, null, '  '))
+                    cb()
+                }))
+    }
 
-                cb(null, ch)
-            },
-            (cb) => {
-                require('fs').writeFileSync('build/assets/patterns/digest.json', JSON.stringify(patternDigest, null, '  '))
-                cb()
-            }))
+    buildDigest('patterns', 'json')
+    buildDigest('art', 'png')
+    buildDigest('shaders', 'glsl')
 })
 
-gulp.task('deploy', ['clean', 'pack', 'pack-css', 'deploy-static', 'pack-maps'], () => {
+gulp.task('deploy', ['clean', 'pack', 'pack-css', 'deploy-static', 'pack-digests'], () => {
     gulp.src(['src/**/*']).pipe(connect.reload());
 });
 

@@ -3,7 +3,7 @@ import {Util} from "../utils/Util";
 import {PMASK} from "../physics/GEngine";
 export const LevelGenerator = (checkpoint, sceneSize) => {
 
-    let lastWallCheckPoint = 0
+    // let lastWallCheckPoint = 0
     let nextGenerationIn = 200
     let sizes = [64, 96, 128, 160, 192]
 
@@ -11,7 +11,7 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
         if (Math.random() < 0.9 || nextGenerationIn === 200) {
             objectAdder(StaticObject(
                 'horizontal_' + Util.getRandomInt(0, 100),
-                'pl_sticky_thin',
+                'level.pl_sticky_thin',
                 Util.getRandomInt(100, sceneSize.x-100), -scrollPosition, sizes[Util.getRandomInt(0, sizes.length)], 32,
                 Util.hexColorToRgbInt('#55557f'), PMASK.PLATFORM_STICKY_THIN
             ))
@@ -62,7 +62,7 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
     }
 
     const generateTemplateEnvironment = (key, scrollPosition, objectAdder, envAdder, respAdder) => {
-        const possibleTemplates = resources.getJSON('patterns')[key]
+        const possibleTemplates = resources.getJSON('digest.patterns').filter(item => item.alias.indexOf(key) > -1)
         const template = possibleTemplates[Util.getRandomInt(0, possibleTemplates.length-1)].alias
         const map = resources.getJSON(template)
         console.log('generating template ' + template)
@@ -75,7 +75,7 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
             } else {
                 l.objects.forEach(o => {
                     objectAdder(StaticObject(
-                        'regular_' + Util.getRandomInt(0, 1000), PMASK[l.name], o.x, -scrollPosition - (sceneSize.y - o.y),
+                        'regular_' + Util.getRandomInt(0, 1000), 'level.' + PMASK[l.name], o.x, -scrollPosition - (sceneSize.y - o.y),
                         o.width, o.height, Util.hexColorToRgbInt(l.color), PMASK[l.name]
                     ))
                 })

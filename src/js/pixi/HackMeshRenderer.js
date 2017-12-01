@@ -12,8 +12,8 @@ export class HackMeshRenderer extends PIXI.mesh.MeshRenderer {
     onContextChange() {
         const gl = this.renderer.gl
         this.shader = new PIXI.Shader(gl,
-            window.resources.getJSON('shader.vert.mesh'),
-            window.resources.getJSON('shader.frag.slice3'))
+            window.resources.getText('vert.mesh'),
+            window.resources.getText('frag.slice3'))
     }
 
     /**
