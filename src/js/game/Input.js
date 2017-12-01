@@ -16,6 +16,8 @@ export const Input = (canvas, debug) => {
         return e.clientY
     }
 
+    let fs = false
+    let startedWhen = 0
     const startedAt = {x: NaN, y: NaN}
     const lastSeenAt = {x: NaN, y: NaN}
     const onTouchStart = (e) => {
@@ -46,6 +48,16 @@ export const Input = (canvas, debug) => {
     }
 
     const onTouchEnd = (e) => {
+        if (Date.now() - startedWhen < 200) {
+            if (fs) {
+                document.exitFullscreen()
+                fs = false
+            } else {
+                window.document.documentElement.requestFullscreen()
+                fs = true
+            }
+        }
+        startedWhen = Date.now()
         e.preventDefault()
 
         self.emit('touchEnded', {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)})
