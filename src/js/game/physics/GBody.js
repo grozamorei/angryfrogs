@@ -13,6 +13,7 @@ export const GBody = (center, halfsizes) => {
     const velocity = GPoint(0, 0)
     const collisions = new GMap()
     const lock = []
+    const collCache = []
 
     const self = {
         get state() { return state },
@@ -41,18 +42,18 @@ export const GBody = (center, halfsizes) => {
          */
         get collisions() { return collisions },
         getCollisionsByMask(mask) {
-            const maskedCollisions = []
+            collCache.splice(0, collCache.length)
             collisions.forEach(c => {
-                if (c.mask === mask) maskedCollisions.push(c)
+                if (c.mask === mask) collCache.push(c)
             })
-            return maskedCollisions
+            return collCache
         },
         getCollisionsByIntersection(inter) {
-            const colls = []
+            collCache.splice(0, collCache.length)
             collisions.forEach(c => {
-                if (c.intersection === inter) colls.push(c)
+                if (c.intersection === inter) collCache.push(c)
             })
-            return colls
+            return collCache
         },
         haveResponseLock(bodyId) { return lock.indexOf(bodyId) !== -1 },
         responseLock(bodyId) {

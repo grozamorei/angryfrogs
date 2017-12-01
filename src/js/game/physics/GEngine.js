@@ -120,8 +120,8 @@ export const GEngine = () => {
             }
         },
         removeBody: (bodyId) => {
-            if (staticBodies.has(bodyId)) staticBodies.delete(bodyId)
-            if (movingBodies.has(bodyId)) movingBodies.delete(bodyId)
+            if (staticBodies.has(bodyId)) staticBodies.remove(bodyId)
+            if (movingBodies.has(bodyId)) movingBodies.remove(bodyId)
         },
         applyForce: (bodyId, force) => {
             movingBodies.get(bodyId).velocity.x = force.x
@@ -227,7 +227,7 @@ export const GEngine = () => {
                 remove.forEach(r => {
                     // console.log('ending collision: ', a.collisions.get(r).intersection, staticBodies.get(r).label, currentFrame, a.velocity.toString())
                     a.responseUnlock(r)
-                    a.collisions.delete(r)
+                    a.collisions.remove(r)
                 })
 
                 let locked = false

@@ -19,7 +19,7 @@ export class GMap {
         return this._keys.indexOf(k) > -1
     }
 
-    delete(k) {
+    remove(k) {
         const idx = this._keys.indexOf(k)
         if (idx === -1) console.error('GMap.delete: Unknown value ' + v)
         this._keys.splice(idx, 1)
