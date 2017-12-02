@@ -166,7 +166,7 @@ export const Controller = (renderer, physics, input) => {
             }
             if (airbourne()) {
                 applyForce(vector, maxXImpulse*1.1, maxYImpulse*0.9, maxMagnitude)
-                canDoubleJump = false
+                // canDoubleJump = false
             }
         }
     })
@@ -238,7 +238,6 @@ export const Controller = (renderer, physics, input) => {
             // update camera position
             const diff = renderer.scroll.y - Math.abs(frog.visual.y)
             if (diff < 500) { // camera position will be changed
-
                 lava.updatePosition(renderer.scroll, renderer.size)
 
                 renderer.scroll.y = Math.floor(Util.lerp(renderer.scroll.y, renderer.scroll.y + 500 - diff, 0.11))
@@ -266,8 +265,8 @@ export const Controller = (renderer, physics, input) => {
         },
         respawn: () => {
             self.removeObject(lava)
-
-            lava = Lava('pixel', 0xCC0000)
+            lava = Lava('lava.shit')
+            lava.updatePosition(renderer.scroll, renderer.size)
             self.addObject(lava)
 
             let respawnPoint

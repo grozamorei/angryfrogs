@@ -1,6 +1,6 @@
 import * as go from "./GameObjectBehaviours";
 import {PMASK} from "../physics/GEngine";
-export const Lava = (texture, tint) => {
+export const Lava = () => {
     const state = {
         /** @type PIXI.Sprite */
         sprite: null,
@@ -29,6 +29,7 @@ export const Lava = (texture, tint) => {
             const rise = speed * dt
             state.sprite.height += rise*2
             state.body.radius.y += rise
+            // console.log(state.sprite.parent)
         },
         updatePosition(cameraPos, rendererSize) {
             state.sprite.x = state.body.center.x = rendererSize.x/2
@@ -38,10 +39,14 @@ export const Lava = (texture, tint) => {
             state.sprite.height = Math.max(10, state.sprite.height - diff*2)
             state.body.radius.y = Math.max(10, state.body.radius.y - diff)
             state.sprite.y = state.body.center.y = newPos
+            // console.log(state.sprite.height)
         }
     }
 
-    Object.assign(self, go.createTemplate(state, 'lava', texture, 0, 0, 800, 50, tint, PMASK.DEATH, true, true))
+    Object.assign(self, go.createTemplate(state, 'lava', 'pixel', 
+        0, 0, 800, 50, 0xCC0000, PMASK.DEATH, 
+        true, true, undefined, undefined, true))
+
 
     return self
 }
