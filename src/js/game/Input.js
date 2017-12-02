@@ -58,7 +58,7 @@ export const Input = (canvas, debug) => {
                 fs = true
             }
         }
-        startedWhen = Date.now()
+        fsDoubleClick = Date.now()
         e.preventDefault()
 
         self.emit('touchEnded', {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)})
@@ -75,7 +75,6 @@ export const Input = (canvas, debug) => {
 
     window.onkeypress = (e) => {
         e.preventDefault()
-        console.log(e.keyCode)
         if (e.keyCode === 119) {
             self.emit('touchEnded', {x: 0, y: -1000})
         }
@@ -84,10 +83,13 @@ export const Input = (canvas, debug) => {
         }
         if (e.keyCode === 100) {
             self.emit('touchEnded', {x: 1000, y: -1000})
-            if (Date.now() - debugDoubleClick < 200) {
-                self.emit('WAKEUPNEO')
-            }
-            debugDoubleClick = Date.now()
+            // if (Date.now() - debugDoubleClick < 200) {
+                
+            // }
+            // debugDoubleClick = Date.now()
+        }
+        if (e.keyCode === 96) {
+            window.debugMenu.toggle()
         }
     }
 

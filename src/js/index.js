@@ -7,14 +7,15 @@ import {StaticObject} from "./game/go/StaticObject";
 import {Renderer} from "./game/Renderer";
 import {GEngine, GEngineE, PMASK} from "./game/physics/GEngine";
 import {Controller} from "./game/controller/Controller";
+import {DebugMenu} from "./game/DebugMenu"
 
 window.onload = () => {
-    // console.log(window.location)
     const platform = CreateDetectedPlatform()
 
     const canvas = DOMUtils.createElement('canvas', 'gameCanvas')
     document.body.appendChild(canvas)
 
+    const debug = window.debugMenu = DebugMenu()
     const resources = window.resources = Resources()
     PIXI.settings.MIPMAP_TEXTURES = false;
 

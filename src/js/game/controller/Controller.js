@@ -7,6 +7,8 @@ import {LevelGenerator} from "./LevelGenerator";
 import {StaticObject} from "../go/StaticObject";
 
 export const Controller = (renderer, physics, input) => {
+    const debug = window.debugMenu.params
+
     let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0x000000, align : 'center'})
     scoreTxt.anchor.x = 0
     scoreTxt.anchor.y = 1
@@ -23,8 +25,6 @@ export const Controller = (renderer, physics, input) => {
     let canJump = false
     let canWallJump = false
     let canDoubleJump = false
-
-    let debugMode = false
 
     const grounded = () => canJump
     const airbourne = () => !canJump && !canWallJump && canDoubleJump
@@ -72,7 +72,7 @@ export const Controller = (renderer, physics, input) => {
         if (intersection === INTERSECTION.LEFT) lastFacing = -1
 
         frog.updateAnimation('midair.head.hit', lastFacing)
-        if (debugMode) return
+        if (debug.neoMode) return
         canJump = false
         canDoubleJump = false
         canWallJump = false
@@ -94,15 +94,6 @@ export const Controller = (renderer, physics, input) => {
         physics.applyForce(frog.body.id, vector)
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
     }
-
-    input.on('WAKEUPNEO', () => {
-        debugMode = !debugMode
-        if (debugMode) {
-            // document.body.appendChild(document.createTextNode("NEO MODE"))
-        } else {
-
-        }
-    })
 
     input.on('touchStarted', () => {
         if (airbourne()) {
@@ -178,7 +169,7 @@ export const Controller = (renderer, physics, input) => {
             }
             if (airbourne()) {
                 applyForce(vector, maxXImpulse*1.1, maxYImpulse*0.9, maxMagnitude)
-                canDoubleJump = debugMode
+                canDoubleJump = debug.neoMode
             }
         }
     })
@@ -203,10 +194,12 @@ export const Controller = (renderer, physics, input) => {
         },
         addRespawn: (resp) => {
             respawns.push(resp)
-            // renderer.addObject(StaticObject(
-            //     'resp', 'pixel',
-            //     resp.x-40, resp.y-40, 80, 80,
-            //     0xCCCCCC, PMASK.NONE))
+            if (debug.showRespawns) {
+                renderer.addObject(StaticObject(
+                    'resp', 'pixel',
+                    resp.x-40, resp.y-40, 80, 80,
+                    0xCCCCCC, PMASK.NONE))    
+            }
         },
         removeObject: (go, index = -1) => {
             if (!go) return
