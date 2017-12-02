@@ -17,7 +17,8 @@ export const Input = (canvas, debug) => {
     }
 
     let fs = false
-    let startedWhen = 0
+    let fsDoubleClick = 0
+    let debugDoubleClick = 0
     const startedAt = {x: NaN, y: NaN}
     const lastSeenAt = {x: NaN, y: NaN}
     const onTouchStart = (e) => {
@@ -48,7 +49,7 @@ export const Input = (canvas, debug) => {
     }
 
     const onTouchEnd = (e) => {
-        if (Date.now() - startedWhen < 200) {
+        if (Date.now() - fsDoubleClick < 200) {
             if (fs) {
                 document.exitFullscreen()
                 fs = false
@@ -74,7 +75,7 @@ export const Input = (canvas, debug) => {
 
     window.onkeypress = (e) => {
         e.preventDefault()
-        // console.log(e.keyCode)
+        console.log(e.keyCode)
         if (e.keyCode === 119) {
             self.emit('touchEnded', {x: 0, y: -1000})
         }
@@ -83,6 +84,10 @@ export const Input = (canvas, debug) => {
         }
         if (e.keyCode === 100) {
             self.emit('touchEnded', {x: 1000, y: -1000})
+            if (Date.now() - debugDoubleClick < 200) {
+                self.emit('WAKEUPNEO')
+            }
+            debugDoubleClick = Date.now()
         }
     }
 

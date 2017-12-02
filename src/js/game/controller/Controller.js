@@ -24,6 +24,8 @@ export const Controller = (renderer, physics, input) => {
     let canWallJump = false
     let canDoubleJump = false
 
+    let debugMode = false
+
     const grounded = () => canJump
     const airbourne = () => !canJump && !canWallJump && canDoubleJump
     const walled = () => canWallJump
@@ -70,6 +72,7 @@ export const Controller = (renderer, physics, input) => {
         if (intersection === INTERSECTION.LEFT) lastFacing = -1
 
         frog.updateAnimation('midair.head.hit', lastFacing)
+        if (debugMode) return
         canJump = false
         canDoubleJump = false
         canWallJump = false
@@ -91,6 +94,15 @@ export const Controller = (renderer, physics, input) => {
         physics.applyForce(frog.body.id, vector)
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
     }
+
+    input.on('WAKEUPNEO', () => {
+        debugMode = !debugMode
+        if (debugMode) {
+            // document.body.appendChild(document.createTextNode("NEO MODE"))
+        } else {
+
+        }
+    })
 
     input.on('touchStarted', () => {
         if (airbourne()) {
@@ -166,7 +178,7 @@ export const Controller = (renderer, physics, input) => {
             }
             if (airbourne()) {
                 applyForce(vector, maxXImpulse*1.1, maxYImpulse*0.9, maxMagnitude)
-                // canDoubleJump = false
+                canDoubleJump = debugMode
             }
         }
     })
