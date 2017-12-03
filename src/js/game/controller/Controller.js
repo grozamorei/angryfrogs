@@ -8,6 +8,20 @@ import {StaticObject} from "../go/StaticObject";
 
 export const Controller = (renderer, physics, input) => {
     const debug = window.debugMenu.params
+    window.debugMenu.on('paramChange', (param, value) => {
+        if (param === 'showRespawns') {
+            if (value) {
+                respawns.forEach(r => {
+                    renderer.addObject(StaticObject(
+                        'resp', 'pixel',
+                        r.x-40, r.y-40, 80, 80,
+                        0xCCCCCC, PMASK.NONE))    
+                })
+            } else {
+
+            }
+        }
+    })
 
     let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0x000000, align : 'center'})
     scoreTxt.anchor.x = 0

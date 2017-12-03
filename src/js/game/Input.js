@@ -1,11 +1,10 @@
 import {emitterTemplate} from "./utils/EmitterBehaviour";
 import {Util as Utils} from "./utils/Util";
-export const Input = (canvas, debug) => {
-    const emitter = {}
+export const Input = (canvas, debugGraphics) => {
     const self =  {
-        update: () => {}
+        update: () => {/*stub*/}
     }
-    Object.assign(self, emitterTemplate(emitter))
+    Object.assign(self, emitterTemplate({}))
 
     const getX = (e) => {
         if ('touches' in e) return e.touches.item(0).clientX
@@ -41,11 +40,11 @@ export const Input = (canvas, debug) => {
         if (magnitude === 0) return
         self.emit('touchMove', magnitude, Utils.normalizeValue(vX))
 
-        debug.clear()
-        debug.lineStyle(2, 0xFF00FF)
-        debug.drawCircle(700, 100, 60)
-        debug.moveTo(700, 100)
-        debug.lineTo(700 + 0.5 * vX, 100 + 0.5 * vY)
+        debugGraphics.clear()
+        debugGraphics.lineStyle(2, 0xFF00FF)
+        debugGraphics.drawCircle(700, 100, 60)
+        debugGraphics.moveTo(700, 100)
+        debugGraphics.lineTo(700 + 0.5 * vX, 100 + 0.5 * vY)
     }
 
     const onTouchEnd = (e) => {
