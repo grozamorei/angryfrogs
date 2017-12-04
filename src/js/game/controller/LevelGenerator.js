@@ -65,6 +65,11 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
         const possibleTemplates = resources.getJSON('digest.patterns').filter(item => item.alias.indexOf(key) > -1)
         const template = possibleTemplates[Util.getRandomInt(0, possibleTemplates.length-1)].alias
         const map = resources.getJSON(template)
+        if (map.properties) {
+            if (map.properties.PASSTHROUGH === false) {
+                return generateTemplateEnvironment(key, scrollPosition, objectAdder, envAdder, respAdder)
+            }
+        }
         console.log('generating template ' + template)
 
         map.layers.forEach(l => {

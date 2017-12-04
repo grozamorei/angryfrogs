@@ -453,8 +453,16 @@
         }],
  "nextobjectid":95,
  "orientation":"orthogonal",
+ "properties":
+    {
+     "PASSTHROUGH":false
+    },
+ "propertytypes":
+    {
+     "PASSTHROUGH":"bool"
+    },
  "renderorder":"right-down",
- "tiledversion":"1.0.3",
+ "tiledversion":"1.0.2",
  "tileheight":16,
  "tilesets":[],
  "tilewidth":16,
