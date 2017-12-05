@@ -21,9 +21,9 @@ export const createTemplate = (
     s.x = x; s.y = y
     s.tint = tint
 
-    if (filters) {
-        s.filters = [filters]
-    }
+    // if (filters) {
+    //     s.filters = [filters]
+    // }
     state.sprite = s
 
     if (collider) {
