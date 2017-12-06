@@ -31,8 +31,8 @@ export const GEngine = () => {
     const slipperyWallGravity = gravity * 0.92
     const stickyWallGravity = gravity * 0.4
 
-    const staticBodies = new GMap()
-    const movingBodies = new GMap()
+    const bodies = new GMap()
+    const interactiveBodies = new GMap()
 
     const stickToFloor = (body, collision) => {
         body.center.y -= collision.penetration
@@ -113,25 +113,28 @@ export const GEngine = () => {
 
     const self = {
         addBody: (value) => {
-            if (value.isStatic) {
-                staticBodies.set(value.id, value)
-            } else {
-                movingBodies.set(value.id, value)
+            if (value.isInteractive) {
+                interactiveBodies.set(value.id, value)
             }
+            bodies.set(value.id, value)
         },
         removeBody: (bodyId) => {
-            if (staticBodies.has(bodyId)) staticBodies.remove(bodyId)
-            if (movingBodies.has(bodyId)) movingBodies.remove(bodyId)
+            if (bodies.has(bodyId)) bodies.remove(bodyId)
+            if (interactiveBodies.has(bodyId)) interactiveBodies.remove(bodyId)
         },
         applyForce: (bodyId, force) => {
-            movingBodies.get(bodyId).velocity.x = force.x
-            movingBodies.get(bodyId).velocity.y = force.y
+            interactiveBodies.get(bodyId).velocity.x = force.x
+            interactiveBodies.get(bodyId).velocity.y = force.y
+        },
+        offsetBody: (bodyId, x, y) => {
+            const b = bodies.get(bodyId)
+            b.center.x += x; b.center.y += y
         },
         update: (dt, currentFrame) => {
             dt /= 1000 // to seconds
 
             // apply all forces
-            movingBodies.forEach(b => {
+            interactiveBodies.forEach(b => {
                 //
                 // falling down with acceleration
                 let g = 0
@@ -164,8 +167,9 @@ export const GEngine = () => {
 
             //
             // determine collision entering
-            movingBodies.forEach(a => {
-                staticBodies.forEach(b => {
+            interactiveBodies.forEach(a => {
+                bodies.forEach(b => {
+                    if (a.id === b.id) return // dont collide with self
 
                     const result = GUtils.testBody(a, b)
                     if (!result) return
@@ -217,7 +221,7 @@ export const GEngine = () => {
             })
 
             // swipe previous collisions
-            movingBodies.forEach(a => {
+            interactiveBodies.forEach(a => {
                 const remove = []
                 a.collisions.forEach((c, key) => {
                     if (c.frame < currentFrame) {
@@ -251,7 +255,7 @@ export const GEngine = () => {
 
             //
             // responses and continues
-            movingBodies.forEach(a => {
+            interactiveBodies.forEach(a => {
                 a.collisions.forEach((c, id) => {
                     if (a.haveResponseLock(id)) return
 

@@ -3,7 +3,7 @@ import {Input} from "./game/Input";
 import {Resources} from "./game/utils/Resources";
 import {Util} from "./game/utils/Util";
 import {CreateDetectedPlatform} from "./platform/Platform";
-import {StaticObject} from "./game/go/StaticObject";
+import {StaticPlatform} from "./game/go/StaticPlatform";
 import {Renderer} from "./game/Renderer";
 import {GEngine, GEngineE, PMASK} from "./game/physics/GEngine";
 import {Controller} from "./game/controller/Controller";
@@ -65,12 +65,12 @@ window.onload = () => {
                 const obj = l.objects[i]
                 let go
                 if (l.name === 'IMAGE') {
-                    go = StaticObject(
-                        obj.name, 'image.' + obj.name,
-                        obj.x, obj.y-rend.size.y, obj.width, obj.height,
-                        0xFFFFFF, PMASK.NONE)
+                    // go = StaticPlatform(
+                    //     obj.name, 'image.' + obj.name,
+                    //     obj.x, obj.y-rend.size.y, obj.width, obj.height,
+                    //     0xFFFFFF, PMASK.NONE)
                 } else {
-                    go = StaticObject(
+                    go = StaticPlatform(
                         l.name.toLowerCase() + '_' + i.toString(),
                         'level.' + PMASK[l.name],
                         obj.x, obj.y-rend.size.y, obj.width, obj.height,

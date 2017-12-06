@@ -6,7 +6,6 @@ export const GBody = (center, halfsizes) => {
         id: nextUniqueId(),
         label: '',
         collisionFilter: 0,
-        isStatic: false,
         isInteractive: false
     }
 
@@ -19,7 +18,6 @@ export const GBody = (center, halfsizes) => {
         get state() { return state },
         get id() { return state.id },
         get label() { return state.label },
-        get isStatic() { return state.isStatic },
         get isInteractive() { return state.isInteractive },
         get collisionMask() { return state.collisionFilter },
         get center() { return center },

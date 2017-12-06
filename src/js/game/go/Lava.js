@@ -1,14 +1,10 @@
-import * as go from "./GameObjectBehaviours";
+import {INamedObject, ISprite, IStaticBody} from "./GameObjectBase";
 import {PMASK} from "../physics/GEngine";
+
 export const Lava = () => {
-    const state = {
-        /** @type PIXI.Sprite */
-        sprite: null,
-        body: null
-    }
 
     const self = {
-        updateRise(dt, jumpHeight) {
+        update(dt, jumpHeight, cameraPos, rendererSize) {
             dt = dt / 1000
 
             let speed = 0
@@ -17,36 +13,34 @@ export const Lava = () => {
             } else if (jumpHeight < 1000) {
                 speed = 40
             } else if (jumpHeight < 3000) {
-                speed = 60
+                speed = 45
             } else if (jumpHeight < 5000) {
-                speed = 90
+                speed = 50
             } else if (jumpHeight < 7000) {
-                speed = 120
+                speed = 55
             } else {
-                speed = 170
+                speed = 60
             }
 
             const rise = speed * dt
-            state.sprite.height += rise*2
-            state.body.radius.y += rise
-            // console.log(state.sprite.parent)
-        },
-        updatePosition(cameraPos, rendererSize) {
-            state.sprite.x = state.body.center.x = rendererSize.x/2
-            const newPos = -cameraPos.y + rendererSize.y
-            const diff = Math.abs(newPos - state.sprite.y)
+            self.visual.height += rise*2
+            self.body.radius.y += rise
 
-            state.sprite.height = Math.max(10, state.sprite.height - diff*2)
-            state.body.radius.y = Math.max(10, state.body.radius.y - diff)
-            state.sprite.y = state.body.center.y = newPos
-            // console.log(state.sprite.height)
-        }
+            self.visual.x = self.body.center.x = rendererSize.x/2
+            const newPos = -cameraPos.y + rendererSize.y
+            const diff = Math.abs(newPos - self.visual.y)
+
+            self.visual.height = Math.max(10, self.visual.height - diff*2)
+            self.body.radius.y = Math.max(10, self.body.radius.y - diff)
+            self.visual.y = self.body.center.y = newPos
+        },
     }
 
-    Object.assign(self, go.createTemplate(state, 'lava', 'pixel', 
-        0, 0, 800, 50, 0xCC0000, PMASK.DEATH, 
-        true, true, undefined, undefined, true))
+    Object.assign(self, INamedObject('lava'))
+    Object.assign(self, ISprite('pixel', 0, 0, 800, 0, 0xCC0000))
+    Object.assign(self, IStaticBody(self, PMASK.DEATH))
 
+    console.log(self)
 
     return self
 }

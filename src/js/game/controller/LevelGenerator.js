@@ -1,4 +1,4 @@
-import {StaticObject} from "../go/StaticObject";
+import {StaticPlatform} from "../go/StaticPlatform";
 import {Util} from "../utils/Util";
 import {PMASK} from "../physics/GEngine";
 export const LevelGenerator = (checkpoint, sceneSize) => {
@@ -9,7 +9,7 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
 
     const generateRandomEnvironment = (scrollPosition, objectAdder) => {
         if (Math.random() < 0.9 || nextGenerationIn === 200) {
-            objectAdder(StaticObject(
+            objectAdder(StaticPlatform(
                 'horizontal_' + Util.getRandomInt(0, 100),
                 'level.pl_sticky_thin',
                 Util.getRandomInt(100, sceneSize.x-100), -scrollPosition, sizes[Util.getRandomInt(0, sizes.length)], 32,
@@ -17,7 +17,7 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
             ))
             nextGenerationIn = 100
         } else {
-            objectAdder(StaticObject(
+            objectAdder(StaticPlatform(
                 'vertical_' + Util.getRandomInt(0, 100),
                 'pixel',
                 Util.getRandomInt(150, sceneSize.x-150), -scrollPosition-200, Util.getRandomInt(30, 50), Util.getRandomInt(300, 350),
@@ -31,24 +31,24 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
         //     if (Math.random() < 0.1) { // dont create walls
         //
         //     } else if (Math.random() < 0.4) { // create walls
-        //         go1 = StaticObject(
+        //         go1 = StaticPlatform(
         //             'wall_' + Util.getRandomInt(0, 100), 'pixel',
         //             0, -1 * (sceneSize.y*2 + lastWallCheckPoint*sceneSize.y), 20, sceneSize.y,
         //             Util.hexColorToRgbInt('#55557f'), PMASK.REGULAR)
         //
-        //         go2 = StaticObject(
+        //         go2 = StaticPlatform(
         //             'wall_' + Util.getRandomInt(0, 100), 'pixel',
         //             780, -1 * (sceneSize.y*2 + lastWallCheckPoint*sceneSize.y), 20, sceneSize.y,
         //             Util.hexColorToRgbInt('#55557f'), PMASK.REGULAR)
         //     } else {
         //         const mask1 = Math.random() > 0.5 ? PMASK.DEATH : PMASK.REGULAR
-        //         go1 = StaticObject(
+        //         go1 = StaticPlatform(
         //             'wall_' + Util.getRandomInt(0, 100), 'pixel',
         //             0, -1 * (sceneSize.y*2 + lastWallCheckPoint*sceneSize.y), 20, sceneSize.y,
         //             Util.hexColorToRgbInt(mask1 === PMASK.DEATH ? "#000000" : '#55557f'), mask1)
         //
         //         const mask2 = mask1 === PMASK.REGULAR ? PMASK.DEATH : Math.random() > 0.5 ? PMASK.DEATH : PMASK.REGULAR
-        //         go2 = StaticObject(
+        //         go2 = StaticPlatform(
         //             'wall_' + Util.getRandomInt(0, 100), 'pixel',
         //             780, -1 * (sceneSize.y*2 + lastWallCheckPoint*sceneSize.y), 20, sceneSize.y,
         //             Util.hexColorToRgbInt(mask2 === PMASK.DEATH ? "#000000": '#55557f'), mask2)
@@ -79,7 +79,7 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
                 })
             } else {
                 l.objects.forEach(o => {
-                    objectAdder(StaticObject(
+                    objectAdder(StaticPlatform(
                         'regular_' + Util.getRandomInt(0, 1000), 'level.' + PMASK[l.name], o.x, -scrollPosition - (sceneSize.y - o.y),
                         o.width, o.height, Util.hexColorToRgbInt(l.color), PMASK[l.name]
                     ))

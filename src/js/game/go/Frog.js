@@ -1,12 +1,9 @@
-import * as go from "./GameObjectBehaviours"
 import {Util} from "../utils/Util";
+import {
+    IColliderBody, IDebugVisual, INamedObject,
+    ISprite
+} from "./GameObjectBase";
 export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
-    const state = {
-        /** @type PIXI.Sprite */
-        sprite: null,
-        debugSprite: null,
-        body: null
-    }
 
     let lastAnimationKey = 'idle'
     let nextAnimationFrameIn = NaN
@@ -15,12 +12,12 @@ export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
 
     const self = {
         update: () => {
-            state.sprite.x = state.debugSprite.x = Math.round(state.body.center.x)
-            state.sprite.y = state.debugSprite.y = Math.round(state.body.center.y)
+            self.visual.x = self.debugVisual.x = Math.round(self.body.center.x)
+            self.visual.y = self.debugVisual.y = Math.round(self.body.center.y)
             if (!isNaN(nextAnimationFrameIn)) {
                 nextAnimationFrameIn -= 1
                 if (nextAnimationFrameIn === 0) {
-                    const scaleX = state.sprite.scale.x
+                    const scaleX = self.visual.scale.x
                     const aData = lastAnimationKey.split('_')
                     const anim = aData[0]
                     const frame = parseInt(aData[1])
@@ -42,17 +39,16 @@ export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
         },
         get lastAnimation() { return lastAnimationKey },
         updateAnimation(name, faceDir, keyFrameSwitch = false) {
-            const scaleX = state.sprite.scale.x
+            const scaleX = self.visual.scale.x
             if (name === lastAnimationKey && Util.normalizeValue(scaleX) === faceDir) return
-            // console.log('update animation to', name, faceDir, keyFrameSwitch)
             nextAnimationFrameIn = keyFrameSwitch ? 1 : NaN
             lastAnimationKey = name
-            state.sprite.texture = window.resources.getTexture(animations[name])
-            state.sprite.scale.x = faceDir * Math.abs(scaleX)
+            self.visual.texture = window.resources.getTexture(animations[name])
+            self.visual.scale.x = faceDir * Math.abs(scaleX)
         },
         getCollisions(intersection, doWhat) {
-            if (state.body.collisions.size > 0) {
-                state.body.collisions.forEach(c => {
+            if (self.body.collisions.size > 0) {
+                self.body.collisions.forEach(c => {
                     if (intersection & c.intersection) {
                         doWhat(c)
                     }
@@ -61,8 +57,10 @@ export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
         }
     }
 
-    Object.assign(self, go.createTemplate(state, 'frog', animations.idle, x, y, w, h, 0xFFFFFF, physicsMask, false, true, collider, undefined, true))
-    Object.assign(self, go.debugVisualTemplate(state, collider.w, collider.h, 0xCC0000, 0.0))
+    Object.assign(self, INamedObject('frog'))
+    Object.assign(self, ISprite(animations.idle, x, y, w, h, 0xFFFFFF))
+    Object.assign(self, IColliderBody(self, physicsMask, collider))
+    Object.assign(self, IDebugVisual(self))
 
     return self
 }
