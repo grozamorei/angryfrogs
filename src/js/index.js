@@ -3,9 +3,8 @@ import {Input} from "./game/Input";
 import {Resources} from "./game/utils/Resources";
 import {Util} from "./game/utils/Util";
 import {CreateDetectedPlatform} from "./platform/Platform";
-import {StaticPlatform} from "./game/go/StaticPlatform";
 import {Renderer} from "./game/Renderer";
-import {GEngine, GEngineE, PMASK} from "./game/physics/GEngine";
+import {GEngine, GEngineE} from "./game/physics/GEngine";
 import {Controller} from "./game/controller/Controller";
 import {DebugMenu} from "./game/DebugMenu"
 
@@ -15,7 +14,7 @@ window.onload = () => {
     const canvas = DOMUtils.createElement('canvas', 'gameCanvas')
     document.body.appendChild(canvas)
 
-    const debug = window.debugMenu = DebugMenu()
+    window.debugMenu = DebugMenu()
     const resources = window.resources = Resources()
     PIXI.settings.MIPMAP_TEXTURES = false;
 
@@ -52,35 +51,7 @@ window.onload = () => {
         const randomMap = possibleMaps[Util.getRandomInt(0, possibleMaps.length-1)].alias
         const startMap = params.levels.start || randomMap
         const map = resources.getJSON(startMap)
-        console.log('starting with map ' + startMap)
-        map.layers.forEach(l => {
-            if (l.name === 'RESPAWN') {
-                l.objects.forEach(resp => {
-                    controller.addRespawn({x:resp.x + resp.width/2, y: resp.y + resp.height/2 - rend.size.y})
-                })
-                return
-            }
-
-            for (let i = 0; i < l.objects.length; i++) {
-                const obj = l.objects[i]
-                let go
-                if (l.name === 'IMAGE') {
-                    // go = StaticPlatform(
-                    //     obj.name, 'image.' + obj.name,
-                    //     obj.x, obj.y-rend.size.y, obj.width, obj.height,
-                    //     0xFFFFFF, PMASK.NONE)
-                } else {
-                    go = StaticPlatform(
-                        l.name.toLowerCase() + '_' + i.toString(),
-                        'level.' + PMASK[l.name],
-                        obj.x, obj.y-rend.size.y, obj.width, obj.height,
-                        Util.hexColorToRgbInt(l.color), PMASK[l.name]
-                    )
-                }
-                controller.addObject(go)
-            }
-        })
-
+        controller.generator.forceGenerate(map, rend.scroll.y, controller.addObject, controller.addRespawn)
         controller.respawn(respawnLocations)
 
         requestAnimationFrame(gameLoop)

@@ -1,4 +1,7 @@
-import {INamedObject, ISprite, IStaticBody} from "./GameObjectBase";
+import {
+    INamedObject, ISprite, IStaticBody, ITypedObject,
+    ObjectType
+} from "./GameObjectBase";
 import {PMASK} from "../physics/GEngine";
 
 export const Lava = () => {
@@ -36,6 +39,7 @@ export const Lava = () => {
         },
     }
 
+    Object.assign(self, ITypedObject(ObjectType.LAVA))
     Object.assign(self, INamedObject('lava'))
     Object.assign(self, ISprite('pixel', 0, 0, 800, 0, 0xCC0000))
     Object.assign(self, IStaticBody(self, PMASK.DEATH))

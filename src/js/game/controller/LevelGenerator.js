@@ -1,6 +1,7 @@
 import {StaticPlatform} from "../go/StaticPlatform";
 import {Util} from "../utils/Util";
 import {PMASK} from "../physics/GEngine";
+import {Respawn} from "../go/Respawn";
 export const LevelGenerator = (checkpoint, sceneSize) => {
 
     // let lastWallCheckPoint = 0
@@ -61,21 +62,25 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
         // }
     }
 
-    const generateTemplateEnvironment = (key, scrollPosition, objectAdder, envAdder, respAdder) => {
+    const randomizeTemplateByKey = (key) => {
         const possibleTemplates = resources.getJSON('digest.patterns').filter(item => item.alias.indexOf(key) > -1)
         const template = possibleTemplates[Util.getRandomInt(0, possibleTemplates.length-1)].alias
         const map = resources.getJSON(template)
         if (map.properties) {
             if (map.properties.PASSTHROUGH === false) {
-                return generateTemplateEnvironment(key, scrollPosition, objectAdder, envAdder, respAdder)
+                return randomizeTemplateByKey(key)
             }
         }
-        console.log('generating template ' + template)
+        return map
+    }
+
+    const generateTemplateEnvironment = (map, scrollPosition, objectAdder) => {
+        console.log('generating template ' + map)
 
         map.layers.forEach(l => {
             if (l.name === 'RESPAWN') {
                 l.objects.forEach(resp => {
-                    respAdder({x:resp.x + resp.width/2, y: -scrollPosition - sceneSize.y + (resp.y + resp.height/2)})
+                    objectAdder(Respawn(resp.x + resp.width/2, -scrollPosition - sceneSize.y + resp.y + resp.height/2))
                 })
             } else {
                 l.objects.forEach(o => {
@@ -91,12 +96,13 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
     }
 
     return {
-        update(scrollPosition, objectAdder, envAdder, respAdder) {
+        get forceGenerate() { return generateTemplateEnvironment },
+        update(scrollPosition, objectAdder) {
             if (scrollPosition - checkpoint < nextGenerationIn) return
             checkpoint = scrollPosition
 
             if (Math.random() < 0.1) {
-                generateTemplateEnvironment('first', scrollPosition, objectAdder, envAdder, respAdder)
+                generateTemplateEnvironment(randomizeTemplateByKey('first'), scrollPosition, objectAdder)
             } else{
                 generateRandomEnvironment(scrollPosition, objectAdder)
             }

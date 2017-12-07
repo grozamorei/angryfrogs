@@ -4,25 +4,10 @@ import {PMASK, GEngineE} from "../physics/GEngine";
 import {INTERSECTION} from "../physics/GUtils";
 import {Lava} from "../go/Lava";
 import {LevelGenerator} from "./LevelGenerator";
-import {StaticPlatform} from "../go/StaticPlatform";
-import {ImageObject} from "../go/ImageObject";
+import {ObjectType} from "../go/GameObjectBase";
 
 export const Controller = (renderer, physics, input) => {
     const debug = window.debugMenu.params
-    window.debugMenu.on('paramChange', (param, value) => {
-        if (param === 'showRespawns') {
-            if (value) {
-                respawns.forEach(r => {
-                    renderer.addObject(ImageObject(
-                        'resp', 'pixel',
-                        r.x-40, r.y-40, 80, 80,
-                        0xCCCCCC, PMASK.NONE))    
-                })
-            } else {
-
-            }
-        }
-    })
 
     let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0x000000, align : 'center'})
     scoreTxt.anchor.x = 0
@@ -31,12 +16,12 @@ export const Controller = (renderer, physics, input) => {
     scoreTxt.y = renderer.size.y - 20
     renderer.stage.addChild(scoreTxt)
 
-    const environment = []
-    const respawns = []
+    const objects = []
+
     let frog = null
     let lava = null
-    let lastFacing = 1
 
+    let lastFacing = 1
     let canJump = false
     let canWallJump = false
     let canDoubleJump = false
@@ -193,38 +178,26 @@ export const Controller = (renderer, physics, input) => {
 
     const generator = LevelGenerator(renderer.scroll.y, renderer.size)
     const self = {
+        get generator() { return generator },
         addObject: (go) => {
             renderer.addObject(go)
-            go.body && physics.addBody(go.body)
-            if (frog && go !== frog) {
-                renderer.addObject(frog)
-            }
-        },
-        addEnvironment: (go) => {
-            renderer.addObject(go)
-            environment.push(go)
-            if (frog) {
-                renderer.addObject(frog)
-            }
-        },
-        addRespawn: (resp) => {
-            respawns.push(resp)
-            if (debug.showRespawns) {
-                renderer.addObject(ImageObject(
-                    'resp', 'pixel',
-                    resp.x-40, resp.y-40, 80, 80,
-                    0xCCCCCC, PMASK.NONE))    
-            }
+            go.hasBody && physics.addBody(go.body)
+            objects.push(go)
         },
         removeObject: (go, index = -1) => {
             if (!go) return
-            // console.log('removing ', go.name, index)
+
             renderer.removeObject(go)
-            go.body && physics.removeBody(go.body.id)
+            go.hasBody && physics.removeBody(go.body.id)
 
-            // go.destroy()
-
-            index > -1 && environment.splice(index, 1)
+            if (index > -1) {
+                objects.splice(index, 1)
+            } else {
+                const idx = objects.indexOf(go)
+                if (idx > -1) {
+                    objects.splice(idx, 1)
+                }
+            }
         },
 
         get score() { return Math.floor(score.actual) * 10 },
@@ -261,23 +234,16 @@ export const Controller = (renderer, physics, input) => {
             if (diff < 500) { // camera position will be changed
                 renderer.scroll.y = Math.floor(Util.lerp(renderer.scroll.y, renderer.scroll.y + 500 - diff, 0.11))
 
-                generator.update(renderer.scroll.y, self.addObject, self.addEnvironment, self.addRespawn)
+                generator.update(renderer.scroll.y, self.addObject)
 
                 //
                 // sweep objects that went below screen
                 const yBound = renderer.scroll.y-renderer.size.y
-                for (let i = environment.length-1; i >= 0; i--) {
-                    const go = environment[i]
-                    if (Math.abs(go.body.bottom) < yBound) { // bodies y-coordinate is negative up, so..
+                for (let i = objects.length-1; i >= 0; i--) {
+                    const go = objects[i]
+                    const goYLocation = Math.abs(go.hasBody ? go.body.bottom : go.y)
+                    if (goYLocation < yBound) { // bodies y-coordinate is negative up, so..
                         self.removeObject(go, i)
-                    }
-                }
-
-                const spawnYBound = renderer.scroll.y - renderer.size.y + 200
-                for (let i = respawns.length-1; i>=0; i--) {
-                    if (Math.abs(respawns[i].y) < spawnYBound) {
-                        // console.log('removing spawn at ', respawns[i], respawns[i].y, spawnYBound)
-                        respawns.splice(i, 1)
                     }
                 }
             }
@@ -287,18 +253,16 @@ export const Controller = (renderer, physics, input) => {
             lava = Lava()
             self.addObject(lava)
 
-            let respawnPoint
-            if (respawns.length > 0) {
-                respawnPoint = respawns.reduce((current, el) => {
-                    if (Math.abs(el.y) < Math.abs(current.y)) {
-                        current.x = el.x
-                        current.y = el.y
-                    }
-                    return current
-                }, {x: Number.MAX_VALUE, y: Number.MAX_VALUE})
-                respawnPoint.x -= 106
-                respawnPoint.y -= 180
-            } else {
+            let respawnPoint = undefined
+
+            for (let i = 0; i < objects.length; i++) {
+                const o = objects[i]
+                if (o.type !== ObjectType.RESPAWN) continue
+                console.log('found respawn point at ', o)
+                respawnPoint = {x: o.x, y: o.y}
+                break
+            }
+            if (respawnPoint === undefined) {
                 respawnPoint = {x: Util.getRandomInt(100, renderer.size.x-100), y: -(renderer.scroll.y-renderer.size.y) - renderer.size.y*0.9}
             }
 
@@ -311,8 +275,8 @@ export const Controller = (renderer, physics, input) => {
                     walled: 'frog.walled', 'walled.prepare.jump': 'frog.walled.prepare.jump',
                     'midair.head.hit': 'frog.midair.head.hit', 'midair.prepare.jump': 'frog.midair.prepare.jump'
                 },
-                respawnPoint.x, respawnPoint.y,
-                256, 256, PMASK.FROG, {x: 86, y: 121, w: 80, h: 148})
+                respawnPoint.x, respawnPoint.y - 35,
+                256, 256, PMASK.FROG, {x: 87, y: 121, w: 80, h: 148})
             score = {actual: 0, anchor: respawnPoint.y}
             self.addObject(frog)
         }

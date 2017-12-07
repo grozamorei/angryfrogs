@@ -2,6 +2,14 @@ import {HackMesh} from "../../pixi/HackMesh";
 import {GBody} from "../physics/GBody";
 import {GPoint} from "../physics/GUtils";
 
+export const ObjectType = { FROG: 'frog', IMAGE: 'image', LAVA: 'lava', RESPAWN: 'respawn', PLATFORM: 'platform' }
+
+export const ITypedObject = (v) => {
+    return {
+        get type() { return v }
+    }
+}
+
 export const INamedObject = (name) => {
     return {
         get name() { return name }
@@ -18,6 +26,7 @@ const IVisual = (SpriteConstructor, tex, x, y, w, h, tint) => {
     if (sprite.anchor)  { sprite.anchor.x = sprite.anchor.y = 0.5 }
 
     return {
+        get hasVisual() { return true },
         get visual() { return sprite }
     }
 }
@@ -29,7 +38,7 @@ const IBody = (state, mask, isInteractive, collider) => {
     let body
     if (collider) {
         body = GBody(
-            GPoint(sprite.x + collider.x + collider.w/2, sprite.y + collider.y + collider.h/2),
+            GPoint(sprite.x, sprite.y),
             GPoint(collider.w/2, collider.h/2)
         )
         if (sprite.anchor) {
@@ -51,39 +60,73 @@ const IBody = (state, mask, isInteractive, collider) => {
         .setOption('collisionFilter', mask)
 
     return {
+        get hasBody() { return true },
         get body() { return body }
     }
 }
 
 export const IDebugVisual = (self) => {
-    const root = new PIXI.Container()
-    if (self.visual) {
+    const staff = {}
+
+    if (self.hasVisual) {
         const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
         s.width = self.visual.width; s.height = self.visual.height
         s.tint = 0x00CC00
         s.alpha = 0.2
-        if (self.anchor) {
-            s.anchor.x = self.anchor.x
-            s.anchor.y = self.anchor.y
+        if (self.visual.anchor !== undefined) {
+            s.anchor.x = self.visual.anchor.x
+            s.anchor.y = self.visual.anchor.y
         } else {
             s.anchor.x = s.anchor.y = 0.5
         }
 
-        root.addChild(s)
+        staff.visual = s
     }
 
-    if (self.body) {
+    if (self.hasBody) {
         const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
         s.width = self.body.radius.x * 2; s.height = self.body.radius.y * 2
         s.tint = 0x0000CC
         s.alpha = 0.2
         s.anchor.x = s.anchor.y = 0.5
 
-        root.addChild(s)
+        staff.body = s
     }
+
+    if (!self.hasVisual && !self.hasBody && (self.x && self.y)) {
+        const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
+        s.width = 81
+        s.height = 81
+        s.tint = 0xCCCCCC
+        s.alpha = 0.4
+        s.anchor.x = s.anchor.y = 0.5
+        s.x = self.x; s.y = self.y
+        staff.simple = s
+    }
+
+    for(const k in staff) {
+        staff[k].visible = window.debugMenu.params.showInvisibleStuff
+    }
+    window.debugMenu.on('paramChange', (k, v) => {
+        if (k !== 'showInvisibleStuff') return
+        for(const k in staff) {
+            staff[k].visible = v
+        }
+    })
 
 
     return {
-        get debugVisual() { return root }
+        get hasDebugVisual() { return true },
+        get debugVisual() { return staff },
+        debugAddAll(container) {
+            for(const k in staff) {
+                container.addChild(staff[k])
+            }
+        },
+        debugRemoveFrom(container) {
+            for(const k in staff) {
+                container.removeChild(staff[k])
+            }
+        }
     }
 }

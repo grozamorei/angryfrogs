@@ -4,12 +4,16 @@ export const DebugMenu = () => {
 
     let params = {
         neoMode: false, 
-        showRespawns: false
+        showInvisibleStuff: false
     }
 
     const savedParams = window.localStorage.debug
     if (savedParams) {
-        params = JSON.parse(savedParams)
+        const newParams = JSON.parse(savedParams)
+        for (const k in newParams) {
+            if (params[k] === undefined) continue
+            params[k] = newParams[k]
+        }
     }
 
     let visible = false
@@ -21,7 +25,7 @@ export const DebugMenu = () => {
         checkbox.type = 'checkbox'
         checkbox.checked = params[k]
 
-        checkbox.addEventListener('click', e => {
+        checkbox.addEventListener('click', _ => {
             params[k] = !params[k]
             self.emit('paramChange', k, params[k])
             window.localStorage.debug = JSON.stringify(params)

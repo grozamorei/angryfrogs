@@ -42,16 +42,12 @@ export const Renderer = (canvas) => {
         /** @type PIXI.Graphics */
         get debugDrawLayer() { return graphics },
         addObject: (go) => {
-            scrollContainer.addChild(go.visual)
-            if ('debugVisual' in go) {
-                scrollContainer.addChild(go.debugVisual)
-            }
+            go.hasVisual && scrollContainer.addChild(go.visual)
+            go.hasDebugVisual && go.debugAddAll(scrollContainer)
         },
         removeObject: (go) => {
-            scrollContainer.removeChild(go.visual)
-            if ('debugVisual' in go) {
-                scrollContainer.removeChild(go.debugVisual)
-            }
+            go.hasVisual && scrollContainer.removeChild(go.visual)
+            go.hasDebugVisual && go.debugRemoveFrom(scrollContainer)
         },
         update: () => {
             const newCanvasW = Math.max(window.innerWidth || 0, document.documentElement.clientWidth)

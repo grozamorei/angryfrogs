@@ -1,7 +1,8 @@
 import {Util} from "../utils/Util";
 import {
+    ObjectType,
     IColliderBody, IDebugVisual, INamedObject,
-    ISprite
+    ISprite, ITypedObject
 } from "./GameObjectBase";
 export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
 
@@ -12,8 +13,9 @@ export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
 
     const self = {
         update: () => {
-            self.visual.x = self.debugVisual.x = Math.round(self.body.center.x)
-            self.visual.y = self.debugVisual.y = Math.round(self.body.center.y)
+            const x = Math.round(self.body.center.x); const y = Math.round(self.body.center.y)
+            self.visual.x = self.debugVisual.visual.x = self.debugVisual.body.x = x
+            self.visual.y = self.debugVisual.visual.y = self.debugVisual.body.y = y
             if (!isNaN(nextAnimationFrameIn)) {
                 nextAnimationFrameIn -= 1
                 if (nextAnimationFrameIn === 0) {
@@ -57,6 +59,7 @@ export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
         }
     }
 
+    Object.assign(self, ITypedObject(ObjectType.FROG))
     Object.assign(self, INamedObject('frog'))
     Object.assign(self, ISprite(animations.idle, x, y, w, h, 0xFFFFFF))
     Object.assign(self, IColliderBody(self, physicsMask, collider))
