@@ -5,7 +5,7 @@ import {Util} from "./game/utils/Util";
 import {CreateDetectedPlatform} from "./platform/Platform";
 import {Renderer} from "./game/Renderer";
 import {GEngine, GEngineE} from "./game/physics/GEngine";
-import {Controller} from "./game/controller/Controller";
+import {Game} from "./game/Game";
 import {DebugMenu} from "./game/DebugMenu"
 
 window.onload = () => {
@@ -23,7 +23,7 @@ window.onload = () => {
         const rend = Renderer(canvas)
         const phys = GEngine()
         const input = Input(canvas, rend.debugDrawLayer)
-        const controller = Controller(rend, phys, input)
+        const controller = Game(rend, phys, input)
 
         let frameCounter = 0
         let time = Date.now()

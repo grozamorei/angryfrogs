@@ -4,6 +4,11 @@ import {
     IColliderBody, IDebugVisual, INamedObject,
     ISprite, ITypedObject
 } from "./GameObjectBase";
+
+/**
+ * State object of a frog and inner logic
+ * @constructor
+ */
 export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
 
     let lastAnimationKey = 'idle'
