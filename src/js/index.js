@@ -37,6 +37,7 @@ window.onload = () => {
             phys.update(dt, frameCounter++)
             controller.update(dt)
             rend.update()
+            PIXI.tweenManager.update()
         }
 
         const respawnLocations = []

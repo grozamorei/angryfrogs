@@ -5,6 +5,7 @@ import {Lava} from "./go/Lava";
 import {LevelGenerator} from "./controller/LevelGenerator";
 import {ObjectType} from "./go/GameObjectBase";
 import {FrogController} from "./controller/FrogController";
+import {Camera} from "./controller/Camera";
 
 export const Game = (renderer, physics, input) => {
 
@@ -18,16 +19,18 @@ export const Game = (renderer, physics, input) => {
     const objects = []
 
     let frog = null
+    let frogController = null
+    let camera = null
     let lava = Lava(renderer, physics)
     let score = {anchor : 0, actual: 0}
 
     const generator = LevelGenerator(renderer.scroll.y, renderer.size)
     const self = {
         get generator() { return generator },
-        addObject: (go) => {
+        addObject: (go, shallow = false) => {
             renderer.addObject(go)
             go.hasBody && physics.addBody(go.body)
-            objects.push(go)
+            !shallow && objects.push(go)
         },
         removeObject: (go, index = -1) => {
             if (!go) return
@@ -75,17 +78,14 @@ export const Game = (renderer, physics, input) => {
                 return
             }
 
-            //
-            // update camera position
-            const diff = renderer.scroll.y - Math.abs(frog.visual.y)
-            if (diff < 500) { // camera position will be changed
-                renderer.scroll.y = Math.floor(Util.lerp(renderer.scroll.y, renderer.scroll.y + 500 - diff, 0.11))
 
+            const cameraMoved = camera.update(dt * 1000)
+            if (cameraMoved) {
                 generator.update(renderer.scroll.y, self.addObject)
 
                 //
                 // sweep objects that went below screen
-                const yBound = renderer.scroll.y-renderer.size.y
+                const yBound = renderer.scroll.y-renderer.size.y*2
                 for (let i = objects.length-1; i >= 0; i--) {
                     const go = objects[i]
                     const goYLocation = Math.abs(go.hasBody ? go.body.bottom : go.y)
@@ -119,10 +119,18 @@ export const Game = (renderer, physics, input) => {
                     },
                     respawnPoint.x, respawnPoint.y - 35,
                     256, 256, PMASK.FROG, {x: 87, y: 121, w: 80, h: 148})
-                FrogController(frog, physics, input)
-                self.addObject(frog)
+                frogController = FrogController(frog, physics, input)
+                camera = Camera(frog, renderer)
+                camera.snapTo(-respawnPoint.y + 1200)
+                self.addObject(frog, true)
             } else {
-                frog.reset(respawnPoint.x, respawnPoint.y - 35)
+                self.removeObject(frog)
+                frogController.disableInput()
+                camera.scrollTo(-respawnPoint.y + 1150, () => {
+                    frog.reset(respawnPoint.x, respawnPoint.y - 35)
+                    self.addObject(frog, true)
+                    frogController.enableInput()
+                })
             }
 
             score = {actual: 0, anchor: respawnPoint.y}

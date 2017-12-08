@@ -83,7 +83,11 @@ export const FrogController = (frog, physics, input) => {
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
     }
 
+    let inputDisabled = false
+
     input.on('touchStarted', () => {
+        if (inputDisabled) return
+
         if (airbourne()) {
             frog.updateAnimation('midair.prepare.jump', lastFacing)
         } else if (grounded()) {
@@ -92,6 +96,8 @@ export const FrogController = (frog, physics, input) => {
     })
 
     input.on('touchMove', (magnitude, direction) => {
+        if (inputDisabled) return
+
         if (!Util.approximately(direction, 0)) {
             lastFacing = direction
         }
@@ -118,6 +124,8 @@ export const FrogController = (frog, physics, input) => {
     })
 
     input.on('touchEnded', (vector) => {
+        if (inputDisabled) return
+
         const maxMagnitude = 120
         const maxYImpulse = 7.5
         let maxXImpulse = 500
@@ -161,4 +169,9 @@ export const FrogController = (frog, physics, input) => {
             }
         }
     })
+
+    return {
+        disableInput: () => { inputDisabled = true },
+        enableInput: () => { inputDisabled = false }
+    }
 }
