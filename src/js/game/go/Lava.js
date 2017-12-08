@@ -4,10 +4,15 @@ import {
 } from "./GameObjectBase";
 import {PMASK} from "../physics/GEngine";
 
-export const Lava = () => {
+export const Lava = (rend, phys) => {
 
     const self = {
-        update(dt, jumpHeight, cameraPos, rendererSize) {
+        reset: () => {
+            self.visual.height = 0
+            self.body.radius.y = 0
+            self.visual.y = 0
+        },
+        update: (dt, jumpHeight, cameraPos, rendererSize) => {
             dt = dt / 1000
 
             let speed = 0
@@ -33,8 +38,8 @@ export const Lava = () => {
             const newPos = -cameraPos.y + rendererSize.y
             const diff = Math.abs(newPos - self.visual.y)
 
-            self.visual.height = Math.max(10, self.visual.height - diff*2)
-            self.body.radius.y = Math.max(10, self.body.radius.y - diff)
+            self.visual.height = Math.max(2, self.visual.height - diff*2)
+            self.body.radius.y = Math.max(2, self.body.radius.y - diff)
             self.visual.y = self.body.center.y = newPos
         },
     }
@@ -44,7 +49,9 @@ export const Lava = () => {
     Object.assign(self, ISprite('pixel', 0, 0, 800, 0, 0xCC0000))
     Object.assign(self, IStaticBody(self, PMASK.DEATH))
 
-    console.log(self)
+    rend.addObject(self)
+    phys.addBody(self.body)
+    self.reset()
 
     return self
 }

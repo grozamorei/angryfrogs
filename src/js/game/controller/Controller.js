@@ -19,7 +19,7 @@ export const Controller = (renderer, physics, input) => {
     const objects = []
 
     let frog = null
-    let lava = null
+    let lava = Lava(renderer, physics)
 
     let lastFacing = 1
     let canJump = false
@@ -249,10 +249,6 @@ export const Controller = (renderer, physics, input) => {
             }
         },
         respawn: () => {
-            self.removeObject(lava)
-            lava = Lava()
-            self.addObject(lava)
-
             let respawnPoint = undefined
 
             for (let i = 0; i < objects.length; i++) {
@@ -278,6 +274,7 @@ export const Controller = (renderer, physics, input) => {
                 respawnPoint.x, respawnPoint.y - 35,
                 256, 256, PMASK.FROG, {x: 87, y: 121, w: 80, h: 148})
             score = {actual: 0, anchor: respawnPoint.y}
+            lava.reset()
             self.addObject(frog)
         }
     }
