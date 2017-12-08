@@ -60,6 +60,11 @@ export const GBody = (center, halfsizes) => {
         responseUnlock(bodyId) {
             if (!self.haveResponseLock(bodyId)) return
             lock.splice(lock.indexOf(bodyId), 1)
+        },
+        reset() {
+            lock.splice(0, lock.length)
+            collisions.clear()
+            velocity.x = velocity.y = 0
         }
     }
     return self

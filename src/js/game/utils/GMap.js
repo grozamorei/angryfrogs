@@ -39,4 +39,9 @@ export class GMap {
             f(this._values[i], this._keys[i])
         }
     }
+
+    clear() {
+        this._keys.splice(0, this._keys.length)
+        this._values.splice(0, this._values.length)
+    }
 }

@@ -254,7 +254,6 @@ export const Controller = (renderer, physics, input) => {
             for (let i = 0; i < objects.length; i++) {
                 const o = objects[i]
                 if (o.type !== ObjectType.RESPAWN) continue
-                console.log('found respawn point at ', o)
                 respawnPoint = {x: o.x, y: o.y}
                 break
             }
@@ -262,20 +261,24 @@ export const Controller = (renderer, physics, input) => {
                 respawnPoint = {x: Util.getRandomInt(100, renderer.size.x-100), y: -(renderer.scroll.y-renderer.size.y) - renderer.size.y*0.9}
             }
 
-            self.removeObject(frog)
-            frog = Frog(
-                {
-                    idle: 'frog.idle',
-                    'jump_00': 'frog.jump_00', 'jump_01': 'frog.jump_01', 'jump_02': 'frog.jump_02',
-                    'prepare.jump.00': 'frog.prepare.jump.00', 'prepare.jump.01': 'frog.prepare.jump.01',
-                    walled: 'frog.walled', 'walled.prepare.jump': 'frog.walled.prepare.jump',
-                    'midair.head.hit': 'frog.midair.head.hit', 'midair.prepare.jump': 'frog.midair.prepare.jump'
-                },
-                respawnPoint.x, respawnPoint.y - 35,
-                256, 256, PMASK.FROG, {x: 87, y: 121, w: 80, h: 148})
+            if (frog === null) {
+                frog = Frog(
+                    {
+                        idle: 'frog.idle',
+                        'jump_00': 'frog.jump_00', 'jump_01': 'frog.jump_01', 'jump_02': 'frog.jump_02',
+                        'prepare.jump.00': 'frog.prepare.jump.00', 'prepare.jump.01': 'frog.prepare.jump.01',
+                        walled: 'frog.walled', 'walled.prepare.jump': 'frog.walled.prepare.jump',
+                        'midair.head.hit': 'frog.midair.head.hit', 'midair.prepare.jump': 'frog.midair.prepare.jump'
+                    },
+                    respawnPoint.x, respawnPoint.y - 35,
+                    256, 256, PMASK.FROG, {x: 87, y: 121, w: 80, h: 148})
+                self.addObject(frog)
+            } else {
+                frog.reset(respawnPoint.x, respawnPoint.y - 35)
+            }
+
             score = {actual: 0, anchor: respawnPoint.y}
             lava.reset()
-            self.addObject(frog)
         }
     }
 

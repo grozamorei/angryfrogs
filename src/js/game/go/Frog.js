@@ -56,6 +56,12 @@ export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
                     }
                 })
             }
+        },
+        reset(atX, atY) {
+            self.body.reset()
+            self.body.center.x = self.visual.x = self.debugVisual.visual.x = self.debugVisual.body.x = atX
+            self.body.center.y = self.visual.y = self.debugVisual.visual.y = self.debugVisual.body.y = atY
+            self.updateAnimation('idle', -1)
         }
     }
 
