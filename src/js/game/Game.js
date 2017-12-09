@@ -109,16 +109,7 @@ export const Game = (renderer, physics, input) => {
             }
 
             if (frog === null) {
-                frog = Frog(
-                    {
-                        idle: 'frog.idle',
-                        'jump_00': 'frog.jump_00', 'jump_01': 'frog.jump_01', 'jump_02': 'frog.jump_02',
-                        'prepare.jump.00': 'frog.prepare.jump.00', 'prepare.jump.01': 'frog.prepare.jump.01',
-                        walled: 'frog.walled', 'walled.prepare.jump': 'frog.walled.prepare.jump',
-                        'midair.head.hit': 'frog.midair.head.hit', 'midair.prepare.jump': 'frog.midair.prepare.jump'
-                    },
-                    respawnPoint.x, respawnPoint.y - 35,
-                    256, 256, PMASK.FROG, {x: 87, y: 121, w: 80, h: 148})
+                frog = Frog(respawnPoint.x, respawnPoint.y - 35)
                 frogController = FrogController(frog, physics, input)
                 camera = Camera(frog, renderer)
                 camera.snapTo(-respawnPoint.y + 1200)

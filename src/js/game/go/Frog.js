@@ -4,12 +4,27 @@ import {
     IColliderBody, IDebugVisual, INamedObject,
     ISprite, ITypedObject
 } from "./GameObjectBase";
+import {PMASK} from "../physics/GEngine";
 
 /**
  * State object of a frog and inner logic
  * @constructor
  */
-export const Frog = (animations, x, y, w, h, physicsMask, collider) => {
+export const Frog = (x, y) => {
+
+    //
+    // frog setup parameters
+    const animations = 
+    {
+        idle: 'frog.idle',
+        'jump_00': 'frog.jump_00', 'jump_01': 'frog.jump_01', 'jump_02': 'frog.jump_02',
+        'prepare.jump.00': 'frog.prepare.jump.00', 'prepare.jump.01': 'frog.prepare.jump.01',
+        walled: 'frog.walled', 'walled.prepare.jump': 'frog.walled.prepare.jump',
+        'midair.head.hit': 'frog.midair.head.hit', 'midair.prepare.jump': 'frog.midair.prepare.jump'
+    }
+    const w = 256, h = 256
+    const physicsMask = PMASK.FROG
+    const collider = {x: 87, y: 121, w: 80, h: 148}
 
     let lastAnimationKey = 'idle'
     let nextAnimationFrameIn = NaN
