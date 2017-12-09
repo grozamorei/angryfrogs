@@ -60,6 +60,7 @@ const IBody = (state, mask, isInteractive, isTrigger, collider) => {
         .setOption('isInteractive', isInteractive)
         .setOption('isTrigger', isTrigger)
         .setOption('collisionFilter', mask)
+    // if (isTrigger) {console.log(body)}
 
     return {
         get hasBody() { return true },
@@ -95,16 +96,16 @@ export const IDebugVisual = (self) => {
         staff.body = s
     }
 
-    if (!self.hasVisual && !self.hasBody && (self.x && self.y)) {
-        const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
-        s.width = 81
-        s.height = 81
-        s.tint = 0xCCCCCC
-        s.alpha = 0.4
-        s.anchor.x = s.anchor.y = 0.5
-        s.x = self.x; s.y = self.y
-        staff.simple = s
-    }
+    // if (!self.hasVisual && (!self.hasBody || self.hasBody && self.body.isTrigger) && (self.x && self.y)) {
+    //     const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
+    //     s.width = 81
+    //     s.height = 81
+    //     s.tint = 0xCCCCCC
+    //     s.alpha = 0.4
+    //     s.anchor.x = s.anchor.y = 0.5
+    //     s.x = self.x; s.y = self.y
+    //     staff.simple = s
+    // }
 
     for(const k in staff) {
         staff[k].visible = window.debugMenu.params.showInvisibleStuff

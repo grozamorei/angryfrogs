@@ -6,11 +6,13 @@ import {LevelGenerator} from "./controller/LevelGenerator";
 import {ObjectType} from "./go/GameObjectBase";
 import {FrogController} from "./controller/FrogController";
 import {Camera} from "./controller/Camera";
+import {RespawnController} from "./controller/RespawnController";
 
 export const Game = (renderer, physics, input) => {
 
     physics.on(GEngineE.TRIGGER_ENTER, respawnBodyId => {
         console.log('entering ', respawnBodyId)
+        respawns.updateCurrent(respawnBodyId)
     })
     physics.on(GEngineE.TRIGGER_EXIT, respawnBodyId => {
         console.log('leaving ', respawnBodyId)
@@ -28,6 +30,7 @@ export const Game = (renderer, physics, input) => {
     let frog = null
     let frogController = null
     let camera = null
+    const respawns = RespawnController()
     let lava = Lava(renderer, physics)
     let score = {anchor : 0, actual: 0}
 
@@ -37,7 +40,8 @@ export const Game = (renderer, physics, input) => {
         addObject: (go, shallow = false) => {
             renderer.addObject(go)
             go.hasBody && physics.addBody(go.body)
-            !shallow && objects.push(go)
+            if (go.type === ObjectType.RESPAWN) { respawns.add(go) }
+            else { !shallow && objects.push(go) }
         },
         removeObject: (go, index = -1) => {
             if (!go) return
@@ -45,12 +49,15 @@ export const Game = (renderer, physics, input) => {
             renderer.removeObject(go)
             go.hasBody && physics.removeBody(go.body.id)
 
-            if (index > -1) {
-                objects.splice(index, 1)
-            } else {
-                const idx = objects.indexOf(go)
-                if (idx > -1) {
-                    objects.splice(idx, 1)
+            if (go.type === ObjectType.RESPAWN) { respawns.remove(go) }
+            else {
+                if (index > -1) {
+                    objects.splice(index, 1)
+                } else {
+                    const idx = objects.indexOf(go)
+                    if (idx > -1) {
+                        objects.splice(idx, 1)
+                    }
                 }
             }
         },
@@ -92,10 +99,10 @@ export const Game = (renderer, physics, input) => {
 
                 //
                 // sweep objects that went below screen
-                const yBound = renderer.scroll.y-renderer.size.y*2
+                const yBound = renderer.scroll.y-renderer.size.y*1.5
                 for (let i = objects.length-1; i >= 0; i--) {
                     const go = objects[i]
-                    const goYLocation = Math.abs(go.hasBody ? go.body.bottom : go.y)
+                    const goYLocation = Math.abs(go.body.bottom)
                     if (goYLocation < yBound) { // bodies y-coordinate is negative up, so..
                         self.removeObject(go, i)
                     }
@@ -103,15 +110,8 @@ export const Game = (renderer, physics, input) => {
             }
         },
         respawn: () => {
-            let respawnPoint = undefined
-
-            for (let i = 0; i < objects.length; i++) {
-                const o = objects[i]
-                if (o.type !== ObjectType.RESPAWN) continue
-                respawnPoint = {x: o.x, y: o.y}
-                break
-            }
-            if (respawnPoint === undefined) {
+            let respawnPoint = respawns.current
+            if (!respawnPoint) {
                 respawnPoint = {x: Util.getRandomInt(100, renderer.size.x-100), y: -(renderer.scroll.y-renderer.size.y) - renderer.size.y*0.9}
             }
 
