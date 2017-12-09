@@ -9,6 +9,13 @@ import {Camera} from "./controller/Camera";
 
 export const Game = (renderer, physics, input) => {
 
+    physics.on(GEngineE.TRIGGER_ENTER, respawnBodyId => {
+        console.log('entering ', respawnBodyId)
+    })
+    physics.on(GEngineE.TRIGGER_EXIT, respawnBodyId => {
+        console.log('leaving ', respawnBodyId)
+    })
+
     let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0x000000, align : 'center'})
     scoreTxt.anchor.x = 0
     scoreTxt.anchor.y = 1

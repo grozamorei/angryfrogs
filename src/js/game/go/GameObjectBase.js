@@ -31,10 +31,11 @@ const IVisual = (SpriteConstructor, tex, x, y, w, h, tint) => {
     }
 }
 
-export const IColliderBody = (state, mask, collider) => { return IBody(state, mask, true, collider) }
-export const IStaticBody = (state, mask) => { return IBody(state, mask, false, undefined) }
-const IBody = (state, mask, isInteractive, collider) => {
-    const sprite = state.visual
+export const IColliderBody = (state, mask, collider) => { return IBody(state, mask, true, false, collider) }
+export const IStaticBody = (state, mask) => { return IBody(state, mask, false, false, undefined) }
+export const ITriggerBody = (state, mask) => { return IBody(state, mask, false, true, undefined) }
+const IBody = (state, mask, isInteractive, isTrigger, collider) => {
+    const sprite = state.hasVisual ? state.visual : state
     let body
     if (collider) {
         body = GBody(
@@ -57,6 +58,7 @@ const IBody = (state, mask, isInteractive, collider) => {
 
     body.setOption('label', state.name + '_body')
         .setOption('isInteractive', isInteractive)
+        .setOption('isTrigger', isTrigger)
         .setOption('collisionFilter', mask)
 
     return {

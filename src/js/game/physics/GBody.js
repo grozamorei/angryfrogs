@@ -6,7 +6,8 @@ export const GBody = (center, halfsizes) => {
         id: nextUniqueId(),
         label: '',
         collisionFilter: 0,
-        isInteractive: false
+        isInteractive: false,
+        isTrigger: false
     }
 
     const velocity = GPoint(0, 0)
@@ -19,6 +20,7 @@ export const GBody = (center, halfsizes) => {
         get id() { return state.id },
         get label() { return state.label },
         get isInteractive() { return state.isInteractive },
+        get isTrigger() { return state.isTrigger },
         get collisionMask() { return state.collisionFilter },
         get center() { return center },
         get radius() { return halfsizes },

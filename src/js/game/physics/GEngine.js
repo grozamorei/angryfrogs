@@ -9,7 +9,9 @@ export const GEngineE = {
     GROUNDED: 'grounded',
     WALLED: 'walled',
     HEADHIT: 'headHit',
-    AIRBORNE: 'airborne'
+    AIRBORNE: 'airborne',
+    TRIGGER_ENTER: 'triggerEnter',
+    TRIGGER_EXIT: 'triggerExit'
 }
 
 export const PMASK = {
@@ -23,6 +25,7 @@ export const PMASK = {
     PLATFORM_SLIPPERY_SOLID: 'pl_slippery_solid',
     WALL_STICKY: 'wall_sticky',
     WALL_SLIPPERY: 'wall_slippery',
+    TRIGGER_BODY: 'trigger_body'
 }
 
 export const GEngine = () => {
@@ -74,6 +77,10 @@ export const GEngine = () => {
         }
     }
 
+    const hitTrigger = (body, collision) => {
+        collision.justEntered && self.emit(GEngineE.TRIGGER_ENTER, collision.secondBodyId)
+    }
+
     const responses = {}
     responses[PMASK.PLATFORM_STICKY_SOLID] = {}
     responses[PMASK.PLATFORM_STICKY_SOLID][INTERSECTION.DOWN] = stickToFloor
@@ -110,6 +117,12 @@ export const GEngine = () => {
     responses[PMASK.WALL_SLIPPERY][INTERSECTION.TOP] = hitSurface
     responses[PMASK.WALL_SLIPPERY][INTERSECTION.LEFT] = behaveOnWall
     responses[PMASK.WALL_SLIPPERY][INTERSECTION.RIGHT] = behaveOnWall
+
+    responses[PMASK.TRIGGER_BODY] = {}
+    responses[PMASK.TRIGGER_BODY][INTERSECTION.DOWN] = hitTrigger
+    responses[PMASK.TRIGGER_BODY][INTERSECTION.TOP] = hitTrigger
+    responses[PMASK.TRIGGER_BODY][INTERSECTION.LEFT] = hitTrigger
+    responses[PMASK.TRIGGER_BODY][INTERSECTION.RIGHT] = hitTrigger
 
     const self = {
         addBody: (value) => {
@@ -190,6 +203,7 @@ export const GEngine = () => {
                         // console.log('entering collision: ', b.label, currentFrame, result.bodyB, a.velocity.toString())
 
                         const collision = {
+                            secondBodyId: b.id,
                             justEntered: true, intersection: result.bodyA,
                             penetration: result.penetration,
                             wallslip: {
@@ -229,9 +243,12 @@ export const GEngine = () => {
                     }
                 })
                 remove.forEach(r => {
-                    // console.log('ending collision: ', a.collisions.get(r).intersection, staticBodies.get(r).label, currentFrame, a.velocity.toString())
+                    // console.log('ending collision: ', a.collisions.get(r).intersection, bodies.get(r).label, bodies.get(r).collisionMask, currentFrame, a.velocity.toString())
                     a.responseUnlock(r)
                     a.collisions.remove(r)
+                    if (bodies.get(r).collisionMask === PMASK.TRIGGER_BODY) {
+                        self.emit(GEngineE.TRIGGER_EXIT, r)
+                    }
                 })
 
                 let locked = false
