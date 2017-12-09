@@ -101,11 +101,11 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
             if (scrollPosition - checkpoint < nextGenerationIn) return
             checkpoint = scrollPosition
 
-            if (Math.random() < 0.1) {
-                generateTemplateEnvironment(randomizeTemplateByKey('first'), scrollPosition, objectAdder)
-            } else{
-                generateRandomEnvironment(scrollPosition, objectAdder)
-            }
+            // if (Math.random() < 0.1) {
+            generateTemplateEnvironment(randomizeTemplateByKey('first'), scrollPosition, objectAdder)
+            // } else{
+            //     generateRandomEnvironment(scrollPosition, objectAdder)
+            // }
         }
     }
 }
