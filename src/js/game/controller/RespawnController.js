@@ -8,8 +8,10 @@ export const RespawnController = () => {
 		get current() { return current },
 		updateCurrent: (respawnBodyId) => {
 			respawns.forEach(r => {
+				r.setActive(false)
 				if (r.body.id !== respawnBodyId) return
 				current = r
+				r.setActive(true)
 			})
 		},
 		add: (v) => {

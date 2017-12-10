@@ -2,9 +2,16 @@ import {IDebugVisual, ITypedObject, ObjectType, ITriggerBody, INamedObject} from
 import {PMASK} from "../physics/GEngine";
 
 export const Respawn = (x, y) => {
+
     const self = {
         x: x, y: y, width: 80, height: 80,
-        active: false
+        setActive: (value) => {
+        	if (value) {
+        		self.debugVisual.simple.tint = 0xCCCC00
+        	} else {
+        		self.debugVisual.simple.tint = 0xCCCCCC
+        	}
+        }
     }
 
     Object.assign(self, INamedObject('respawn'))
