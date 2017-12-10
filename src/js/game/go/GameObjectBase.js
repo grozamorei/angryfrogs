@@ -47,10 +47,9 @@ const IBody = (state, mask, isInteractive, isTrigger, collider) => {
             sprite.anchor.y = (collider.y + collider.y/2) / sprite.height
         }
     } else {
-        body = GBody(
-            GPoint(sprite.x + sprite.width/2, sprite.y + sprite.height/2),
-            GPoint(sprite.width/2, sprite.height/2)
-        )
+        const x = state.hasVisual ? sprite.x + sprite.width/2 : state.x
+        const y = state.hasVisual ? sprite.y + sprite.height/2 : state.y
+        body = GBody(GPoint(x, y), GPoint(sprite.width/2, sprite.height/2))
         if (sprite.anchor) {
             sprite.anchor.x = sprite.anchor.y = 0.5
         }
@@ -87,25 +86,24 @@ export const IDebugVisual = (self) => {
     }
 
     if (self.hasBody) {
-        const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
-        s.width = self.body.radius.x * 2; s.height = self.body.radius.y * 2
-        s.tint = 0x0000CC
-        s.alpha = 0.2
-        s.anchor.x = s.anchor.y = 0.5
+        if (self.body.isTrigger && !self.hasVisual) { 
+            const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
+            s.width = self.width; s.height = self.height
+            s.tint = 0xCCCCCC
+            s.alpha = 0.3
+            s.anchor.x = s.anchor.y = 0.5
+            s.x = self.x; s.y = self.y
+            staff.simple = s
+        } else {
+            const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
+            s.width = self.body.radius.x * 2; s.height = self.body.radius.y * 2
+            s.tint = 0x0000CC
+            s.alpha = 0.2
+            s.anchor.x = s.anchor.y = 0.5
 
-        staff.body = s
+            staff.body = s    
+        }
     }
-
-    // if (!self.hasVisual && (!self.hasBody || self.hasBody && self.body.isTrigger) && (self.x && self.y)) {
-    //     const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
-    //     s.width = 81
-    //     s.height = 81
-    //     s.tint = 0xCCCCCC
-    //     s.alpha = 0.4
-    //     s.anchor.x = s.anchor.y = 0.5
-    //     s.x = self.x; s.y = self.y
-    //     staff.simple = s
-    // }
 
     for(const k in staff) {
         staff[k].visible = window.debugMenu.params.showInvisibleStuff
