@@ -11,11 +11,9 @@ import {RespawnController} from "./controller/RespawnController";
 export const Game = (renderer, physics, input) => {
 
     physics.on(GEngineE.TRIGGER_ENTER, respawnBodyId => {
-        console.log('entering ', respawnBodyId)
         respawns.updateCurrent(respawnBodyId)
     })
     physics.on(GEngineE.TRIGGER_EXIT, respawnBodyId => {
-        console.log('leaving ', respawnBodyId)
     })
 
     let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0x000000, align : 'center'})
@@ -84,14 +82,6 @@ export const Game = (renderer, physics, input) => {
             } else if (frog.body.center.x >= renderer.size.x) {
                 frog.body.center.x = 1
             }
-
-            //
-            // die if frog went below screen
-            if (Math.abs(frog.body.center.y) < renderer.scroll.y-renderer.size.y || frog.body.center.y > 0) {
-                physics.emit(GEngineE.DEATH)
-                return
-            }
-
 
             const cameraMoved = camera.update(dt * 1000)
             if (cameraMoved) {
