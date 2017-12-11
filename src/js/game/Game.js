@@ -31,9 +31,11 @@ export const Game = (renderer, physics, input) => {
     const respawns = RespawnController()
     let lava = Lava(renderer, physics)
     let score = {anchor : 0, actual: 0}
+    let dead = true
 
     const generator = LevelGenerator(renderer.scroll.y, renderer.size)
     const self = {
+        get dead() { return dead },
         get generator() { return generator },
         addObject: (go, shallow = false) => {
             renderer.addObject(go)
@@ -100,6 +102,7 @@ export const Game = (renderer, physics, input) => {
             }
         },
         respawn: () => {
+            dead = true
             let respawnPoint = respawns.current
             if (!respawnPoint) {
                 respawnPoint = {x: Util.getRandomInt(100, renderer.size.x-100), y: -(renderer.scroll.y-renderer.size.y) - renderer.size.y*0.9}
@@ -111,6 +114,7 @@ export const Game = (renderer, physics, input) => {
                 camera = Camera(frog, renderer)
                 camera.snapTo(-respawnPoint.y + 1200)
                 self.addObject(frog, true)
+                dead = false
             } else {
                 self.removeObject(frog)
                 frogController.disableInput()
@@ -118,6 +122,7 @@ export const Game = (renderer, physics, input) => {
                     frog.reset(respawnPoint.x, respawnPoint.y - 35)
                     self.addObject(frog, true)
                     frogController.enableInput()
+                    dead = false
                 })
             }
 

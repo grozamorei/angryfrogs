@@ -23,7 +23,7 @@ window.onload = () => {
         const rend = Renderer(canvas)
         const phys = GEngine()
         const input = Input(canvas, rend.debugDrawLayer)
-        const controller = Game(rend, phys, input)
+        const gameController = Game(rend, phys, input)
 
         let frameCounter = 0
         let time = Date.now()
@@ -36,15 +36,17 @@ window.onload = () => {
 
             input.update()
             phys.update(dt, frameCounter++)
-            controller.update(dt)
+            gameController.update(dt)
             rend.update()
             PIXI.tweenManager.update()
         }
 
         const respawnLocations = []
         phys.on(GEngineE.DEATH, () => {
-            platform.sendScore(controller.score)
-            controller.respawn(respawnLocations)
+            if (gameController.dead) return
+
+            platform.sendScore(gameController.score)
+            gameController.respawn(respawnLocations)
         })
 
         const params = resources.getJSON('params')
@@ -53,8 +55,8 @@ window.onload = () => {
         const randomMap = possibleMaps[Util.getRandomInt(0, possibleMaps.length-1)].alias
         const startMap = params.levels.start || randomMap
         const map = resources.getJSON(startMap)
-        controller.generator.forceGenerate(map, rend.scroll.y, controller.addObject, controller.addRespawn)
-        controller.respawn(respawnLocations)
+        gameController.generator.forceGenerate(map, rend.scroll.y, gameController.addObject, gameController.addRespawn)
+        gameController.respawn(respawnLocations)
 
         requestAnimationFrame(gameLoop)
     }
