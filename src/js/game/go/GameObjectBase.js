@@ -68,6 +68,7 @@ const IBody = (state, mask, isInteractive, isTrigger, collider) => {
 }
 
 export const IDebugVisual = (self) => {
+    const debug = window.debugMenu.params
     const staff = {}
 
     if (self.hasVisual) {
@@ -82,6 +83,7 @@ export const IDebugVisual = (self) => {
             s.anchor.x = s.anchor.y = 0.5
         }
 
+        s.visible = debug.invisibleStuff.sprites
         staff.visual = s
     }
 
@@ -93,6 +95,7 @@ export const IDebugVisual = (self) => {
             s.alpha = 0.3
             s.anchor.x = s.anchor.y = 0.5
             s.x = self.x; s.y = self.y
+            s.visible = debug.invisibleStuff.triggers
             staff.simple = s
         } else {
             const s = new PIXI.Sprite(window.resources.getTexture('pixel'))
@@ -101,17 +104,20 @@ export const IDebugVisual = (self) => {
             s.alpha = 0.2
             s.anchor.x = s.anchor.y = 0.5
 
+            s.visible = debug.invisibleStuff.colliders
             staff.body = s    
         }
     }
 
-    for(const k in staff) {
-        staff[k].visible = window.debugMenu.params.showInvisibleStuff
-    }
     window.debugMenu.on('paramChange', (k, v) => {
-        if (k !== 'showInvisibleStuff') return
-        for(const k in staff) {
-            staff[k].visible = v
+        if (k === 'sprites') {
+            staff.visual && (staff.visual.visible = v)
+        }
+        if (k === 'triggers') {
+            staff.simple && (staff.simple.visible = v)
+        }
+        if (k === 'colliders') {
+            staff.body && (staff.body.visible = v)
         }
     })
 

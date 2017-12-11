@@ -4,7 +4,12 @@ export const DebugMenu = () => {
 
     let params = {
         neoMode: false, 
-        showInvisibleStuff: false
+        invisibleStuff_group: false,
+        invisibleStuff: {
+            triggers: false,
+            colliders: false,
+            sprites: false
+        }
     }
 
     const savedParams = window.localStorage.debug
@@ -17,21 +22,48 @@ export const DebugMenu = () => {
     }
 
     let visible = false
-    
     const view = DOMUtils.createElement('div', 'debugMenu', null)
-    for (const k in params) {
+
+    const checkBoxField = (obj, key, offset = 0, onChange = null) => {
         const item = DOMUtils.createElement('div', '', view, null)
+        DOMUtils.createElement('div', '', item, {width: 20*offset + 'px'}, 'debugMenuItem')
         const checkbox = DOMUtils.createElement('input', '', item, null, 'debugMenuItem')
         checkbox.type = 'checkbox'
-        checkbox.checked = params[k]
+        checkbox.checked = obj[key]
 
         checkbox.addEventListener('click', _ => {
-            params[k] = !params[k]
-            self.emit('paramChange', k, params[k])
+            obj[key] = !obj[key]
+            self.emit('paramChange', key, obj[key])
             window.localStorage.debug = JSON.stringify(params)
+            onChange && onChange()
         })
         const text = DOMUtils.createElement('p', '', item, null, 'debugMenuItem')
-        text.innerHTML = k
+        text.innerHTML = key
+        return item
+    }
+
+    const arrayPanel = (children, obj, key) => {
+        if (obj[key+'_group']) {
+            // obj[key].forEach(subObj => {
+            for (const oneKey in obj[key])
+                children.push(checkBoxField(obj[key], oneKey, 1))
+            // })
+        }
+    }
+    
+    for (const k in params) {
+        if (k.indexOf('_group') > -1) continue
+        if (typeof params[k] === 'object') {
+            const children = []
+            checkBoxField(params, k+'_group', 0, () => {
+                children.forEach(child => view.removeChild(child))
+                children.splice(0, children.length)
+                arrayPanel(children, params, k)
+            })
+            arrayPanel(children, params, k)
+        } else {
+            checkBoxField(params, k)
+        }
     }
 
     const self = {
