@@ -28,8 +28,9 @@ window.onload = () => {
         let frameCounter = 0
         let time = Date.now()
         const gameLoop = () => {
-            const dt = Date.now() - time
+            let dt = Date.now() - time
             time = Date.now()
+            if (dt > 50) {dt = 17}
 
             requestAnimationFrame(gameLoop)
 
