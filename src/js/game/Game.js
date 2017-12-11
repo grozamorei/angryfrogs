@@ -62,7 +62,7 @@ export const Game = (renderer, physics, input) => {
             }
         },
 
-        get score() { return Math.floor(score.actual) * 10 },
+        get score() { return Math.floor(score.actual) },
         update: (dt) => {
             //
             // update score
@@ -115,18 +115,19 @@ export const Game = (renderer, physics, input) => {
                 camera.snapTo(-respawnPoint.y + 1200)
                 self.addObject(frog, true)
                 dead = false
+                score = {actual: 0, anchor: frog.visual.y }
             } else {
                 self.removeObject(frog)
                 frogController.disableInput()
                 camera.scrollTo(-respawnPoint.y + 1150, () => {
-                    frog.reset(respawnPoint.x, respawnPoint.y - 35)
+                    frog.reset(respawnPoint.x, respawnPoint.y - 135)
                     self.addObject(frog, true)
                     frogController.enableInput()
                     dead = false
+                    score = {actual: 0, anchor: frog.visual.y}
                 })
             }
 
-            score = {actual: 0, anchor: respawnPoint.y}
             lava.reset()
         }
     }
