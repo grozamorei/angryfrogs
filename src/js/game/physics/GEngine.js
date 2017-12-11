@@ -126,6 +126,9 @@ export const GEngine = () => {
 
     const self = {
         addBody: (value) => {
+            interactiveBodies.forEach(b => {
+                if (b.id === value.id) console.error('da fuq')
+            })
             if (value.isInteractive) {
                 interactiveBodies.set(value.id, value)
             }
@@ -263,9 +266,10 @@ export const GEngine = () => {
 
                 if (a.collisions.size === 1 && remove.length > 0) {
                     const set = a.collisions.getSetAt(0)
-                    // console.log(a.collisions, id, c)
-                    if (!a.haveResponseLock(set.k) && ((INTERSECTION.LEFT|INTERSECTION.RIGHT)&set.v.intersection)) {
-                        self.emit(GEngineE.WALLED, set.v.intersection)
+                    if (set.v.mask !== PMASK.TRIGGER_BODY) {
+                        if (!a.haveResponseLock(set.k) && ((INTERSECTION.LEFT|INTERSECTION.RIGHT)&set.v.intersection)) {
+                            self.emit(GEngineE.WALLED, set.v.intersection)
+                        }
                     }
                 }
             })
