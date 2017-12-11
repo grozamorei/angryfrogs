@@ -1,4 +1,4 @@
-import {GEngineE} from "../physics/GEngine";
+import {GEngineE, PMASK} from "../physics/GEngine";
 import {Util} from "../utils/Util";
 import {INTERSECTION} from "../physics/GUtils";
 
@@ -26,6 +26,7 @@ export const FrogController = (frog, physics, input) => {
     const isWallJumpDirectionRight = (dir) => {
         let isDirectionRight = false
         frog.getCollisions(INTERSECTION.LEFT | INTERSECTION.RIGHT, c => {
+            if (c.mask === PMASK.TRIGGER_BODY) return
             if (c.intersection&INTERSECTION.LEFT) isDirectionRight = dir > 0
             if (c.intersection&INTERSECTION.RIGHT) isDirectionRight = dir < 0
         })
@@ -137,6 +138,7 @@ export const FrogController = (frog, physics, input) => {
             // pointing down jump while standing still is not allowed
             let hardFloorCollisions = false
             frog.getCollisions(INTERSECTION.DOWN, c => {
+                if (c.mask === PMASK.TRIGGER_BODY) return
                 if (c.mask.indexOf('slippery') === -1) {
                     hardFloorCollisions = true
                 } else {

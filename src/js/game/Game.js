@@ -16,10 +16,10 @@ export const Game = (renderer, physics, input) => {
     physics.on(GEngineE.TRIGGER_EXIT, respawnBodyId => {
     })
 
-    let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0x000000, align : 'center'})
+    let scoreTxt = new PIXI.Text('', {fontFamily : 'NotoMono', fontSize: 50, fill : 0xFFFFFF, align : 'center'})
     scoreTxt.anchor.x = 0
     scoreTxt.anchor.y = 1
-    scoreTxt.x = 20
+    scoreTxt.x = 40
     scoreTxt.y = renderer.size.y - 20
     renderer.stage.addChild(scoreTxt)
 
@@ -89,11 +89,11 @@ export const Game = (renderer, physics, input) => {
 
                 //
                 // sweep objects that went below screen
-                const yBound = renderer.scroll.y-renderer.size.y*1.5
+                const yBound = renderer.scroll.y-renderer.size.y
                 for (let i = objects.length-1; i >= 0; i--) {
                     const go = objects[i]
                     const goYLocation = Math.abs(go.body.bottom)
-                    if (goYLocation < yBound) { // bodies y-coordinate is negative up, so..
+                    if (goYLocation < yBound && goYLocation < respawns.lockObjectsAnchor) {
                         self.removeObject(go, i)
                     }
                 }
