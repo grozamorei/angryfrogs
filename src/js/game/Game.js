@@ -119,8 +119,8 @@ export const Game = (renderer, physics, input) => {
             } else {
                 self.removeObject(frog)
                 frogController.disableInput()
-                camera.scrollTo(-respawnPoint.y + 1150, () => {
-                    frog.reset(respawnPoint.x, respawnPoint.y - 135)
+                camera.scrollTo(-respawnPoint.y + 1100, () => {
+                    frog.reset(respawnPoint.x, respawnPoint.y - 35)
                     self.addObject(frog, true)
                     frogController.enableInput()
                     dead = false
