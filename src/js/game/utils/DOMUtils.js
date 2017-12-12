@@ -27,5 +27,16 @@ export const DOMUtils = {
             el.className = cssClass
         }
         return el
+    },
+
+    createButton: (parent, width, text, onClick) => {
+        const el = DOMUtils.createElement('button', '', parent, {width: width + 'px'})
+        el.type = 'button'
+        el.innerHTML = text
+
+        el.addEventListener('click', _ => {
+            onClick && onClick()
+        })
+        return el
     }
 }
