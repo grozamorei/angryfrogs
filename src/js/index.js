@@ -18,6 +18,18 @@ window.onload = () => {
     const resources = window.resources = Resources()
     PIXI.settings.MIPMAP_TEXTURES = false;
 
+    const fpsCounter = new Stats()
+    fpsCounter.showPanel(0)
+    if (window.debugMenu.params.fpsCounter) {
+        document.body.appendChild(fpsCounter.dom)
+    }
+    window.debugMenu.on('paramChange', (k, v) => {
+        if (k === 'fpsCounter') {
+            if (v) document.body.appendChild(fpsCounter.dom)
+            else document.body.removeChild(fpsCounter.dom)
+        }
+    })
+
     const startGame = () => {
         console.log(resources.raw)
         const rend = Renderer(canvas)
@@ -28,6 +40,8 @@ window.onload = () => {
         let frameCounter = 0
         let time = Date.now()
         const gameLoop = () => {
+            fpsCounter.begin()
+
             let dt = Date.now() - time
             time = Date.now()
             if (dt > 50) {dt = 17}
@@ -39,6 +53,8 @@ window.onload = () => {
             gameController.update(dt)
             rend.update()
             PIXI.tweenManager.update()
+
+            fpsCounter.end()
         }
 
         const respawnLocations = []

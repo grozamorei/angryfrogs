@@ -1,4 +1,5 @@
 export const Renderer = (canvas) => {
+    const debug = window.debugMenu
 
     let vSize = {x: 800, y: 1280}
     let canvasW = 0, canvasH = 0
@@ -27,13 +28,15 @@ export const Renderer = (canvas) => {
         canvasH = Math.max(window.innerHeight || 0, document.documentElement.clientHeight)
 
         renderer.resize(Math.round(vSize.x * (canvasH / vSize.y)), canvasH)
-        const hMargin = (canvasW - renderer.width) / 2
+        const hMargin = debug.visible ? 0 : (canvasW - renderer.width) / 2
         canvas.style.marginLeft = hMargin.toString() + 'px'
 
         stage.scale.x = renderer.width / vSize.x
         stage.scale.y = renderer.height / vSize.y
     }
     resizeCanvas()
+
+    debug.on('visibility', _ => resizeCanvas())
 
     return {
         get size() { return vSize },

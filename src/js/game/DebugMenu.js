@@ -3,6 +3,7 @@ import {emitterTemplate} from "./utils/EmitterBehaviour";
 export const DebugMenu = () => {
 
     let params = {
+        fpsCounter: false,
         neoMode: false, 
         invisibleStuff_group: false,
         invisibleStuff: {
@@ -68,8 +69,10 @@ export const DebugMenu = () => {
 
     const self = {
         get params() { return params },
+        get visible() { return visible },
         toggle: () => {
             visible = !visible
+            self.emit('visibility', visible)
             if (visible) {
                 view.style.display = 'block'
             } else {
