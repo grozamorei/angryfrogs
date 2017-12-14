@@ -38,5 +38,32 @@ export const DOMUtils = {
             onClick && onClick()
         })
         return el
+    },
+
+    makeLine: (parent, marginTop, children) => {
+        const line = DOMUtils.createElement('div', '', parent, {'text-align': 'center', 'margin-top': marginTop + 'px'})
+        children.forEach(ch => {
+            line.appendChild(ch)
+        })
+        return line
+    },
+
+    makeLabel: (text, inline, parent) => {
+        const p = DOMUtils.createElement('p', '', parent, {display: inline ? 'inline-block' : 'block'});
+        p.innerHTML = text
+        return p
+    },
+
+    makeDropdown: (options) => {
+        const s = DOMUtils.createElement('select')
+        const nodeOptions = options.map(v => {
+            const o = document.createElement('option')
+            o.setAttribute('value', v)
+            o.innerHTML = v
+            return o
+        })
+        console.log(nodeOptions)
+        nodeOptions.forEach(n => s.appendChild(n))
+        return s
     }
 }

@@ -30,11 +30,12 @@ export const DebugMenu = () => {
         }
     }
 
+    const availablePatterns = window.resources.getJSON('digest.patterns').map(v => v.alias)
     let visible = false
     const view = DOMUtils.createElement('div', 'debugMenu', null)
 
-    const checkBoxField = (obj, key, offset = 0, onChange = null) => {
-        const item = DOMUtils.createElement('div', '', view, null)
+    const checkBoxField = (parent, obj, key, offset = 0, onChange = null) => {
+        const item = DOMUtils.createElement('div', '', parent, null)
         DOMUtils.createElement('div', '', item, {width: 20*offset + 'px'}, 'debugMenuItem')
         const checkbox = DOMUtils.createElement('input', '', item, null, 'debugMenuItem')
         checkbox.type = 'checkbox'
@@ -51,30 +52,44 @@ export const DebugMenu = () => {
         return item
     }
 
-    const arrayPanel = (children, obj, key) => {
+    const arrayPanel = (parent, children, obj, key) => {
         if (obj[key+'_group']) {
             for (const oneKey in obj[key]) {
                 if (oneKey === 'display') continue
-                children.push(checkBoxField(obj[key], oneKey, 1))
+                children.push(checkBoxField(parent, obj[key], oneKey, 1))
             }
         }
     }
 
     const levelConstructor = () => {
+        console.log(availablePatterns)
         const p = params.levelConstructor
         const drawCurrent = (div) => {
-            // console.log(p.current, p.presets.length)
             while (div.hasChildNodes()) {
                 div.removeChild(div.lastChild)
             }
 
             if (p.current === -1) {
                 const str = DOMUtils.createElement('p', '', div)
-                str.innerHTML = 'use regular random shit'
-            } else if (p.current === p.presets.length) {
-                // const str = DOMUtils.createElement('p', '', div)
-                // str.innerHTML = 'create preset'
+                str.innerHTML = 'use regular random generation'
 
+                DOMUtils.createButton(DOMUtils.createElement('div', '', div, {'text-align': 'center', 'margin-top': '20px'}), 50, 'apply', null)
+            } else {
+
+                const presetName = DOMUtils.createElement('input', '', null)
+                presetName.type = 'text'; presetName.value = 'some preset'
+
+                DOMUtils.makeLine(div, 5, [DOMUtils.makeLabel('name', true, null), presetName])
+
+                const column = DOMUtils.createElement('div', '', div, {'text-align': 'center', 'margin-top': '10px'})
+
+                //
+                // addition
+
+                DOMUtils.makeLine(div, 5, [DOMUtils.makeLabel('add piece', true, null), DOMUtils.makeDropdown(availablePatterns)])
+
+                //
+                // existing
             }
         }
         const panel = DOMUtils.createElement('div', 'levelConstructor')
@@ -90,7 +105,7 @@ export const DebugMenu = () => {
             }
             drawCurrent(workingDiv)
         })
-        const currentTab = DOMUtils.createButton(switcher, 100, p.current === -1 ? 'default' : p.presets[p.current].name, null)
+        const currentTab = DOMUtils.createButton(switcher, 100, p.current, null)
         DOMUtils.createButton(switcher, 30, '>', () => {
             if (p.current === p.presets.length) return
             p.current = p.current+1
@@ -105,7 +120,7 @@ export const DebugMenu = () => {
         const workingDiv = DOMUtils.createElement('div', 'currentTab', panel)
         drawCurrent(workingDiv)
 
-        DOMUtils.createButton(DOMUtils.createElement('div', '', panel, {'text-align': 'center', 'margin-top': '20px'}), 50, 'apply', null)
+
         return panel
     }
     
@@ -115,28 +130,32 @@ export const DebugMenu = () => {
         if (typeof params[k] === 'object') {
             if (params[k].display === 'list') {
                 const children = []
-                checkBoxField(params, k+'_group', 0, () => {
-                    children.forEach(child => view.removeChild(child))
+                checkBoxField(view, params, k+'_group', 0, () => {
+                    children.forEach(child => root.removeChild(child))
                     children.splice(0, children.length)
-                    arrayPanel(children, params, k)
+                    arrayPanel(root, children, params, k)
                 })
-                arrayPanel(children, params, k)
+                const root = DOMUtils.createElement('div', 'fuck', view)
+                arrayPanel(root, children, params, k)
             }
             if (params[k].display === 'levelConstructor') {
                 const panel = levelConstructor()
-                checkBoxField(params, k+'_group', 0, (checked) => {
+                checkBoxField(view, params, k+'_group', 0, (checked) => {
                     if (checked) {
-                        view.appendChild(panel)
+                        panel.style.display = 'block'
                     } else {
-                        view.removeChild(panel)
+                        panel.style.display = 'none'
                     }
                 })
+                view.appendChild(panel)
                 if (params[k + '_group']) {
-                    view.appendChild(panel)
+                    panel.style.display = 'block'
+                } else {
+                    panel.style.display = 'none'
                 }
             }
         } else {
-            checkBoxField(params, k)
+            checkBoxField(view, params, k)
         }
     }
 

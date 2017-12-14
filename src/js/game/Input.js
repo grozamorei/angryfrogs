@@ -73,7 +73,7 @@ export const Input = (canvas, debugGraphics) => {
     canvas.onmouseup = onTouchEnd
 
     window.onkeypress = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
         if (e.keyCode === 119) {
             self.emit('touchEnded', {x: 0, y: -1000})
         }
