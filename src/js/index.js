@@ -14,23 +14,25 @@ window.onload = () => {
     const canvas = DOMUtils.createElement('canvas', 'gameCanvas')
     document.body.appendChild(canvas)
 
-    window.debugMenu = DebugMenu()
-    const resources = window.resources = Resources()
     PIXI.settings.MIPMAP_TEXTURES = false;
 
-    const fpsCounter = new Stats()
-    fpsCounter.showPanel(0)
-    if (window.debugMenu.params.fpsCounter) {
-        document.body.appendChild(fpsCounter.dom)
-    }
-    window.debugMenu.on('paramChange', (k, v) => {
-        if (k === 'fpsCounter') {
-            if (v) document.body.appendChild(fpsCounter.dom)
-            else document.body.removeChild(fpsCounter.dom)
-        }
-    })
+    const resources = window.resources = Resources()
 
     const startGame = () => {
+        window.debugMenu = DebugMenu()
+
+        const fpsCounter = new Stats()
+        fpsCounter.showPanel(0)
+        if (window.debugMenu.params.fpsCounter) {
+            document.body.appendChild(fpsCounter.dom)
+        }
+        window.debugMenu.on('paramChange', (k, v) => {
+            if (k === 'fpsCounter') {
+                if (v) document.body.appendChild(fpsCounter.dom)
+                else document.body.removeChild(fpsCounter.dom)
+            }
+        })
+
         console.log(resources.raw)
         const rend = Renderer(canvas)
         const phys = GEngine()
