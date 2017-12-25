@@ -84,6 +84,13 @@ export const DebugMenu = () => {
 
                 const presetName = DOMUtils.createElement('input', '', null)
                 presetName.type = 'text'; presetName.value = p.presets[p.current] ? p.presets[p.current].name : 'new preset'
+                presetName.addEventListener('input', () => {
+                    if (p.presets[p.current]) {
+                        tab.innerHTML = p.presets[p.current].name = presetName.value
+                        window.localStorage.debug = JSON.stringify(params)
+                    }
+                })
+
 
                 DOMUtils.makeLine(div, 5, [DOMUtils.makeLabel('name', true, null), presetName])
 
