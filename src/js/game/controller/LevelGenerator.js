@@ -71,11 +71,11 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
                 return randomizeTemplateByKey(key)
             }
         }
+        console.log('generating template ' + template)
         return map
     }
 
     const generateTemplateEnvironment = (map, scrollPosition, objectAdder) => {
-        console.log('generating template ' + map)
 
         map.layers.forEach(l => {
             if (l.name === 'RESPAWN') {
@@ -95,6 +95,13 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
         nextGenerationIn = 1400
     }
 
+    let currentPreset = undefined
+    let presetStep = 0
+    JSON.parse(window.localStorage.debug).levelConstructor.presets.forEach(pres => {
+        if (!pres.active) return
+        currentPreset = pres.pieces
+    })
+
     return {
         get forceGenerate() { return generateTemplateEnvironment },
         update(scrollPosition, objectAdder) {
@@ -102,7 +109,16 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
             checkpoint = scrollPosition
 
             // if (Math.random() < 0.1) {
-            generateTemplateEnvironment(randomizeTemplateByKey('first'), scrollPosition, objectAdder)
+            if (currentPreset) {
+                console.log('generating preset template ' + currentPreset[presetStep])
+                generateTemplateEnvironment(resources.getJSON(currentPreset[presetStep]), scrollPosition, objectAdder)
+                presetStep += 1
+                if (presetStep > currentPreset.length-1) {
+                    presetStep = 0
+                }
+            } else {
+                generateTemplateEnvironment(randomizeTemplateByKey('first'), scrollPosition, objectAdder)
+            }
             // } else{
             //     generateRandomEnvironment(scrollPosition, objectAdder)
             // }
