@@ -128,6 +128,10 @@ export const DebugMenu = () => {
                         location.reload(true)
                     })
 
+                    const save = DOMUtils.createButton(null, 60, 'save', () => {
+                        saveAs(new Blob([JSON.stringify(p.presets[p.current])], {type: 'text/plain;charset=utf-8'}), p.presets[p.current].name + '.json')
+                    })
+
                     const erase = DOMUtils.createButton(null, 60, 'erase', () => {
                         p.presets.splice(p.current, 1)
                         p.current -= 1
@@ -136,7 +140,7 @@ export const DebugMenu = () => {
                         drawCurrent(tab, div)
                     })
 
-                    DOMUtils.makeLine(column, 10, [activate, erase])
+                    DOMUtils.makeLine(column, 10, [activate, save, erase])
                 }
             }
         }
