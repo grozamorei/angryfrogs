@@ -117,13 +117,15 @@ export const DebugMenu = () => {
                 // existing
                 if (p.presets[p.current]) {
                     for (let i = p.presets[p.current].pieces.length-1; i >= 0 ; i--) {
-                        const lbl = DOMUtils.makeLabel(p.presets[p.current].pieces[i], true)
+                        // const lbl = DOMUtils.makeLabel(p.presets[p.current].pieces[i], true)
+                        const lbl = DOMUtils.createElement('img')
+                        lbl.src = 'assets/debug/' + p.presets[p.current].pieces[i] + '.bmp'
                         const erase = DOMUtils.createButton(null, 20, '-', () => {
                             p.presets[p.current].pieces.splice(i, 1)
                             window.localStorage.debug = JSON.stringify(params)
                             drawCurrent(tab, div)
                         })
-                        DOMUtils.makeLine(column, -5, [lbl, erase])
+                        DOMUtils.makeLine(column, -6, [lbl, erase])
                     }
 
                     const activate = DOMUtils.createButton(null, 80, 'activate', () => {
