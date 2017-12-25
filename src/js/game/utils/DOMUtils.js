@@ -62,7 +62,6 @@ export const DOMUtils = {
             o.innerHTML = v
             return o
         })
-        console.log(nodeOptions)
         nodeOptions.forEach(n => s.appendChild(n))
         return s
     }

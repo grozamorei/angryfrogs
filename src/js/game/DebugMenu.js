@@ -62,9 +62,9 @@ export const DebugMenu = () => {
     }
 
     const levelConstructor = () => {
-        console.log(availablePatterns)
+        console.log(params.levelConstructor.presets)
         const p = params.levelConstructor
-        const drawCurrent = (div) => {
+        const drawCurrent = (tab, div) => {
             while (div.hasChildNodes()) {
                 div.removeChild(div.lastChild)
             }
@@ -73,11 +73,17 @@ export const DebugMenu = () => {
                 const str = DOMUtils.createElement('p', '', div)
                 str.innerHTML = 'use regular random generation'
 
-                DOMUtils.createButton(DOMUtils.createElement('div', '', div, {'text-align': 'center', 'margin-top': '20px'}), 50, 'apply', null)
+                DOMUtils.createButton(DOMUtils.createElement('div', '', div, {'text-align': 'center', 'margin-top': '20px'}), 50, 'apply', () => {
+                    p.presets.forEach(pres => {
+                        pres.active = false
+                    })
+                    window.localStorage.debug = JSON.stringify(params)
+                    location.reload(true)
+                })
             } else {
 
                 const presetName = DOMUtils.createElement('input', '', null)
-                presetName.type = 'text'; presetName.value = 'some preset'
+                presetName.type = 'text'; presetName.value = p.presets[p.current] ? p.presets[p.current].name : 'new preset'
 
                 DOMUtils.makeLine(div, 5, [DOMUtils.makeLabel('name', true, null), presetName])
 
@@ -86,10 +92,46 @@ export const DebugMenu = () => {
                 //
                 // addition
 
-                DOMUtils.makeLine(div, 5, [DOMUtils.makeLabel('add piece', true, null), DOMUtils.makeDropdown(availablePatterns)])
+                const dd = DOMUtils.makeDropdown(availablePatterns)
+                const addButton = DOMUtils.createButton(null, 40, 'add', () => {
+                    if (p.current >= p.presets.length) {
+                        p.presets.push({name: presetName.value, pieces: [dd.value], active: false})
+                        p.current = p.presets.length - 1
+                        tab.innerHTML = p.presets[p.current].name
+                    } else {
+                        p.presets[p.current].pieces.push(dd.value)
+                    }
+                    drawCurrent(tab, div)
+                    window.localStorage.debug = JSON.stringify(params)
+                })
+                DOMUtils.makeLine(column, 5, [DOMUtils.makeLabel('add piece', true, null), dd, addButton])
 
                 //
                 // existing
+                if (p.presets[p.current]) {
+                    for (let i = p.presets[p.current].pieces.length-1; i >= 0 ; i--) {
+                        column.appendChild(DOMUtils.makeLabel(p.presets[p.current].pieces[i]))
+                    }
+
+                    const activate = DOMUtils.createButton(null, 80, 'activate', () => {
+                        p.presets.forEach(pres => {
+                            pres.active = false
+                        })
+                        p.presets[p.current].active = true
+                        window.localStorage.debug = JSON.stringify(params)
+                        location.reload(true)
+                    })
+
+                    const erase = DOMUtils.createButton(null, 60, 'erase', () => {
+                        p.presets.splice(p.current, 1)
+                        p.current -= 1
+                        tab.innerHTML = p.presets[p.current].name
+                        window.localStorage.debug = JSON.stringify(params)
+                        drawCurrent(tab, div)
+                    })
+
+                    DOMUtils.makeLine(column, 10, [activate, erase])
+                }
             }
         }
         const panel = DOMUtils.createElement('div', 'levelConstructor')
@@ -103,7 +145,7 @@ export const DebugMenu = () => {
             } else {
                 currentTab.innerHTML = p.presets[p.current].name
             }
-            drawCurrent(workingDiv)
+            drawCurrent(currentTab, workingDiv)
         })
         const currentTab = DOMUtils.createButton(switcher, 100, p.current, null)
         DOMUtils.createButton(switcher, 30, '>', () => {
@@ -114,11 +156,11 @@ export const DebugMenu = () => {
             } else {
                 currentTab.innerHTML = p.presets[p.current].name
             }
-            drawCurrent(workingDiv)
+            drawCurrent(currentTab, workingDiv)
         })
 
         const workingDiv = DOMUtils.createElement('div', 'currentTab', panel)
-        drawCurrent(workingDiv)
+        drawCurrent(currentTab, workingDiv)
 
 
         return panel
