@@ -36,7 +36,7 @@ export const Game = (renderer, physics, input) => {
     const generator = LevelGenerator(renderer.scroll.y, renderer.size)
     const self = {
         get dead() { return dead },
-        get generator() { return generator },
+        // get generator() { return generator },
         addObject: (go, shallow = false) => {
             renderer.addObject(go)
             go.hasBody && physics.addBody(go.body)
@@ -131,6 +131,7 @@ export const Game = (renderer, physics, input) => {
             lava.reset()
         }
     }
+    generator.update(renderer.scroll.y, self.addObject)
 
     return self
 }

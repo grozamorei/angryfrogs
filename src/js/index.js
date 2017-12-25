@@ -1,7 +1,6 @@
 import {DOMUtils} from "./game/utils/DOMUtils";
 import {Input} from "./game/Input";
 import {Resources} from "./game/utils/Resources";
-import {Util} from "./game/utils/Util";
 import {CreateDetectedPlatform} from "./platform/Platform";
 import {Renderer} from "./game/Renderer";
 import {GEngine, GEngineE} from "./game/physics/GEngine";
@@ -67,16 +66,8 @@ window.onload = () => {
             gameController.respawn(respawnLocations)
         })
 
-        const params = resources.getJSON('params')
-
-        const possibleMaps = resources.getJSON('digest.patterns')
-        const randomMap = possibleMaps[Util.getRandomInt(0, possibleMaps.length-1)].alias
-        const startMap = params.levels.start || randomMap
-        const map = resources.getJSON(startMap)
-        gameController.generator.forceGenerate(map, rend.scroll.y, gameController.addObject, gameController.addRespawn)
-        gameController.respawn(respawnLocations)
-
         requestAnimationFrame(gameLoop)
+        gameController.respawn(respawnLocations)
     }
 
     //

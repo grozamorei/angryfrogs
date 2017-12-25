@@ -2,10 +2,10 @@ import {StaticPlatform} from "../go/StaticPlatform";
 import {Util} from "../utils/Util";
 import {PMASK} from "../physics/GEngine";
 import {Respawn} from "../go/Respawn";
+
 export const LevelGenerator = (checkpoint, sceneSize) => {
 
-    // let lastWallCheckPoint = 0
-    let nextGenerationIn = 200
+    let nextGenerationIn = -1
     let sizes = [64, 96, 128, 160, 192]
 
     const generateRandomEnvironment = (scrollPosition, objectAdder) => {
@@ -102,8 +102,9 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
         currentPreset = pres.pieces
     })
 
+    let firstPattern = true
+
     return {
-        get forceGenerate() { return generateTemplateEnvironment },
         update(scrollPosition, objectAdder) {
             if (scrollPosition - checkpoint < nextGenerationIn) return
             checkpoint = scrollPosition
@@ -117,7 +118,18 @@ export const LevelGenerator = (checkpoint, sceneSize) => {
                     presetStep = 0
                 }
             } else {
-                generateTemplateEnvironment(randomizeTemplateByKey('first'), scrollPosition, objectAdder)
+                if (firstPattern) {
+                    const params = resources.getJSON('params')
+
+                    const possibleMaps = resources.getJSON('digest.patterns')
+                    const randomMap = possibleMaps[Util.getRandomInt(0, possibleMaps.length-1)].alias
+                    const startMap = params.levels.start || randomMap
+                    generateTemplateEnvironment(resources.getJSON(startMap), scrollPosition, objectAdder)
+
+                    firstPattern = false
+                } else {
+                    generateTemplateEnvironment(randomizeTemplateByKey('first'), scrollPosition, objectAdder)
+                }
             }
             // } else{
             //     generateRandomEnvironment(scrollPosition, objectAdder)
