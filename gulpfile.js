@@ -83,7 +83,7 @@ gulp.task('pack-digests', ['clean', 'deploy-static'], () => {
                 (cb) => {
                     require('fs').writeFileSync('build/assets/' + assetPath + '/digest.json', JSON.stringify(digest, null, '  '))
                     cb()
-                }))
+                })).pipe(through.obj())
     }
 
     buildDigest('patterns', 'json')
