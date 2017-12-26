@@ -28,7 +28,9 @@ export const DebugMenu = () => {
             if (params[k] === undefined) continue
             params[k] = newParams[k]
         }
-    }
+    } else {
+		window.localStorage.debug = JSON.stringify(params)
+	}
 
     const availablePatterns = window.resources.getJSON('digest.patterns').map(v => v.alias)
     let visible = false
@@ -224,6 +226,7 @@ export const DebugMenu = () => {
         get params() { return params },
         get visible() { return visible },
         toggle: () => {
+			console.log('toggle dev menu')
             visible = !visible
             self.emit('visibility', visible)
             if (visible) {

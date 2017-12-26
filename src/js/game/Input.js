@@ -87,7 +87,7 @@ export const Input = (canvas, debugGraphics) => {
             // }
             // debugDoubleClick = Date.now()
         }
-        if (e.keyCode === 96) {
+        if (e.keyCode === 49) {
             window.debugMenu.toggle()
         }
     }
