@@ -20,6 +20,7 @@ export const DebugMenu = () => {
             presets: []
         }
     }
+    const saveParams = () => window.localStorage.debug = JSON.stringify(params)
     // window.localStorage.debug = JSON.stringify(params)
     const savedParams = window.localStorage.debug
     if (savedParams) {
@@ -29,7 +30,7 @@ export const DebugMenu = () => {
             params[k] = newParams[k]
         }
     } else {
-		window.localStorage.debug = JSON.stringify(params)
+		saveParams()
 	}
 
     const availablePatterns = window.resources.getJSON('digest.patterns').map(v => v.alias)
@@ -46,7 +47,7 @@ export const DebugMenu = () => {
         checkbox.addEventListener('click', _ => {
             obj[key] = !obj[key]
             self.emit('paramChange', key, obj[key])
-            window.localStorage.debug = JSON.stringify(params)
+            saveParams()
             onChange && onChange(obj[key])
         })
         const text = DOMUtils.createElement('p', '', item, null, 'debugMenuItem')
@@ -79,7 +80,7 @@ export const DebugMenu = () => {
                     p.presets.forEach(pres => {
                         pres.active = false
                     })
-                    window.localStorage.debug = JSON.stringify(params)
+                    saveParams()
                     location.reload(true)
                 })
             } else {
@@ -89,7 +90,7 @@ export const DebugMenu = () => {
                 presetName.addEventListener('input', () => {
                     if (p.presets[p.current]) {
                         tab.innerHTML = p.presets[p.current].name = presetName.value
-                        window.localStorage.debug = JSON.stringify(params)
+                        saveParams()
                     }
                 })
 
@@ -111,7 +112,7 @@ export const DebugMenu = () => {
                         p.presets[p.current].pieces.push(dd.value)
                     }
                     drawCurrent(tab, div)
-                    window.localStorage.debug = JSON.stringify(params)
+                    saveParams()
                 })
                 DOMUtils.makeLine(column, 5, [DOMUtils.makeLabel('add piece', true, null), dd, addButton])
 
@@ -124,7 +125,7 @@ export const DebugMenu = () => {
                         lbl.src = 'assets/debug/' + p.presets[p.current].pieces[i] + '.bmp'
                         const erase = DOMUtils.createButton(null, 20, '-', () => {
                             p.presets[p.current].pieces.splice(i, 1)
-                            window.localStorage.debug = JSON.stringify(params)
+                            saveParams()
                             drawCurrent(tab, div)
                         })
                         DOMUtils.makeLine(column, -6, [lbl, erase])
@@ -135,7 +136,7 @@ export const DebugMenu = () => {
                             pres.active = false
                         })
                         p.presets[p.current].active = true
-                        window.localStorage.debug = JSON.stringify(params)
+                        saveParams()
                         location.reload(true)
                     })
 
@@ -146,8 +147,8 @@ export const DebugMenu = () => {
                     const erase = DOMUtils.createButton(null, 60, 'erase', () => {
                         p.presets.splice(p.current, 1)
                         p.current -= 1
-                        tab.innerHTML = p.presets[p.current].name
-                        window.localStorage.debug = JSON.stringify(params)
+                        tab.innerHTML = p.presets[p.current] ? p.presets[p.current].name : 'default'
+                        saveParams()
                         drawCurrent(tab, div)
                     })
 
@@ -166,9 +167,10 @@ export const DebugMenu = () => {
             } else {
                 currentTab.innerHTML = p.presets[p.current].name
             }
+            saveParams()
             drawCurrent(currentTab, workingDiv)
         })
-        const currentTab = DOMUtils.createButton(switcher, 100, p.current, null)
+        const currentTab = DOMUtils.createButton(switcher, 100, p.presets[p.current] ? p.presets[p.current].name : p.current, null)
         DOMUtils.createButton(switcher, 30, '>', () => {
             if (p.current === p.presets.length) return
             p.current = p.current+1
@@ -177,6 +179,7 @@ export const DebugMenu = () => {
             } else {
                 currentTab.innerHTML = p.presets[p.current].name
             }
+            saveParams()
             drawCurrent(currentTab, workingDiv)
         })
 
@@ -235,7 +238,7 @@ export const DebugMenu = () => {
                 view.style.display = 'none'
             }
             params.showMenu = visible
-            window.localStorage.debug = JSON.stringify(params)
+            saveParams()
         }
     }
     Object.assign(self, emitterTemplate({}))
