@@ -103,6 +103,17 @@
                  "width":160,
                  "x":127,
                  "y":1180.33333333333
+                }, 
+                {
+                 "height":32,
+                 "id":68,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":128,
+                 "x":450.666666666667,
+                 "y":272.666666666664
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -125,17 +136,6 @@
                  "width":128,
                  "x":609,
                  "y":188.33333333333
-                }, 
-                {
-                 "height":32,
-                 "id":33,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":192,
-                 "x":441.500166666667,
-                 "y":287.000016666666
                 }, 
                 {
                  "height":32,
@@ -191,6 +191,17 @@
                  "width":128,
                  "x":578,
                  "y":962
+                }, 
+                {
+                 "height":32,
+                 "id":67,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":320,
+                 "x":38,
+                 "y":689
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -312,17 +323,6 @@
                  "width":32,
                  "x":764.333333333334,
                  "y":25
-                }, 
-                {
-                 "height":32,
-                 "id":64,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":288,
-                 "x":39,
-                 "y":684.666666666666
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -345,17 +345,6 @@
                  "width":81,
                  "x":140.166666666667,
                  "y":1078.16666666667
-                }, 
-                {
-                 "height":81,
-                 "id":45,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":81,
-                 "x":338.166666666667,
-                 "y":744.833333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -363,7 +352,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":67,
+ "nextobjectid":69,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.3",
