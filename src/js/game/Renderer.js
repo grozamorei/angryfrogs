@@ -27,9 +27,16 @@ export const Renderer = (canvas) => {
         canvasW = Math.max(window.innerWidth || 0, document.documentElement.clientWidth)
         canvasH = Math.max(window.innerHeight || 0, document.documentElement.clientHeight)
 
-        renderer.resize(Math.round(vSize.x * (canvasH / vSize.y)), canvasH)
+        console.log(canvasW / canvasH, vSize.x/vSize.y)
+        if (canvasW / canvasH > vSize.x / vSize.y) {
+            renderer.resize(Math.round(vSize.x * (canvasH / vSize.y)), canvasH)
+        } else {
+            renderer.resize(canvasW, Math.round(vSize.y * (canvasW / vSize.x)))
+        }
         const hMargin = debug.visible ? 0 : (canvasW - renderer.width) / 2
+        const vMargin = debug.visible ? 0 : (canvasH - renderer.height) / 2
         canvas.style.marginLeft = hMargin.toString() + 'px'
+        canvas.style.marginTop = vMargin.toString() + 'px'
 
         stage.scale.x = renderer.width / vSize.x
         stage.scale.y = renderer.height / vSize.y
