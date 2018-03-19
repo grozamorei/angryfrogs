@@ -25,43 +25,45 @@ export const Input = (canvas, debugGraphics) => {
 
         startedAt.x = getX(e)
         startedAt.y = getY(e)
-        self.emit('touchStarted')
+        // self.emit('touchStarted')
+        self.emit('touchEnded', {x: 0, y: -1000})
     }
 
     const onTouchMove = (e) => {
         e.preventDefault()
-        if (isNaN(startedAt.x)) return
-        lastSeenAt.x = getX(e)
-        lastSeenAt.y = getY(e)
+    //     if (isNaN(startedAt.x)) return
+    //     lastSeenAt.x = getX(e)
+    //     lastSeenAt.y = getY(e)
 
-        const vX = lastSeenAt.x - startedAt.x
-        const vY = lastSeenAt.y - startedAt.y
-        const magnitude = Math.sqrt(vX*vX + vY*vY)
-        if (magnitude === 0) return
-        self.emit('touchMove', magnitude, Utils.normalizeValue(vX))
+    //     const vX = lastSeenAt.x - startedAt.x
+    //     const vY = lastSeenAt.y - startedAt.y
+    //     const magnitude = Math.sqrt(vX*vX + vY*vY)
+    //     if (magnitude === 0) return
+    //     self.emit('touchMove', magnitude, Utils.normalizeValue(vX))
 
-        debugGraphics.clear()
-        debugGraphics.lineStyle(2, 0xFF00FF)
-        debugGraphics.drawCircle(700, 100, 60)
-        debugGraphics.moveTo(700, 100)
-        debugGraphics.lineTo(700 + 0.5 * vX, 100 + 0.5 * vY)
+    //     debugGraphics.clear()
+    //     debugGraphics.lineStyle(2, 0xFF00FF)
+    //     debugGraphics.drawCircle(700, 100, 60)
+    //     debugGraphics.moveTo(700, 100)
+    //     debugGraphics.lineTo(700 + 0.5 * vX, 100 + 0.5 * vY)
     }
 
     const onTouchEnd = (e) => {
-        if (Date.now() - fsDoubleClick < 200) {
-            if (fs) {
-                document.exitFullscreen()
-                fs = false
-            } else {
-                window.document.documentElement.requestFullscreen()
-                fs = true
-            }
-        }
-        fsDoubleClick = Date.now()
         e.preventDefault()
+    //     if (Date.now() - fsDoubleClick < 200) {
+    //         if (fs) {
+    //             document.exitFullscreen()
+    //             fs = false
+    //         } else {
+    //             window.document.documentElement.requestFullscreen()
+    //             fs = true
+    //         }
+    //     }
+    //     fsDoubleClick = Date.now()
+    //     e.preventDefault()
 
-        self.emit('touchEnded', {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)})
-        startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = NaN
+    //     self.emit('touchEnded', {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)})
+    //     startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = NaN
     }
 
     canvas.ontouchstart = onTouchStart
