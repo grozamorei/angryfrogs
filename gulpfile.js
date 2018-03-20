@@ -20,14 +20,13 @@ gulp.task('pack', ['clean'], () => {
     const webpack2 = require('webpack')
 
     const config = {
+        watch: true,
         module: {
             loaders: [{
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
-                query: {
-                    presets: ['es2015']
-                }
+                query: { presets: ['env'] }
             }]
         },
         output: {
@@ -36,9 +35,18 @@ gulp.task('pack', ['clean'], () => {
         devtool: "source-map"
     }
 
-    return gulp.src('src/js/**/*.js')
+    const transpileStream = 
+        gulp.src('src/js/**/*.js')
         .pipe(stream(config, webpack2))
-        .pipe(gulp.dest('build/'))
+
+    transpileStream.on('error', e => {
+        console.error(e)
+    })
+    transpileStream.on('compilation-error', e => {
+        console.error(e)
+    })
+
+    return transpileStream.pipe(gulp.dest('build/'))
 })
 
 gulp.task('pack-css', ['clean'], () => {
