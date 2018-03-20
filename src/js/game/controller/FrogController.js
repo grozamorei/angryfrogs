@@ -40,7 +40,7 @@ export const FrogController = (frog, physics, input) => {
 
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
         if (frog.lastAnimation.indexOf('jump') === -1) {
-            console.log('what is this?')
+            // console.log('what is this?')
             frog.updateAnimation('jump_01', lastFacing, true)
         }
 
@@ -81,6 +81,7 @@ export const FrogController = (frog, physics, input) => {
             }
         }
         physics.applyForce(frog.body.id, vector)
+        console.log('force: ', vector)
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
     }
 
@@ -127,6 +128,7 @@ export const FrogController = (frog, physics, input) => {
     input.on('touchEnded', (vector) => {
         if (inputDisabled) return
 
+        const minMagnitude = 70
         const maxMagnitude = 120
         const maxYImpulse = 7.5
         let maxXImpulse = 500
@@ -152,7 +154,7 @@ export const FrogController = (frog, physics, input) => {
             maxXImpulse = 800
         }
 
-        /*const magnitude = */Util.clampMagnitude(vector, 70, maxMagnitude)
+        /*const magnitude = */Util.clampMagnitude(vector, minMagnitude, maxMagnitude)
         if (isNaN(vector.x) || isNaN(vector.y)) {
             ground()
         } else {
@@ -161,8 +163,16 @@ export const FrogController = (frog, physics, input) => {
                 return
             }
             if (walled()) {
-                if (vector.x === 0) return
-                isWallJumpDirectionRight(vector.x)&&applyForce(vector, maxXImpulse*1.5, maxYImpulse*0.95, maxMagnitude)
+                frog.getCollisions(INTERSECTION.LEFT, _ => {
+                    vector.x = 120
+                    applyForce(vector, maxXImpulse, maxYImpulse, maxMagnitude)
+                })
+                frog.getCollisions(INTERSECTION.RIGHT, _ => {
+                    vector.x = -120
+                    applyForce(vector, maxXImpulse, maxYImpulse, maxMagnitude)
+                })
+                // if (vector.x === 0) return
+                // isWallJumpDirectionRight(vector.x)&&applyForce(vector, maxXImpulse*1.5, maxYImpulse*0.95, maxMagnitude)
                 return
             }
             if (airbourne()) {

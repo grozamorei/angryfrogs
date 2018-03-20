@@ -20,7 +20,6 @@ gulp.task('pack', ['clean'], () => {
     const webpack2 = require('webpack')
 
     const config = {
-        watch: true,
         module: {
             loaders: [{
                 test: /\.js$/,

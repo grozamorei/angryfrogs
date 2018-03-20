@@ -175,18 +175,18 @@ export const GEngine = (gyro) => {
                 const path = (((currentVelY*currentVelY) - (startVelY*startVelY)) / 2*g)
                 b.velocity.y = currentVelY
                 b.center.y += path
-                if (b.getCollisionsByIntersection(INTERSECTION.DOWN).length === 0) {
-                    b.center.x += gyro.pullValue * 100 * dt
-                }
-                // if (path !== 0) {
-                // } else {
-                    
-                //     // b.center.x += b.velocity.x * dt
-                // }
-
                 //
                 // moving sideways linearly
-                
+                b.center.x += b.velocity.x * dt //+ gyro.pullValue * 50 * dt
+
+                const floors = b.getCollisionsByIntersection(INTERSECTION.DOWN)
+                const slipperyFloor = floors.reduce((acc, current) => {
+                    if (acc === true) return acc
+                    return current.mask.indexOf('slippery') > -1
+                }, false)
+                if (slipperyFloor) {
+                    b.center.x += gyro.pullValue * 70 * dt
+                }
             })
 
             //

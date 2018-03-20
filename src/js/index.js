@@ -37,7 +37,7 @@ window.onload = () => {
         const rend = Renderer(canvas)
         const input2 = GyroInput()
         const phys = GEngine(input2)
-        const input = Input(canvas, rend.debugDrawLayer)
+        const input = Input(input2, canvas, rend.debugDrawLayer)
         const gameController = Game(rend, phys, input)
 
         let frameCounter = 0
