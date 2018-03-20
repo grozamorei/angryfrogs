@@ -3,6 +3,7 @@ const connect = require('gulp-connect')
 
 gulp.task('connect', () => {
     connect.server({
+        host: '0.0.0.0',
         root: 'build/',
         port: '8100',
         livereload: true
