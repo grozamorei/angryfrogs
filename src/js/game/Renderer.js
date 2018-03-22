@@ -2,6 +2,7 @@ export const Renderer = (canvas) => {
     const debug = window.debugMenu
 
     let vSize = {x: 800, y: 1280}
+    let adjustedVSize = {x: 0, y: 0}
     let canvasW = 0, canvasH = 0
 
     const stage = new PIXI.Container()
@@ -27,26 +28,34 @@ export const Renderer = (canvas) => {
         canvasW = Math.max(window.innerWidth || 0, document.documentElement.clientWidth)
         canvasH = Math.max(window.innerHeight || 0, document.documentElement.clientHeight)
 
-        // console.log(canvasW / canvasH, vSize.x/vSize.y)
         if (canvasW / canvasH > vSize.x / vSize.y) {
-            renderer.resize(Math.round(vSize.x * (canvasH / vSize.y)), canvasH)
+            const adjustedW = Math.round(vSize.x * (canvasH / vSize.y))
+            const marginH = debug.visible ? 0 : (canvasW - adjustedW) / 2
+            renderer.resize(canvasW, canvasH)
+            // 
+            stage.scale.x = adjustedW / vSize.x
+            stage.scale.y = renderer.height / vSize.y
+            stage.x = marginH
+            adjustedVSize.x = vSize.x
+            adjustedVSize.y = vSize.y
         } else {
-            renderer.resize(canvasW, Math.round(vSize.y * (canvasW / vSize.x)))
+            const adjustedH = Math.round(vSize.y * (canvasW / vSize.x))
+            const marginV = debug.visible ? 0 : (canvasH - adjustedH) / 2
+            renderer.resize(canvasW, canvasH)
+            // 
+            stage.scale.x = renderer.width / vSize.x
+            stage.scale.y = adjustedH / vSize.y
+            stage.y = marginV*2
+            adjustedVSize.x = vSize.x
+            adjustedVSize.y = vSize.y * (canvasH / adjustedH)
         }
-        const hMargin = debug.visible ? 0 : (canvasW - renderer.width) / 2
-        const vMargin = debug.visible ? 0 : (canvasH - renderer.height) / 2
-        canvas.style.marginLeft = hMargin.toString() + 'px'
-        canvas.style.marginTop = vMargin.toString() + 'px'
-
-        stage.scale.x = renderer.width / vSize.x
-        stage.scale.y = renderer.height / vSize.y
     }
     resizeCanvas()
 
     debug.on('visibility', _ => resizeCanvas())
 
     return {
-        get size() { return vSize },
+        get size() { return adjustedVSize },
         get stage() { return stage },
         get scroll() { return scrollContainer },
         /** @type PIXI.Graphics */
