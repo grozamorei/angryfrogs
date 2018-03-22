@@ -81,7 +81,7 @@ export const FrogController = (frog, physics, input) => {
             }
         }
         physics.applyForce(frog.body.id, vector)
-        console.log('force: ', vector)
+        // console.log('force: ', vector)
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
     }
 

@@ -49,19 +49,21 @@ export const Input = (canvas, debugGraphics) => {
     }
 
     const onTouchEnd = (e) => {
-        if (Date.now() - fsDoubleClick < 200) {
-            if (fs) {
-                document.exitFullscreen()
-                fs = false
-            } else {
-                window.document.documentElement.requestFullscreen()
-                fs = true
-            }
-        }
+        // if (Date.now() - fsDoubleClick < 200) {
+        //     if (fs) {
+        //         document.exitFullscreen()
+        //         fs = false
+        //     } else {
+        //         window.document.documentElement.requestFullscreen()
+        //         fs = true
+        //     }
+        // }
         fsDoubleClick = Date.now()
         e.preventDefault()
 
-        self.emit('touchEnded', {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)})
+        const gesturePath = {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)}
+        self.emit('touchEnded', gesturePath)
+        console.log(lastSeenAt.x - startedAt.x)
         startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = NaN
     }
 

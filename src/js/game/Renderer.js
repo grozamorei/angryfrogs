@@ -27,7 +27,7 @@ export const Renderer = (canvas) => {
         canvasW = Math.max(window.innerWidth || 0, document.documentElement.clientWidth)
         canvasH = Math.max(window.innerHeight || 0, document.documentElement.clientHeight)
 
-        console.log(canvasW / canvasH, vSize.x/vSize.y)
+        // console.log(canvasW / canvasH, vSize.x/vSize.y)
         if (canvasW / canvasH > vSize.x / vSize.y) {
             renderer.resize(Math.round(vSize.x * (canvasH / vSize.y)), canvasH)
         } else {
