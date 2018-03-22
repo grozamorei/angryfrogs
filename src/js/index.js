@@ -1,6 +1,5 @@
 import {DOMUtils} from "./game/utils/DOMUtils";
 import {Input} from "./game/Input";
-import {GyroInput} from "./game/GyroInput";
 import {Resources} from "./game/utils/Resources";
 import {CreateDetectedPlatform} from "./platform/Platform";
 import {Renderer} from "./game/Renderer";
@@ -35,9 +34,8 @@ window.onload = () => {
 
         console.log(resources.raw)
         const rend = Renderer(canvas)
-        const input2 = GyroInput()
-        const phys = GEngine(input2)
-        const input = Input(input2, canvas, rend.debugDrawLayer)
+        const phys = GEngine()
+        const input = Input(canvas, rend.debugDrawLayer)
         const gameController = Game(rend, phys, input)
 
         let frameCounter = 0

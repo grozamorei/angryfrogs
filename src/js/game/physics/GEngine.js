@@ -28,7 +28,7 @@ export const PMASK = {
     TRIGGER_BODY: 'trigger_body'
 }
 
-export const GEngine = (gyro) => {
+export const GEngine = () => {
 
     const gravity = 13
     const slipperyWallGravity = gravity * 0.92
@@ -177,16 +177,7 @@ export const GEngine = (gyro) => {
                 b.center.y += path
                 //
                 // moving sideways linearly
-                b.center.x += b.velocity.x * dt //+ gyro.pullValue * 50 * dt
-
-                const floors = b.getCollisionsByIntersection(INTERSECTION.DOWN)
-                const slipperyFloor = floors.reduce((acc, current) => {
-                    if (acc === true) return acc
-                    return current.mask.indexOf('slippery') > -1
-                }, false)
-                if (slipperyFloor) {
-                    b.center.x += gyro.pullValue * 70 * dt
-                }
+                b.center.x += b.velocity.x * dt
             })
 
             //

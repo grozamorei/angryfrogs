@@ -1,6 +1,6 @@
 import {emitterTemplate} from "./utils/EmitterBehaviour";
 import {Util as Utils} from "./utils/Util";
-export const Input = (gyro, canvas, debugGraphics) => {
+export const Input = (canvas, debugGraphics) => {
     const self =  {
         update: () => {/*stub*/}
     }
@@ -25,29 +25,27 @@ export const Input = (gyro, canvas, debugGraphics) => {
 
         startedAt.x = getX(e)
         startedAt.y = getY(e)
-        // self.emit('touchStarted')
-        // console.log(gyro.pullValue)
-        // self.emit('touchEnded', {x: 0, y: -1000})
+        self.emit('touchStarted')
     }
 
     const onTouchMove = (e) => {
         e.preventDefault()
         
-    //     if (isNaN(startedAt.x)) return
-    //     lastSeenAt.x = getX(e)
-    //     lastSeenAt.y = getY(e)
+        if (isNaN(startedAt.x)) return
+        lastSeenAt.x = getX(e)
+        lastSeenAt.y = getY(e)
 
-    //     const vX = lastSeenAt.x - startedAt.x
-    //     const vY = lastSeenAt.y - startedAt.y
-    //     const magnitude = Math.sqrt(vX*vX + vY*vY)
-    //     if (magnitude === 0) return
-    //     self.emit('touchMove', magnitude, Utils.normalizeValue(vX))
+        const vX = lastSeenAt.x - startedAt.x
+        const vY = lastSeenAt.y - startedAt.y
+        const magnitude = Math.sqrt(vX*vX + vY*vY)
+        if (magnitude === 0) return
+        self.emit('touchMove', magnitude, Utils.normalizeValue(vX))
 
-    //     debugGraphics.clear()
-    //     debugGraphics.lineStyle(2, 0xFF00FF)
-    //     debugGraphics.drawCircle(700, 100, 60)
-    //     debugGraphics.moveTo(700, 100)
-    //     debugGraphics.lineTo(700 + 0.5 * vX, 100 + 0.5 * vY)
+        debugGraphics.clear()
+        debugGraphics.lineStyle(2, 0xFF00FF)
+        debugGraphics.drawCircle(700, 100, 60)
+        debugGraphics.moveTo(700, 100)
+        debugGraphics.lineTo(700 + 0.5 * vX, 100 + 0.5 * vY)
     }
 
     const onTouchEnd = (e) => {
@@ -63,9 +61,8 @@ export const Input = (gyro, canvas, debugGraphics) => {
         fsDoubleClick = Date.now()
         e.preventDefault()
 
-        self.emit('touchEnded', {x: gyro.pullValue*200, y: -1000})
-    //     self.emit('touchEnded', {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)})
-    //     startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = NaN
+        self.emit('touchEnded', {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)})
+        startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = NaN
     }
 
     canvas.ontouchstart = onTouchStart
