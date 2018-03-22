@@ -58,21 +58,13 @@ export const FrogController = (frog, physics, input) => {
         canWallJump = false
     })
 
-    const applyForce = (vector, maxXImpulse, maxYImpulse, maxMagnitude, slipping = false) => {
-        vector.x = maxXImpulse * vector.x/maxMagnitude
-        vector.y = maxYImpulse * vector.y/maxMagnitude
-
-        if (slipping) {
-            // frog.updateAnimation('slide_00', lastFacing, true)
+    const applyForce2 = vector => {
+        if (walled()) {
+            frog.updateAnimation('jump_01', lastFacing, true)
         } else {
-            if (walled()) {
-                frog.updateAnimation('jump_01', lastFacing, true)
-            } else {
-                frog.updateAnimation('jump_00', lastFacing, true)
-            }
+            frog.updateAnimation('jump_00', lastFacing, true)
         }
         physics.applyForce(frog.body.id, vector)
-        // console.log('force: ', vector)
         lastFacing = frog.body.velocity.x >= 0 ? 1 : -1
     }
 
@@ -114,58 +106,33 @@ export const FrogController = (frog, physics, input) => {
         }
     })
 
-    input.on('touchEnded', (vector) => {
+    input.on('touchEnded', vector => {
         if (inputDisabled) return
 
-        const minMagnitude = 70
-        const maxMagnitude = 120
-        const maxYImpulse = 7.5
-        let maxXImpulse = 500
-        let slipFloorJump = false
-        if (vector.y >= 0) {
-            vector.y = 0
-
-            //
-            // pointing down jump while standing still is not allowed
-            let hardFloorCollisions = false
-            frog.getCollisions(INTERSECTION.DOWN, c => {
-                if (c.mask === PMASK.TRIGGER_BODY) return
-                if (c.mask.indexOf('slippery') === -1) {
-                    hardFloorCollisions = true
-                } else {
-                    slipFloorJump = true
-                }
-            })
-            if (hardFloorCollisions) {
-                ground()
-                return
-            }
-            maxXImpulse = 800
-        }
-
-        /*const magnitude = */Util.clampMagnitude(vector, minMagnitude, maxMagnitude)
+        const maxXVelocity = 250
+        const maxYVelocity = -6
+        const thresholdYVelocity = Math.max(Math.max(0.5, Math.abs(vector.x)), Math.abs(vector.y))
+        console.log(vector)
         if (isNaN(vector.x) || isNaN(vector.y)) {
             ground()
         } else {
             if (grounded()) {
-                applyForce(vector, maxXImpulse, maxYImpulse, maxMagnitude, slipFloorJump)
+                vector.y = maxYVelocity * thresholdYVelocity
+                vector.x *= maxXVelocity
+                applyForce2(vector)
                 return
             }
             if (walled()) {
-                frog.getCollisions(INTERSECTION.LEFT, _ => {
-                    vector.x = 120
-                    applyForce(vector, maxXImpulse, maxYImpulse, maxMagnitude)
-                })
-                frog.getCollisions(INTERSECTION.RIGHT, _ => {
-                    vector.x = -120
-                    applyForce(vector, maxXImpulse, maxYImpulse, maxMagnitude)
-                })
-                // if (vector.x === 0) return
-                // isWallJumpDirectionRight(vector.x)&&applyForce(vector, maxXImpulse*1.5, maxYImpulse*0.95, maxMagnitude)
+                frog.getCollisions(INTERSECTION.LEFT, _ => vector.x = maxXVelocity * 1.35)
+                frog.getCollisions(INTERSECTION.RIGHT, _ => vector.x = -maxXVelocity * 1.35)
+                vector.y = maxYVelocity * .9
+                applyForce2(vector)
                 return
             }
             if (airbourne()) {
-                applyForce(vector, maxXImpulse*1.1, maxYImpulse*0.9, maxMagnitude)
+                vector.y = maxYVelocity * thresholdYVelocity
+                vector.x *= maxXVelocity
+                applyForce2(vector)
                 canDoubleJump = debug.neoMode
             }
         }

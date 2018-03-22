@@ -15,10 +15,7 @@ export const Input = (canvas, rend) => {
         return e.clientY
     }
 
-    const getGestureVelocity = (e) => {
-        lastSeenAt.x = getX(e)
-        lastSeenAt.y = getY(e)
-
+    const getGestureVelocity = () => {
         const normTemplate = rend.stage.width * 0.25
         const vX = lastSeenAt.x - startedAt.x
         const vY = lastSeenAt.y - startedAt.y
@@ -45,26 +42,28 @@ export const Input = (canvas, rend) => {
         e.preventDefault()
         
         if (isNaN(startedAt.x)) return
-        const gest = getGestureVelocity(e)
+        lastSeenAt.x = getX(e)
+        lastSeenAt.y = getY(e)
+        const gest = getGestureVelocity()
         const magnitude = Math.sqrt(gest.x*gest.x + gest.y*gest.y)
         if (magnitude === 0) return
         self.emit('touchMove', magnitude, Utils.normalizeValue(gest.x))
     }
 
     const onTouchEnd = (e) => {
-        // if (Date.now() - fsDoubleClick < 200) {
-        //     if (fs) {
-        //         document.exitFullscreen()
-        //         fs = false
-        //     } else {
-        //         window.document.documentElement.requestFullscreen()
-        //         fs = true
-        //     }
-        // }
+        if (Date.now() - fsDoubleClick < 200) {
+            if (fs) {
+                document.exitFullscreen()
+                fs = false
+            } else {
+                window.document.documentElement.requestFullscreen()
+                fs = true
+            }
+        }
         fsDoubleClick = Date.now()
         e.preventDefault()
 
-        self.emit('touchEnded', getGestureVelocity(e))
+        self.emit('touchEnded', getGestureVelocity())
         startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = NaN
     }
 
