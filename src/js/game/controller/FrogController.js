@@ -23,15 +23,6 @@ export const FrogController = (frog, physics, input) => {
         canDoubleJump = true
         canWallJump = false
     }
-    const isWallJumpDirectionRight = (dir) => {
-        let isDirectionRight = false
-        frog.getCollisions(INTERSECTION.LEFT | INTERSECTION.RIGHT, c => {
-            if (c.mask === PMASK.TRIGGER_BODY) return
-            if (c.intersection&INTERSECTION.LEFT) isDirectionRight = dir > 0
-            if (c.intersection&INTERSECTION.RIGHT) isDirectionRight = dir < 0
-        })
-        return isDirectionRight
-    }
 
     physics.on(GEngineE.GROUNDED, ground)
 
@@ -105,18 +96,16 @@ export const FrogController = (frog, physics, input) => {
         }
 
         if (grounded()) {
-            if (magnitude > 30) {
+            if (magnitude > 0.5) {
                 frog.updateAnimation('prepare.jump.01', lastFacing)
             } else {
                 frog.updateAnimation('prepare.jump.00', lastFacing)
             }
         } else if (walled()) {
-            if (isWallJumpDirectionRight(direction)) {
-                if (magnitude > 15) {
-                    frog.updateAnimation('walled.prepare.jump', lastFacing*-1)
-                } else {
-                    frog.updateAnimation('walled', lastFacing*-1)
-                }
+            frog.getCollisions(INTERSECTION.LEFT, _ => lastFacing = -1)
+            frog.getCollisions(INTERSECTION.RIGHT, _ => lastFacing = 1)
+            if (magnitude > 0.5) {
+                frog.updateAnimation('walled.prepare.jump', lastFacing)
             } else {
                 frog.updateAnimation('walled', lastFacing)
             }

@@ -49,6 +49,7 @@ export const Renderer = (canvas) => {
             adjustedVSize.x = vSize.x
             adjustedVSize.y = vSize.y * (canvasH / adjustedH)
         }
+        console.log(vSize.x, stage.width)
     }
     resizeCanvas()
 

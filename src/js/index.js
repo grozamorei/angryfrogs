@@ -35,7 +35,7 @@ window.onload = () => {
         console.log(resources.raw)
         const rend = Renderer(canvas)
         const phys = GEngine()
-        const input = Input(canvas, rend.debugDrawLayer)
+        const input = Input(canvas, rend)
         const gameController = Game(rend, phys, input)
 
         let frameCounter = 0

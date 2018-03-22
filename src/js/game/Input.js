@@ -1,6 +1,6 @@
 import {emitterTemplate} from "./utils/EmitterBehaviour";
 import {Util as Utils} from "./utils/Util";
-export const Input = (canvas, debugGraphics) => {
+export const Input = (canvas, rend) => {
     const self =  {
         update: () => {/*stub*/}
     }
@@ -13,6 +13,19 @@ export const Input = (canvas, debugGraphics) => {
     const getY = (e) => {
         if ('touches' in e) return e.touches.item(0).clientY
         return e.clientY
+    }
+
+    const getGestureVelocity = (e) => {
+        lastSeenAt.x = getX(e)
+        lastSeenAt.y = getY(e)
+
+        const normTemplate = rend.stage.width * 0.25
+        const vX = lastSeenAt.x - startedAt.x
+        const vY = lastSeenAt.y - startedAt.y
+
+        const gvx = Math.min(Math.abs(vX)/normTemplate, 1)
+        const gvy = Math.min(Math.abs(vY)/normTemplate, 1)
+        return {x: Utils.normalizeValue(vX) * gvx, y: Utils.normalizeValue(vY) * gvy}
     }
 
     let fs = false
@@ -32,20 +45,10 @@ export const Input = (canvas, debugGraphics) => {
         e.preventDefault()
         
         if (isNaN(startedAt.x)) return
-        lastSeenAt.x = getX(e)
-        lastSeenAt.y = getY(e)
-
-        const vX = lastSeenAt.x - startedAt.x
-        const vY = lastSeenAt.y - startedAt.y
-        const magnitude = Math.sqrt(vX*vX + vY*vY)
+        const gest = getGestureVelocity(e)
+        const magnitude = Math.sqrt(gest.x*gest.x + gest.y*gest.y)
         if (magnitude === 0) return
-        self.emit('touchMove', magnitude, Utils.normalizeValue(vX))
-
-        debugGraphics.clear()
-        debugGraphics.lineStyle(2, 0xFF00FF)
-        debugGraphics.drawCircle(700, 100, 60)
-        debugGraphics.moveTo(700, 100)
-        debugGraphics.lineTo(700 + 0.5 * vX, 100 + 0.5 * vY)
+        self.emit('touchMove', magnitude, Utils.normalizeValue(gest.x))
     }
 
     const onTouchEnd = (e) => {
@@ -61,9 +64,7 @@ export const Input = (canvas, debugGraphics) => {
         fsDoubleClick = Date.now()
         e.preventDefault()
 
-        const gesturePath = {x: (lastSeenAt.x - startedAt.x), y: (lastSeenAt.y - startedAt.y)}
-        self.emit('touchEnded', gesturePath)
-        console.log(lastSeenAt.x - startedAt.x)
+        self.emit('touchEnded', getGestureVelocity(e))
         startedAt.x = startedAt.y = lastSeenAt.x = lastSeenAt.y = NaN
     }
 
